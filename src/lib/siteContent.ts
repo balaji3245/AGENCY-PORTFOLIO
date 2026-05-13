@@ -67,7 +67,15 @@ export type SiteContent = {
     eyebrow: string;
     title: string;
     description: string;
-    members: { name: string; role: string; image: string }[];
+    members: {
+      name: string;
+      role: string;
+      image: string;
+      skills?: string[];
+      portfolio?: string;
+      github?: string;
+      email?: string;
+    }[];
   };
   testimonials: { client: string; company: string; content: string }[];
   process: { num: string; title: string; desc: string }[];
@@ -246,12 +254,60 @@ export const defaultSiteContent: SiteContent = {
     description:
       "Every project is handled through clear specialist roles, structured reviews, and one coordinated delivery flow from first idea to launch.",
     members: [
-      { name: "Strategy & Discovery", role: "We clarify goals, audience, positioning, content needs, and the right website structure before design begins.", image: "from-cyan-400 to-blue-500" },
-      { name: "Brand & Creative Direction", role: "We shape the visual system, campaign feel, messaging, and assets so the business looks consistent everywhere.", image: "from-fuchsia-400 to-rose-500" },
-      { name: "UI/UX Design", role: "We create clean, responsive interfaces focused on trust, readability, conversion, and smooth user journeys.", image: "from-amber-300 to-orange-500" },
-      { name: "Frontend Development", role: "We build fast, polished pages with modern React, Next.js, animation, and mobile-first implementation.", image: "from-emerald-400 to-teal-500" },
-      { name: "Backend & Integrations", role: "We connect forms, dashboards, CMS flows, payments, APIs, automations, and business tools when needed.", image: "from-violet-400 to-indigo-500" },
-      { name: "SEO & Launch Support", role: "We prepare metadata, performance checks, analytics, launch testing, and improvement notes after handover.", image: "from-lime-300 to-green-500" },
+      { 
+        name: "Strategy & Discovery", 
+        role: "We clarify goals, audience, positioning, content needs, and the right website structure before design begins.", 
+        image: "from-cyan-400 to-blue-500",
+        skills: ["Strategy", "Research", "Planning"],
+        portfolio: "https://example.com/portfolio",
+        github: "https://github.com/example",
+        email: "strategy@yjdevelopers.com"
+      },
+      { 
+        name: "Brand & Creative Direction", 
+        role: "We shape the visual system, campaign feel, messaging, and assets so the business looks consistent everywhere.", 
+        image: "from-fuchsia-400 to-rose-500",
+        skills: ["Branding", "Creative", "Visual Design"],
+        portfolio: "",
+        github: "",
+        email: "creative@yjdevelopers.com"
+      },
+      { 
+        name: "UI/UX Design", 
+        role: "We create clean, responsive interfaces focused on trust, readability, conversion, and smooth user journeys.", 
+        image: "from-amber-300 to-orange-500",
+        skills: ["Figma", "UI", "UX", "Wireframing"],
+        portfolio: "",
+        github: "",
+        email: "design@yjdevelopers.com"
+      },
+      { 
+        name: "Frontend Development", 
+        role: "We build fast, polished pages with modern React, Next.js, animation, and mobile-first implementation.", 
+        image: "from-emerald-400 to-teal-500",
+        skills: ["React", "Next.js", "Tailwind CSS", "Framer Motion"],
+        portfolio: "https://example.com/frontend",
+        github: "https://github.com/frontenddev",
+        email: "frontend@yjdevelopers.com"
+      },
+      { 
+        name: "Backend & Integrations", 
+        role: "We connect forms, dashboards, CMS flows, payments, APIs, automations, and business tools when needed.", 
+        image: "from-violet-400 to-indigo-500",
+        skills: ["Node.js", "PostgreSQL", "APIs", "AWS"],
+        portfolio: "",
+        github: "https://github.com/backenddev",
+        email: "backend@yjdevelopers.com"
+      },
+      { 
+        name: "SEO & Launch Support", 
+        role: "We prepare metadata, performance checks, analytics, launch testing, and improvement notes after handover.", 
+        image: "from-lime-300 to-green-500",
+        skills: ["SEO", "Analytics", "Performance"],
+        portfolio: "",
+        github: "",
+        email: "seo@yjdevelopers.com"
+      },
     ],
   },
   testimonials: [

@@ -24,21 +24,46 @@ export default function Team() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: i * 0.1 }}
-              className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-colors hover:border-white/25"
+              className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-colors hover:border-white/25 flex flex-col"
             >
               <div className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${member.image}`} />
-              <div className="mb-10 flex items-start justify-between gap-4">
+              <div className="mb-6 flex items-start justify-between gap-4">
                 <span className="text-xs font-semibold uppercase tracking-widest text-gray-500">
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <ArrowUpRight
-                  size={18}
-                  className="text-gray-600 transition-colors group-hover:text-white"
-                  aria-hidden="true"
-                />
+                <div className="flex gap-3">
+                  {member.github && (
+                    <a href={member.github} target="_blank" rel="noreferrer" className="text-gray-600 hover:text-white transition-colors" aria-label="GitHub">
+                      <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                    </a>
+                  )}
+                  {member.portfolio && (
+                    <a href={member.portfolio} target="_blank" rel="noreferrer" className="text-gray-600 hover:text-white transition-colors" aria-label="Portfolio">
+                      <ArrowUpRight size={18} />
+                    </a>
+                  )}
+                </div>
               </div>
-              <h4 className="mb-3 text-xl font-semibold tracking-tight">{member.name}</h4>
-              <p className="text-sm leading-6 text-gray-400">{member.role}</p>
+              <h4 className="mb-2 text-xl font-semibold tracking-tight">{member.name}</h4>
+              <p className="mb-4 text-sm leading-6 text-gray-400 flex-grow">{member.role}</p>
+
+              <div className="mt-auto space-y-4 pt-4 border-t border-white/5">
+                {member.skills && member.skills.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {member.skills.map((skill, sIndex) => (
+                      <span key={sIndex} className="px-2 py-1 text-[10px] uppercase tracking-wider font-medium bg-white/5 border border-white/10 rounded-full text-gray-300">
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                
+                {member.email && (
+                  <a href={`mailto:${member.email}`} className="text-sm text-cyan-400 hover:text-cyan-300 transition-colors block">
+                    {member.email}
+                  </a>
+                )}
+              </div>
             </motion.div>
           ))}
         </div>

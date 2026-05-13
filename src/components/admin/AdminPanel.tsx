@@ -1248,6 +1248,74 @@ export default function AdminPanel() {
                     }
                   />
                 </Field>
+                <div className="grid gap-4 md:grid-cols-2 mt-4">
+                  <Field label="Email ID">
+                    <Input
+                      value={member.email || ""}
+                      onChange={(e) =>
+                        setDraft({
+                          ...draft,
+                          team: {
+                            ...draft.team,
+                            members: draft.team.members.map((item, i) =>
+                              i === index ? { ...item, email: e.target.value } : item
+                            ),
+                          },
+                        })
+                      }
+                    />
+                  </Field>
+                  <Field label="Portfolio Link">
+                    <Input
+                      value={member.portfolio || ""}
+                      onChange={(e) =>
+                        setDraft({
+                          ...draft,
+                          team: {
+                            ...draft.team,
+                            members: draft.team.members.map((item, i) =>
+                              i === index ? { ...item, portfolio: e.target.value } : item
+                            ),
+                          },
+                        })
+                      }
+                    />
+                  </Field>
+                  <Field label="GitHub Link">
+                    <Input
+                      value={member.github || ""}
+                      onChange={(e) =>
+                        setDraft({
+                          ...draft,
+                          team: {
+                            ...draft.team,
+                            members: draft.team.members.map((item, i) =>
+                              i === index ? { ...item, github: e.target.value } : item
+                            ),
+                          },
+                        })
+                      }
+                    />
+                  </Field>
+                  <Field label="Skills (comma separated)">
+                    <Input
+                      value={member.skills ? member.skills.join(", ") : ""}
+                      onChange={(e) =>
+                        setDraft({
+                          ...draft,
+                          team: {
+                            ...draft.team,
+                            members: draft.team.members.map((item, i) =>
+                              i === index
+                                ? { ...item, skills: e.target.value.split(",").map(s => s.trim()) }
+                                : item
+                            ),
+                          },
+                        })
+                      }
+                    />
+                  </Field>
+                </div>
               </div>
             ))}
             <SecondaryButton
@@ -1262,6 +1330,10 @@ export default function AdminPanel() {
                         name: "New Capability",
                         role: "Describe what this part of the team handles.",
                         image: "from-zinc-400 to-slate-500",
+                        email: "",
+                        portfolio: "",
+                        github: "",
+                        skills: [],
                       },
                     ],
                   },
