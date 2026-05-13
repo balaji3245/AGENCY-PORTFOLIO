@@ -46,6 +46,7 @@ const adminNavigation = [
   { href: "#testimonials", label: "Reviews", hint: "Client quotes" },
   { href: "#process", label: "Process", hint: "Workflow steps" },
   { href: "#industries", label: "Industries", hint: "Business categories" },
+  { href: "#pricing", label: "Pricing", hint: "Plans and features" },
   { href: "#policies", label: "Policies", hint: "Terms and delivery" },
   { href: "#contact-vision", label: "Contact", hint: "CTA and vision" },
 ];
@@ -160,6 +161,7 @@ export default function AdminPanel() {
   const [contactSubmissions, setContactSubmissions] = useState<ContactSubmission[]>(
     []
   );
+  const [isLoadingLeads, setIsLoadingLeads] = useState(true);
 
   const refreshContactSubmissions = useCallback(async () => {
     try {
@@ -167,14 +169,19 @@ export default function AdminPanel() {
         cache: "no-store",
       });
 
-      if (!response.ok) return;
+      if (!response.ok) {
+        setIsLoadingLeads(false);
+        return;
+      }
 
       const data = (await response.json()) as {
         submissions: ContactSubmission[];
       };
-      setContactSubmissions(data.submissions);
+      setContactSubmissions(data.submissions || []);
     } catch {
       setContactSubmissions([]);
+    } finally {
+      setIsLoadingLeads(false);
     }
   }, []);
 
@@ -354,7 +361,12 @@ export default function AdminPanel() {
               </SecondaryButton>
             </div>
 
-            {contactSubmissions.length ? (
+            {isLoadingLeads ? (
+              <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-white/15 p-12 text-center">
+                <div className="h-8 w-8 animate-spin rounded-full border-2 border-cyan-400 border-t-transparent mb-4" />
+                <p className="text-sm text-gray-400">Fetching leads from storage...</p>
+              </div>
+            ) : contactSubmissions.length ? (
               <div className="grid gap-4">
                 {contactSubmissions.map((submission) => (
                   <article
@@ -371,12 +383,12 @@ export default function AdminPanel() {
                           {submission.email}
                         </a>
                         <a
-                          href={`tel:${submission.phone.replace(/\s/g, "")}`}
+                          href={submission.phone ? `tel:${submission.phone.replace(/\s/g, "")}` : "#"}
                           className="mt-1 block text-sm text-gray-300 transition hover:text-white"
                         >
-                          {submission.phone}
+                          {submission.phone || "No phone provided"}
                         </a>
-                        <p className="mt-1 text-xs text-gray-500">
+                        <p className="mt-1 text-xs text-gray-500" suppressHydrationWarning>
                           {new Date(submission.createdAt).toLocaleString()}
                         </p>
                       </div>
@@ -1411,6 +1423,144 @@ export default function AdminPanel() {
               }
             >
               <Plus size={14} /> Add Step
+            </SecondaryButton>
+          </Section>
+
+          <Section id="pricing" title="Pricing Plans" description="Edit the name, price, and features for each plan." visible={activeSection === "#pricing"}>
+            {draft.pricing.map((plan, index) => (
+              <div key={index} className="rounded-2xl border border-white/10 p-4">
+                <div className="mb-4 flex items-center justify-between">
+                  <p className="text-sm text-gray-300">Plan {index + 1}</p>
+                  <SecondaryButton
+                    onClick={() =>
+                      setDraft({
+                        ...draft,
+                        pricing: draft.pricing.filter((_, i) => i !== index),
+                      })
+                    }
+                  >
+                    <Trash2 size={14} /> Remove
+                  </SecondaryButton>
+                </div>
+                <div className="grid gap-4 md:grid-cols-2">
+                  <Field label="Plan Name">
+                    <Input
+                      value={plan.name}
+                      onChange={(e) =>
+                        setDraft({
+                          ...draft,
+                          pricing: draft.pricing.map((item, i) =>
+                            i === index ? { ...item, name: e.target.value } : item
+                          ),
+                        })
+                      }
+                    />
+                  </Field>
+                  <Field label="Price">
+                    <Input
+                      value={plan.price}
+                      onChange={(e) =>
+                        setDraft({
+                          ...draft,
+                          pricing: draft.pricing.map((item, i) =>
+                            i === index ? { ...item, price: e.target.value } : item
+                          ),
+                        })
+                      }
+                    />
+                  </Field>
+                </div>
+                <Field label="Description">
+                  <Textarea
+                    rows={2}
+                    value={plan.description}
+                    onChange={(e) =>
+                      setDraft({
+                        ...draft,
+                        pricing: draft.pricing.map((item, i) =>
+                          i === index ? { ...item, description: e.target.value } : item
+                        ),
+                      })
+                    }
+                  />
+                </Field>
+                <div className="space-y-3">
+                  <p className="text-xs uppercase tracking-[0.2em] text-gray-500">
+                    Features
+                  </p>
+                  {plan.features.map((feature, fIndex) => (
+                    <div key={fIndex} className="flex gap-3">
+                      <Input
+                        value={feature}
+                        onChange={(e) =>
+                          setDraft({
+                            ...draft,
+                            pricing: draft.pricing.map((item, i) =>
+                              i === index
+                                ? {
+                                    ...item,
+                                    features: item.features.map((f, j) =>
+                                      j === fIndex ? e.target.value : f
+                                    ),
+                                  }
+                                : item
+                            ),
+                          })
+                        }
+                      />
+                      <SecondaryButton
+                        onClick={() =>
+                          setDraft({
+                            ...draft,
+                            pricing: draft.pricing.map((item, i) =>
+                              i === index
+                                ? {
+                                    ...item,
+                                    features: item.features.filter((_, j) => j !== fIndex),
+                                  }
+                                : item
+                            ),
+                          })
+                        }
+                      >
+                        <Trash2 size={14} />
+                      </SecondaryButton>
+                    </div>
+                  ))}
+                  <SecondaryButton
+                    onClick={() =>
+                      setDraft({
+                        ...draft,
+                        pricing: draft.pricing.map((item, i) =>
+                          i === index
+                            ? { ...item, features: [...item.features, "New Feature"] }
+                            : item
+                        ),
+                      })
+                    }
+                  >
+                    <Plus size={14} /> Add Feature
+                  </SecondaryButton>
+                </div>
+              </div>
+            ))}
+            <SecondaryButton
+              onClick={() =>
+                setDraft({
+                  ...draft,
+                  pricing: [
+                    ...draft.pricing,
+                    {
+                      name: "New Plan",
+                      price: "0",
+                      description: "Plan description",
+                      features: ["Feature 1"],
+                    },
+                  ],
+                })
+              }
+            >
+              <Plus size={14} /> Add Pricing Plan
             </SecondaryButton>
           </Section>
 

@@ -16,19 +16,19 @@
 }
 
 :root {
-  --background: #050505;
+  --background: #030612;
   --foreground: #ffffff;
-  --primary: #ffffff;
-  --primary-foreground: #000000;
-  --accent: #111111;
+  --primary: #4B7DFF;
+  --primary-foreground: #ffffff;
+  --accent: #A15BFF;
   --accent-foreground: #ffffff;
   --muted: #888888;
-  --border: #222222;
-  --card: #0a0a0a;
+  --border: #141d33;
+  --card: #060b19;
 }
 
 body {
-  background-color: var(--background);
+  background-color: transparent;
   color: var(--foreground);
   font-family: var(--font-sans), sans-serif;
   overflow-x: hidden;

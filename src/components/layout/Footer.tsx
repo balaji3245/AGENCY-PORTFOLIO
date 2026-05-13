@@ -9,7 +9,7 @@ export default function Footer() {
   const { content } = useSiteContent();
 
   return (
-    <footer className="bg-[#050505] pt-32 pb-10 border-t border-white/5 relative overflow-hidden">
+    <footer className="bg-transparent pt-32 pb-10 border-t border-white/5 relative overflow-hidden">
       <div className="container mx-auto px-6 md:px-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
           <div className="lg:col-span-2">

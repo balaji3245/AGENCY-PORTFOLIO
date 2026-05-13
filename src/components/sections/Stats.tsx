@@ -42,7 +42,7 @@ export default function Stats() {
   const { content } = useSiteContent();
 
   return (
-    <section className="py-24 bg-[#0a0a0a] relative overflow-hidden">
+    <section className="py-24 bg-transparent relative overflow-hidden">
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[300px] bg-gradient-to-r from-blue-900/10 via-purple-900/10 to-blue-900/10 blur-[100px] pointer-events-none" />
       
       <div className="container mx-auto px-6 relative z-10">

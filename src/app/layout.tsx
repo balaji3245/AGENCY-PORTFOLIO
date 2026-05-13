@@ -4,6 +4,7 @@ import "./globals.css";
 import SmoothScroll from "@/components/ui/SmoothScroll";
 import CustomCursor from "@/components/ui/CustomCursor";
 import SiteContentProvider from "@/components/SiteContentProvider";
+import MovingBackground from "@/components/ui/MovingBackground";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const siteUrl = new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://yjdevelopers.com");
@@ -57,8 +58,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="dark" suppressHydrationWarning>
       <body className={`${inter.variable} font-sans antialiased`}>
+        <MovingBackground />
         <div className="noise-bg"></div>
         <CustomCursor />
         <SiteContentProvider>

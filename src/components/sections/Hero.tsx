@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import MagneticButton from "@/components/ui/MagneticButton";
-import Scene from "@/components/3d/Scene";
 import { ArrowRight } from "lucide-react";
 import { useSiteContent } from "@/components/SiteContentProvider";
 
@@ -16,8 +15,6 @@ export default function Hero() {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-      <Scene />
-      
       <div className="container relative z-10 mx-auto px-6 md:px-12 text-center flex flex-col items-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

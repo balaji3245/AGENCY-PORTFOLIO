@@ -8,7 +8,7 @@ export default function Services() {
   const { content } = useSiteContent();
 
   return (
-    <section id="services" className="py-32 relative bg-[#050505]">
+    <section id="services" className="py-32 relative bg-transparent">
       <div className="container mx-auto px-6 md:px-12">
         <div className="flex flex-col md:flex-row justify-between items-end mb-20">
           <div className="max-w-2xl">

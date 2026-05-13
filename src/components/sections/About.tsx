@@ -21,7 +21,7 @@ export default function About() {
   const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
 
   return (
-    <section ref={containerRef} id="about" className="py-32 relative z-10 bg-[#0a0a0a]">
+    <section ref={containerRef} id="about" className="py-32 relative z-10 bg-transparent">
       <div className="container mx-auto px-6 md:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <motion.div style={{ opacity }} className="max-w-xl">
@@ -61,7 +61,7 @@ export default function About() {
               style={{ y: y1 }}
               className="absolute top-0 right-0 w-64 h-80 rounded-2xl overflow-hidden glass border border-white/10"
             >
-              <div className="w-full h-full bg-gradient-to-br from-[#1a1a1a] to-[#050505] p-6 flex flex-col justify-end">
+              <div className="w-full h-full bg-gradient-to-br from-[#1a1a1a] to-[#030612] p-6 flex flex-col justify-end">
                 <div className="w-8 h-8 rounded-full bg-white/10 mb-4" />
                 <div className="h-2 w-24 bg-white/20 rounded mb-2" />
                 <div className="h-2 w-16 bg-white/10 rounded" />

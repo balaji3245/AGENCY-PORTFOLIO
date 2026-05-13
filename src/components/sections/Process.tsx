@@ -7,7 +7,7 @@ export default function Process() {
   const { content } = useSiteContent();
 
   return (
-    <section id="process" className="py-32 bg-[#050505] relative overflow-hidden">
+    <section id="process" className="py-32 bg-transparent relative overflow-hidden">
       <div className="container mx-auto px-6 md:px-12 relative z-10">
         <div className="text-center mb-24">
           <h2 className="text-xs uppercase tracking-widest text-gray-500 mb-4">
@@ -32,7 +32,7 @@ export default function Process() {
                 <div className="absolute left-6 md:left-10 top-16 bottom-[-64px] w-[1px] bg-white/10 group-hover:bg-white/30 transition-colors duration-500" />
               )}
 
-              <div className="w-12 h-12 md:w-20 md:h-20 shrink-0 rounded-full border border-white/20 flex items-center justify-center text-xl md:text-3xl font-bold text-white/50 group-hover:text-white group-hover:border-white transition-all duration-500 bg-[#050505] relative z-10">
+              <div className="w-12 h-12 md:w-20 md:h-20 shrink-0 rounded-full border border-white/20 flex items-center justify-center text-xl md:text-3xl font-bold text-white/50 group-hover:text-white group-hover:border-white transition-all duration-500 bg-transparent relative z-10">
                 {step.num}
               </div>
 

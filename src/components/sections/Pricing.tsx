@@ -9,7 +9,7 @@ export default function Pricing() {
   const { content } = useSiteContent();
 
   return (
-    <section id="pricing" className="py-32 bg-[#0a0a0a]">
+    <section id="pricing" className="py-32 bg-transparent">
       <div className="container mx-auto px-6 md:px-12">
         <div className="text-center mb-20">
           <h2 className="text-xs uppercase tracking-widest text-gray-500 mb-4">

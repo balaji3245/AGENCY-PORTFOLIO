@@ -10,7 +10,7 @@ export default function Portfolio() {
   const { content } = useSiteContent();
 
   return (
-    <section ref={containerRef} id="work" className="relative bg-[#050505]">
+    <section ref={containerRef} id="work" className="relative bg-transparent">
       {/* Sticky Header */}
       <div className="sticky top-0 h-screen w-full flex items-center pt-20 pointer-events-none z-0">
         <div className="container mx-auto px-6 md:px-12">
@@ -25,7 +25,7 @@ export default function Portfolio() {
           return (
             <div key={i} className="min-h-screen flex items-center justify-center py-20 sticky top-0">
               <motion.div 
-                className={`w-full max-w-6xl rounded-3xl overflow-hidden glass-card border border-white/10 bg-gradient-to-br ${project.color} p-8 md:p-12 shadow-2xl backdrop-blur-3xl`}
+                className={`w-full max-w-6xl rounded-3xl overflow-hidden glass-card border border-white/10 bg-black/90 p-8 md:p-12 shadow-2xl`}
                 initial={{ scale: 0.9, opacity: 0 }}
                 whileInView={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}

@@ -8,7 +8,7 @@ export default function Industries() {
   const { content } = useSiteContent();
 
   return (
-    <section className="py-20 bg-[#050505]">
+    <section className="py-20 bg-transparent">
       <div className="container mx-auto px-6 md:px-12 text-center">
         <h2 className="text-xs uppercase tracking-widest text-gray-500 mb-12">
           Industries We Serve
