@@ -2,20 +2,14 @@ import type {
   ContactSubmission,
   ContactSubmissionInput,
 } from "@/lib/contactSubmissions";
-import { readSharedJson, writeSharedJson } from "@/lib/serverStorage";
+import { sendContactSubmissionEmail } from "@/lib/contactEmail";
+import {
+  readContactSubmissions,
+  writeContactSubmissions,
+} from "@/lib/githubContactStorage";
 
 export const dynamic = "force-dynamic";
-
-const submissionsKey = "yj-developers:contact-submissions";
-const submissionsFile = "contact-submissions.json";
-
-async function readSubmissions() {
-  return readSharedJson<ContactSubmission[]>(submissionsKey, submissionsFile, []);
-}
-
-async function writeSubmissions(submissions: ContactSubmission[]) {
-  await writeSharedJson(submissionsKey, submissionsFile, submissions);
-}
+export const runtime = "nodejs";
 
 function cleanSubmission(input: Partial<ContactSubmissionInput>) {
   return {
@@ -27,12 +21,30 @@ function cleanSubmission(input: Partial<ContactSubmissionInput>) {
 }
 
 export async function GET() {
-  const submissions = await readSubmissions();
-  return Response.json({ submissions });
+  try {
+    const submissions = await readContactSubmissions();
+    return Response.json({ submissions });
+  } catch (error) {
+    return Response.json(
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : "Unable to read contact submissions.",
+      },
+      { status: 500 }
+    );
+  }
 }
 
 export async function POST(request: Request) {
-  const input = cleanSubmission(await request.json());
+  let input: ReturnType<typeof cleanSubmission>;
+
+  try {
+    input = cleanSubmission(await request.json());
+  } catch {
+    return Response.json({ error: "Invalid request body." }, { status: 400 });
+  }
 
   if (!input.name || !input.email || !input.phone || !input.message) {
     return Response.json(
@@ -46,27 +58,58 @@ export async function POST(request: Request) {
     id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
     createdAt: new Date().toISOString(),
   };
-  const submissions = [submission, ...(await readSubmissions())];
 
-  await writeSubmissions(submissions);
+  try {
+    const submissions = [submission, ...(await readContactSubmissions())];
+    await writeContactSubmissions(submissions);
+    const email = await sendContactSubmissionEmail(submission).catch(
+      (error) => ({
+        sent: false,
+        reason:
+          error instanceof Error ? error.message : "Unable to send email.",
+      })
+    );
 
-  return Response.json({ submission }, { status: 201 });
+    return Response.json({ submission, email }, { status: 201 });
+  } catch (error) {
+    return Response.json(
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : "Unable to save contact submission.",
+      },
+      { status: 500 }
+    );
+  }
 }
 
 export async function DELETE(request: Request) {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
 
-  if (!id) {
-    await writeSubmissions([]);
+  try {
+    if (!id) {
+      await writeContactSubmissions([]);
+      return Response.json({ ok: true });
+    }
+
+    const submissions = (await readContactSubmissions()).filter(
+      (submission) => submission.id !== id
+    );
+
+    await writeContactSubmissions(submissions);
+
     return Response.json({ ok: true });
+  } catch (error) {
+    return Response.json(
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : "Unable to delete contact submission.",
+      },
+      { status: 500 }
+    );
   }
-
-  const submissions = (await readSubmissions()).filter(
-    (submission) => submission.id !== id
-  );
-
-  await writeSubmissions(submissions);
-
-  return Response.json({ ok: true });
 }

@@ -36,3 +36,21 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Contact form storage and email
+
+Contact form submissions are saved to a JSON file in GitHub and shown in the
+admin panel at `/admin`. In production, add these Vercel environment variables:
+
+```bash
+GITHUB_TOKEN=github_pat_or_fine_grained_token
+GITHUB_REPO=balaji3245/AGENCY-PORTFOLIO
+GITHUB_CONTACTS_PATH=data/contact-submissions.json
+GITHUB_BRANCH=main
+RESEND_API_KEY=resend_api_key
+CONTACT_TO_EMAIL=your-email@example.com
+CONTACT_FROM_EMAIL="YJ DEVELOPERS <noreply@your-domain.com>"
+```
+
+The GitHub token needs contents read/write access to this repository. For email,
+verify your sending domain in Resend before using a custom `CONTACT_FROM_EMAIL`.
