@@ -14,7 +14,7 @@ export default function LoginPage({
     const correctPassword = process.env.ADMIN_PASSWORD;
 
     if (correctPassword && password === correctPassword) {
-      cookies().set("admin_session", "authenticated", {
+      (await cookies()).set("admin_session", "authenticated", {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
