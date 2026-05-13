@@ -118,7 +118,7 @@ export const defaultSiteContent: SiteContent = {
     title: "YJ DEVELOPERS builds",
     highlight: "brands that perform.",
     description:
-      "We craft creative campaigns, conversion-ready websites, memorable brand identities, and digital systems that help businesses look sharp and grow faster.",
+      "Specializing in Brand Design, Web Development, Digital Marketing, and Cloud Software. Four core pillars to scale your business with premium digital solutions.",
     primaryCta: "View Our Work",
     secondaryCta: "Book a Call",
   },
@@ -127,8 +127,8 @@ export const defaultSiteContent: SiteContent = {
     title: "We mix strategy, design and code for growing brands.",
     highlightedWord: "strategy, design and code",
     paragraphs: [
-      "YJ DEVELOPERS is a multi-disciplinary agency for businesses that need more than a basic website. We plan the brand, shape the story, design the interface, and build the platform.",
-      "From digital agency retainers and creative direction to web development and branding studio work, our team helps clients launch with clarity and keep improving after launch.",
+      "YJ DEVELOPERS is a specialized digital agency focused on four core pillars: Branding, Development, Marketing, and Software Solutions. We don't just build websites; we create scalable ecosystems that drive business growth.",
+      "Whether you need a striking visual identity, a high-performance web platform, or complex cloud-based software, our team delivers premium results that help your brand stand out and scale effectively.",
     ],
     stats: [
       { value: "45+", label: "Projects Planned" },
@@ -143,58 +143,28 @@ export const defaultSiteContent: SiteContent = {
       "Choose one focused service or bring us in as your complete digital partner from brand strategy to launch.",
     items: [
       {
-        title: "Digital Agency Growth",
+        title: "Brand Strategy & Design",
         description:
-          "Campaign landing pages, funnels, analytics, automation, and conversion improvements for everyday business growth.",
-        icon: "megaphone",
-      },
-      {
-        title: "Creative Agency Campaigns",
-        description:
-          "Scroll-stopping visuals, motion concepts, social creatives, launch assets, and polished digital storytelling.",
-        icon: "palette",
-      },
-      {
-        title: "Web Development Agency",
-        description:
-          "Fast websites, dashboards, ecommerce stores, and web apps built with scalable React and Next.js foundations.",
-        icon: "monitor",
-      },
-      {
-        title: "Branding Studio",
-        description:
-          "Logos, typography, color systems, brand guidelines, voice, and full identity kits for confident launches.",
+          "We create iconic identities, logos, and visual systems that make your brand unforgettable and market-ready.",
         icon: "penTool",
       },
       {
-        title: "Landing Pages",
+        title: "Web & App Development",
         description:
-          "High-impact product, service, and offer pages with responsive layouts, strong copy, and measurable CTAs.",
-        icon: "globe",
+          "Fast, responsive, and conversion-ready digital platforms built with modern technologies like React and Next.js.",
+        icon: "monitor",
       },
       {
-        title: "Mobile Experiences",
+        title: "Digital Marketing & SEO",
         description:
-          "Responsive, mobile-first interfaces that keep your brand sharp on every screen size.",
-        icon: "smartphone",
+          "Data-driven campaigns and technical SEO strategies designed to scale your reach and maximize ROI.",
+        icon: "megaphone",
       },
       {
-        title: "SEO & Performance",
+        title: "Cloud & Software Solutions",
         description:
-          "Technical SEO, speed tuning, metadata, clean structure, and reporting so your website is discoverable.",
-        icon: "search",
-      },
-      {
-        title: "Backend & Integrations",
-        description:
-          "APIs, private dashboards, CMS setup, forms, payments, and integrations that make your website useful.",
+          "Scalable backend systems, enterprise dashboards, and custom SaaS platforms built for complex business needs.",
         icon: "server",
-      },
-      {
-        title: "Ecommerce Solutions",
-        description:
-          "Product catalogs, checkout flows, payment gateway setup, inventory flows, and brand-focused store design.",
-        icon: "zap",
       },
     ],
   },
@@ -219,59 +189,35 @@ export const defaultSiteContent: SiteContent = {
     items: [
       {
         title: "UrbanEdge Brand Launch",
-        category: "Branding Studio",
+        category: "Brand Strategy & Design",
         description:
           "A complete identity system with logo direction, visual language, launch creatives, and a conversion-focused website for a modern local brand.",
-        tech: ["Brand Strategy", "Identity", "Next.js", "SEO"],
+        tech: ["Brand Strategy", "Identity", "Logo Design"],
         color: "from-blue-900/40 to-black",
       },
       {
-        title: "DineFlow Restaurant Suite",
-        category: "Web Development",
+        title: "DineFlow Platform",
+        category: "Web & App Development",
         description:
-          "A restaurant website with menu management, reservation flows, WhatsApp ordering, local SEO, and campaign-ready landing pages.",
-        tech: ["React", "CMS", "Analytics", "Payments"],
+          "A comprehensive restaurant management platform with real-time reservation flows, menu control, and mobile-first ordering.",
+        tech: ["Next.js", "CMS", "Payments"],
         color: "from-orange-900/40 to-black",
       },
       {
-        title: "Zenith Ecommerce Experience",
-        category: "Ecommerce Solutions",
+        title: "GrowthLab Campaign",
+        category: "Digital Marketing & SEO",
         description:
-          "High-performance store with custom product filtering, checkout optimization, inventory sync, and SEO-ready architecture for a growing retail brand.",
-        tech: ["Next.js", "Stripe", "PostgreSQL", "Tailwind"],
-        color: "from-purple-900/40 to-black",
-      },
-      {
-        title: "Pulse Mobile App Launch",
-        category: "Mobile Experiences",
-        description:
-          "A mobile-first progressive web app with seamless transitions, offline support, push notifications, and a polished user interface for real-time tracking.",
-        tech: ["PWA", "Framer Motion", "TypeScript", "Node.js"],
-        color: "from-fuchsia-900/40 to-black",
-      },
-      {
-        title: "GrowthLab SEO Funnel",
-        category: "SEO & Landing Pages",
-        description:
-          "Technical SEO overhaul combined with high-converting landing pages that increased organic traffic by 150% and lead conversion by 40%.",
-        tech: ["Technical SEO", "Copywriting", "AB Testing", "Analytics"],
+          "Full-funnel marketing strategy and technical SEO overhaul that increased client conversion rates by 150% in 6 months.",
+        tech: ["SEO", "Performance Marketing", "Analytics"],
         color: "from-emerald-900/40 to-black",
       },
       {
         title: "Insight Enterprise Dashboard",
-        category: "Backend & Integrations",
+        category: "Cloud & Software Solutions",
         description:
-          "Internal data visualization tool with custom API integrations, real-time analytics, user role management, and automated reporting systems.",
-        tech: ["GraphQL", "React Query", "AWS", "Dashboard"],
+          "A custom enterprise dashboard for data visualization, user role management, and real-time backend synchronization.",
+        tech: ["Software Architecture", "GraphQL", "SaaS"],
         color: "from-cyan-900/40 to-black",
-      },
-      {
-        title: "ScaleUp Creative Campaign",
-        category: "Digital Agency",
-        description:
-          "A digital campaign system with ad creatives, landing pages, lead capture forms, dashboards, and weekly optimization reporting.",
-        tech: ["Creative Direction", "Funnels", "CRM", "Reporting"],
-        color: "from-zinc-800/40 to-black",
       },
     ],
   },
