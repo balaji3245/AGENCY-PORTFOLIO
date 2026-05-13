@@ -1,30 +1,20 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
-import path from "node:path";
 import type {
   ContactSubmission,
   ContactSubmissionInput,
 } from "@/lib/contactSubmissions";
+import { readSharedJson, writeSharedJson } from "@/lib/serverStorage";
 
 export const dynamic = "force-dynamic";
 
-const submissionsDirectory = path.join(process.cwd(), ".data");
-const submissionsFile = path.join(
-  submissionsDirectory,
-  "contact-submissions.json"
-);
+const submissionsKey = "yj-developers:contact-submissions";
+const submissionsFile = "contact-submissions.json";
 
 async function readSubmissions() {
-  try {
-    const fileContent = await readFile(submissionsFile, "utf8");
-    return JSON.parse(fileContent) as ContactSubmission[];
-  } catch {
-    return [];
-  }
+  return readSharedJson<ContactSubmission[]>(submissionsKey, submissionsFile, []);
 }
 
 async function writeSubmissions(submissions: ContactSubmission[]) {
-  await mkdir(submissionsDirectory, { recursive: true });
-  await writeFile(submissionsFile, JSON.stringify(submissions, null, 2));
+  await writeSharedJson(submissionsKey, submissionsFile, submissions);
 }
 
 function cleanSubmission(input: Partial<ContactSubmissionInput>) {

@@ -4,14 +4,11 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
-  useSyncExternalStore,
+  useState,
 } from "react";
-import {
-  defaultSiteContent,
-  SITE_CONTENT_STORAGE_KEY,
-  type SiteContent,
-} from "@/lib/siteContent";
+import { defaultSiteContent, type SiteContent } from "@/lib/siteContent";
 
 type SiteContentContextValue = {
   content: SiteContent;
@@ -21,51 +18,51 @@ type SiteContentContextValue = {
 
 const SiteContentContext = createContext<SiteContentContextValue | null>(null);
 
-function readStoredContent() {
-  return window.localStorage.getItem(SITE_CONTENT_STORAGE_KEY) ?? "";
-}
-
-function notifyContentSubscribers() {
-  window.dispatchEvent(new Event("site-content-change"));
-}
-
 export default function SiteContentProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const subscribe = useCallback((listener: () => void) => {
-    window.addEventListener("storage", listener);
-    window.addEventListener("site-content-change", listener);
-    return () => {
-      window.removeEventListener("storage", listener);
-      window.removeEventListener("site-content-change", listener);
-    };
+  const [content, setContent] = useState<SiteContent>(defaultSiteContent);
+
+  useEffect(() => {
+    const abortController = new AbortController();
+
+    async function loadContent() {
+      try {
+        const response = await fetch("/api/site-content", {
+          cache: "no-store",
+          signal: abortController.signal,
+        });
+
+        if (!response.ok) return;
+
+        const data = (await response.json()) as { content: SiteContent };
+        setContent(data.content);
+      } catch {
+        if (!abortController.signal.aborted) {
+          setContent(defaultSiteContent);
+        }
+      }
+    }
+
+    loadContent();
+
+    return () => abortController.abort();
   }, []);
 
-  const storedContent = useSyncExternalStore(subscribe, readStoredContent, () => "");
-
-  const content = useMemo(() => {
-    if (!storedContent) return defaultSiteContent;
-    try {
-      return JSON.parse(storedContent) as SiteContent;
-    } catch {
-      window.localStorage.removeItem(SITE_CONTENT_STORAGE_KEY);
-      return defaultSiteContent;
-    }
-  }, [storedContent]);
-
   const saveContent = useCallback((nextContent: SiteContent) => {
-    window.localStorage.setItem(
-      SITE_CONTENT_STORAGE_KEY,
-      JSON.stringify(nextContent)
-    );
-    notifyContentSubscribers();
+    setContent(nextContent);
+    void fetch("/api/site-content", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(nextContent),
+    });
   }, []);
 
   const resetContent = useCallback(() => {
-    window.localStorage.removeItem(SITE_CONTENT_STORAGE_KEY);
-    notifyContentSubscribers();
+    setContent(defaultSiteContent);
+    void fetch("/api/site-content", { method: "DELETE" });
   }, []);
 
   const value = useMemo(
