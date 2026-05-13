@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { useSiteContent } from "@/components/SiteContentProvider";
+import BrandLogo from "@/components/layout/BrandLogo";
 
 export default function Footer() {
   const { content } = useSiteContent();
@@ -14,10 +15,10 @@ export default function Footer() {
           <div className="lg:col-span-2">
             <Link
               href="/"
-              className="text-3xl font-bold tracking-tighter mb-6 block"
+              className="mb-6 inline-flex"
+              aria-label="YJ Developers home"
             >
-              {content.brand.name}
-              <span className="text-gray-500">.</span>
+              <BrandLogo imageClassName="h-16" />
             </Link>
             <p className="text-gray-400 font-light max-w-sm mb-8">
               {content.brand.footerDescription}

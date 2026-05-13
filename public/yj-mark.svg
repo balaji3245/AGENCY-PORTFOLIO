@@ -1,0 +1,21 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="128" height="128" rx="30" fill="#050505"/>
+  <path d="M20 33H46L65 61L60 85H36L50 72L20 33Z" fill="white"/>
+  <path d="M63 67L94 33H119L76 85H50L63 67Z" fill="white"/>
+  <path d="M94 33H121L114 62C111 77 100 85 83 85H53L71 67H84C93 67 98 63 100 55L104 35L94 33Z" fill="url(#jGradient)"/>
+  <rect x="88" y="22" width="12" height="12" fill="#4B7DFF"/>
+  <rect x="104" y="15" width="10" height="10" fill="#4B7DFF"/>
+  <rect x="106" y="40" width="10" height="10" fill="#4B7DFF"/>
+  <path d="M17 93H111" stroke="url(#accentGradient)" stroke-width="5" stroke-linecap="round"/>
+  <defs>
+    <linearGradient id="jGradient" x1="69" y1="31" x2="116" y2="85" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#65A0FF"/>
+      <stop offset="0.55" stop-color="#345DFF"/>
+      <stop offset="1" stop-color="#A15BFF"/>
+    </linearGradient>
+    <linearGradient id="accentGradient" x1="17" y1="93" x2="111" y2="93" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#327CFF"/>
+      <stop offset="1" stop-color="#B965FF"/>
+    </linearGradient>
+  </defs>
+</svg>

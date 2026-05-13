@@ -31,6 +31,9 @@ yarn-error.log*
 .pnpm-debug.log*
 dev-server*.log
 
+# local contact form storage
+/.data/
+
 # env files (can opt-in for committing if needed)
 .env*
 

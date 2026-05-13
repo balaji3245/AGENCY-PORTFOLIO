@@ -4,12 +4,11 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import MagneticButton from "@/components/ui/MagneticButton";
-import { useSiteContent } from "@/components/SiteContentProvider";
+import BrandLogo from "@/components/layout/BrandLogo";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { content } = useSiteContent();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -43,8 +42,8 @@ export default function Navbar() {
         }`}
       >
         <div className="container mx-auto px-6 md:px-12 flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold tracking-tighter">
-            {content.brand.name}<span className="text-muted">.</span>
+          <Link href="/" aria-label="YJ Developers home">
+            <BrandLogo compact imageClassName="h-11 w-11" />
           </Link>
 
           {/* Desktop Nav */}

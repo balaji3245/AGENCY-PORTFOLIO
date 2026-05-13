@@ -1,6 +1,6 @@
 "use client";
 
-import type { FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { motion } from "framer-motion";
 import { Mail, Phone, Send } from "lucide-react";
 import { useSiteContent } from "@/components/SiteContentProvider";
@@ -8,18 +8,39 @@ import MagneticButton from "@/components/ui/MagneticButton";
 
 export default function Contact() {
   const { content } = useSiteContent();
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const [status, setStatus] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
+    const form = event.currentTarget;
+    const formData = new FormData(form);
     const name = String(formData.get("name") ?? "").trim();
     const email = String(formData.get("email") ?? "").trim();
+    const phone = String(formData.get("phone") ?? "").trim();
     const message = String(formData.get("message") ?? "").trim();
-    const subject = encodeURIComponent(`Project inquiry from ${name || "website"}`);
-    const body = encodeURIComponent(
-      [`Name: ${name}`, `Email: ${email}`, "", message].join("\n")
-    );
 
-    window.location.href = `mailto:${content.brand.email}?subject=${subject}&body=${body}`;
+    setIsSubmitting(true);
+    setStatus("");
+
+    try {
+      const response = await fetch("/api/contact-submissions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, phone, message }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Unable to send message.");
+      }
+
+      form.reset();
+      setStatus("Message received. We will get back to you soon.");
+    } catch {
+      setStatus("Message could not be sent. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -99,6 +120,19 @@ export default function Contact() {
                 />
               </div>
               <div className="flex flex-col gap-2">
+                <label htmlFor="contact-phone" className="text-xs uppercase tracking-widest text-gray-500">
+                  Mobile No
+                </label>
+                <input
+                  id="contact-phone"
+                  name="phone"
+                  type="tel"
+                  required
+                  className="w-full bg-transparent border-b border-white/20 py-3 text-lg focus:outline-none focus:border-white transition-colors"
+                  placeholder="+91 98765 43210"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
                 <label htmlFor="contact-message" className="text-xs uppercase tracking-widest text-gray-500">
                   Message
                 </label>
@@ -111,9 +145,18 @@ export default function Contact() {
                   placeholder="Tell us about your project..."
                 />
               </div>
-              <MagneticButton type="submit" className="self-start mt-4 py-4 px-8">
-                Send Message <Send size={16} />
+              <MagneticButton
+                type="submit"
+                className="self-start mt-4 py-4 px-8"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Sending..." : "Send Message"} <Send size={16} />
               </MagneticButton>
+              {status ? (
+                <p className="text-sm text-emerald-300" role="status">
+                  {status}
+                </p>
+              ) : null}
             </form>
           </motion.div>
         </div>

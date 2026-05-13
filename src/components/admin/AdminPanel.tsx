@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Save, RotateCcw, Plus, Trash2, ExternalLink } from "lucide-react";
 import {
   defaultSiteContent,
@@ -9,6 +9,8 @@ import {
   type SiteContent,
 } from "@/lib/siteContent";
 import { useSiteContent } from "@/components/SiteContentProvider";
+import type { ContactSubmission } from "@/lib/contactSubmissions";
+import BrandLogo from "@/components/layout/BrandLogo";
 
 const iconOptions: IconName[] = [
   "megaphone",
@@ -31,21 +33,47 @@ const iconOptions: IconName[] = [
   "sparkles",
 ];
 
+const adminNavigation = [
+  { href: "#leads", label: "Leads", hint: "Form submissions" },
+  { href: "#brand", label: "Brand", hint: "Name, email, phone" },
+  { href: "#hero", label: "Hero", hint: "First screen copy" },
+  { href: "#about", label: "About", hint: "Intro and proof points" },
+  { href: "#services", label: "Services", hint: "Service cards" },
+  { href: "#tech-stack", label: "Tech", hint: "Tools and platforms" },
+  { href: "#portfolio", label: "Projects", hint: "Case study cards" },
+  { href: "#stats", label: "Stats", hint: "Number counters" },
+  { href: "#team", label: "Team", hint: "Capability cards" },
+  { href: "#testimonials", label: "Reviews", hint: "Client quotes" },
+  { href: "#process", label: "Process", hint: "Workflow steps" },
+  { href: "#industries", label: "Industries", hint: "Business categories" },
+  { href: "#policies", label: "Policies", hint: "Terms and delivery" },
+  { href: "#contact-vision", label: "Contact", hint: "CTA and vision" },
+];
+
 function cloneContent(content: SiteContent) {
   return JSON.parse(JSON.stringify(content)) as SiteContent;
 }
 
 function Section({
+  id,
   title,
   description,
+  visible,
   children,
 }: {
+  id: string;
   title: string;
   description?: string;
+  visible: boolean;
   children: React.ReactNode;
 }) {
+  if (!visible) return null;
+
   return (
-    <section className="rounded-[24px] border border-white/10 bg-black/30 p-6 md:p-8">
+    <section
+      id={id}
+      className="scroll-mt-28 rounded-[24px] border border-white/10 bg-black/30 p-6 md:p-8"
+    >
       <div className="mb-6">
         <h2 className="text-2xl font-semibold">{title}</h2>
         {description ? (
@@ -128,6 +156,27 @@ export default function AdminPanel() {
   const { content, saveContent, resetContent } = useSiteContent();
   const [draft, setDraft] = useState<SiteContent>(() => cloneContent(content));
   const [status, setStatus] = useState("Unsaved changes can be edited here.");
+  const [activeSection, setActiveSection] = useState("#leads");
+  const [contactSubmissions, setContactSubmissions] = useState<ContactSubmission[]>(
+    []
+  );
+
+  const refreshContactSubmissions = useCallback(async () => {
+    try {
+      const response = await fetch("/api/contact-submissions", {
+        cache: "no-store",
+      });
+
+      if (!response.ok) return;
+
+      const data = (await response.json()) as {
+        submissions: ContactSubmission[];
+      };
+      setContactSubmissions(data.submissions);
+    } catch {
+      setContactSubmissions([]);
+    }
+  }, []);
 
   useEffect(() => {
     const syncDraft = window.setTimeout(() => {
@@ -136,6 +185,16 @@ export default function AdminPanel() {
 
     return () => window.clearTimeout(syncDraft);
   }, [content]);
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(refreshContactSubmissions, 0);
+    const intervalId = window.setInterval(refreshContactSubmissions, 5000);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+      window.clearInterval(intervalId);
+    };
+  }, [refreshContactSubmissions]);
 
   const save = () => {
     if (!draft.brand.name.trim() || !draft.brand.email.trim()) {
@@ -161,11 +220,36 @@ export default function AdminPanel() {
     setStatus("Content reset to default YJ DEVELOPERS data.");
   };
 
+  const goToSection = (sectionId: string) => {
+    setActiveSection(sectionId);
+
+    window.requestAnimationFrame(() => {
+      document
+        .querySelector(sectionId)
+        ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  };
+
+  const removeContactSubmission = async (id: string) => {
+    await fetch(`/api/contact-submissions?id=${encodeURIComponent(id)}`, {
+      method: "DELETE",
+    });
+    await refreshContactSubmissions();
+    setStatus("Lead deleted from admin panel.");
+  };
+
+  const removeAllContactSubmissions = async () => {
+    await fetch("/api/contact-submissions", { method: "DELETE" });
+    await refreshContactSubmissions();
+    setStatus("All leads cleared from admin panel.");
+  };
+
   return (
-    <div className="admin-panel min-h-screen bg-[radial-gradient(circle_at_top,_rgba(78,91,135,0.25),_transparent_35%),linear-gradient(180deg,_#060606_0%,_#0b0b0d_100%)] px-4 py-24 text-white md:px-8">
+    <div className="admin-panel min-h-dvh bg-[radial-gradient(circle_at_top,_rgba(78,91,135,0.25),_transparent_35%),linear-gradient(180deg,_#060606_0%,_#0b0b0d_100%)] px-4 py-8 text-white md:px-8">
       <div className="mx-auto max-w-7xl">
         <div className="mb-8 flex flex-col gap-6 rounded-[28px] border border-white/10 bg-black/30 p-6 shadow-2xl shadow-black/20 md:flex-row md:items-end md:justify-between">
           <div className="max-w-2xl">
+            <BrandLogo imageClassName="mb-5 h-16" />
             <p className="text-xs uppercase tracking-[0.25em] text-cyan-300/80">
               YJ DEVELOPERS Admin
             </p>
@@ -173,9 +257,9 @@ export default function AdminPanel() {
               Portfolio control panel
             </h1>
             <p className="mt-3 text-sm text-gray-400 md:text-base">
-              Brand copy, services, projects, pricing, team, policies, and contact
-              details yahin se control honge. Save karte hi homepage updated content
-              use karega.
+              Website ke public content ko section-wise edit karo. Left menu se
+              area choose karo, changes karne ke baad Save Changes dabao, aur
+              homepage turant updated content use karega.
             </p>
           </div>
 
@@ -207,8 +291,115 @@ export default function AdminPanel() {
           {status}
         </div>
 
-        <div className="grid gap-6">
-          <Section title="Brand" description="Global business details used across navbar, footer, and contact section.">
+        <div className="grid gap-6 lg:grid-cols-[260px_1fr] lg:items-start">
+          <aside className="rounded-[24px] border border-white/10 bg-black/30 p-4 lg:sticky lg:top-8 lg:max-h-[calc(100dvh-4rem)] lg:overflow-y-auto">
+            <p className="px-3 pb-3 text-xs font-medium uppercase tracking-[0.22em] text-gray-500">
+              Edit Sections
+            </p>
+            <nav className="grid gap-1 pr-1">
+              {adminNavigation.map((item) => (
+                <button
+                  type="button"
+                  key={item.href}
+                  onClick={() => goToSection(item.href)}
+                  className={`group rounded-2xl px-3 py-3 text-left transition ${
+                    activeSection === item.href
+                      ? "bg-white text-black"
+                      : "hover:bg-white/8"
+                  }`}
+                >
+                  <span
+                    className={`block text-sm font-medium ${
+                      activeSection === item.href ? "text-black" : "text-white"
+                    }`}
+                  >
+                    {item.label}
+                  </span>
+                  <span
+                    className={`mt-0.5 block text-xs ${
+                      activeSection === item.href
+                        ? "text-black/60"
+                        : "text-gray-500 group-hover:text-gray-400"
+                    }`}
+                  >
+                    {item.hint}
+                  </span>
+                </button>
+              ))}
+            </nav>
+            <div className="mt-4 rounded-2xl border border-cyan-400/20 bg-cyan-400/10 p-3 text-xs leading-5 text-cyan-50">
+              Tip: pehle ek section edit karo, phir Save Changes. Reset poora
+              content default par le aayega.
+            </div>
+          </aside>
+
+          <div className="grid gap-6">
+          <Section id="leads" title="Leads" description="Contact form submissions from the website." visible={activeSection === "#leads"}>
+            <div className="flex flex-col gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4 md:flex-row md:items-center md:justify-between">
+              <div>
+                <p className="text-lg font-medium">
+                  {contactSubmissions.length} submission
+                  {contactSubmissions.length === 1 ? "" : "s"}
+                </p>
+                <p className="mt-1 text-sm text-gray-400">
+                  Newest messages appear first.
+                </p>
+              </div>
+              <SecondaryButton
+                onClick={removeAllContactSubmissions}
+                disabled={!contactSubmissions.length}
+                className={!contactSubmissions.length ? "cursor-not-allowed opacity-50" : ""}
+              >
+                <Trash2 size={14} /> Clear All
+              </SecondaryButton>
+            </div>
+
+            {contactSubmissions.length ? (
+              <div className="grid gap-4">
+                {contactSubmissions.map((submission) => (
+                  <article
+                    key={submission.id}
+                    className="rounded-2xl border border-white/10 bg-white/[0.03] p-4"
+                  >
+                    <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+                      <div>
+                        <h3 className="text-lg font-semibold">{submission.name}</h3>
+                        <a
+                          href={`mailto:${submission.email}`}
+                          className="text-sm text-cyan-300 transition hover:text-cyan-100"
+                        >
+                          {submission.email}
+                        </a>
+                        <a
+                          href={`tel:${submission.phone.replace(/\s/g, "")}`}
+                          className="mt-1 block text-sm text-gray-300 transition hover:text-white"
+                        >
+                          {submission.phone}
+                        </a>
+                        <p className="mt-1 text-xs text-gray-500">
+                          {new Date(submission.createdAt).toLocaleString()}
+                        </p>
+                      </div>
+                      <SecondaryButton
+                        onClick={() => removeContactSubmission(submission.id)}
+                      >
+                        <Trash2 size={14} /> Delete
+                      </SecondaryButton>
+                    </div>
+                    <p className="whitespace-pre-wrap rounded-2xl border border-white/10 bg-black/20 p-4 text-sm leading-6 text-gray-300">
+                      {submission.message}
+                    </p>
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <div className="rounded-2xl border border-dashed border-white/15 p-8 text-center text-sm text-gray-400">
+                No contact form submissions yet.
+              </div>
+            )}
+          </Section>
+
+          <Section id="brand" title="Brand" description="Navbar, footer, email, phone, and global business details." visible={activeSection === "#brand"}>
             <div className="grid gap-4 md:grid-cols-2">
               <Field label="Agency Name">
                 <Input
@@ -261,7 +452,7 @@ export default function AdminPanel() {
             </Field>
           </Section>
 
-          <Section title="Hero">
+          <Section id="hero" title="Hero" description="Homepage ka first screen: badge, headline, description, and buttons." visible={activeSection === "#hero"}>
             <div className="grid gap-4 md:grid-cols-2">
               <Field label="Badge">
                 <Input
@@ -327,7 +518,7 @@ export default function AdminPanel() {
             </Field>
           </Section>
 
-          <Section title="About">
+          <Section id="about" title="About" description="Business intro, highlighted words, proof points, and about paragraphs." visible={activeSection === "#about"}>
             <div className="grid gap-4 md:grid-cols-2">
               <Field label="Eyebrow">
                 <Input
@@ -483,7 +674,7 @@ export default function AdminPanel() {
             </SecondaryButton>
           </Section>
 
-          <Section title="Services">
+          <Section id="services" title="Services" description="Public service cards with icon, title, and short description." visible={activeSection === "#services"}>
             <div className="grid gap-4 md:grid-cols-2">
               <Field label="Eyebrow">
                 <Input
@@ -637,7 +828,7 @@ export default function AdminPanel() {
             </SecondaryButton>
           </Section>
 
-          <Section title="Tech Stack">
+          <Section id="tech-stack" title="Tech Stack" description="Technologies and platforms shown in the moving stack section." visible={activeSection === "#tech-stack"}>
             <Field label="Eyebrow">
               <Input
                 value={draft.techStack.eyebrow}
@@ -695,7 +886,7 @@ export default function AdminPanel() {
             </SecondaryButton>
           </Section>
 
-          <Section title="Portfolio Projects">
+          <Section id="portfolio" title="Portfolio Projects" description="Case study cards shown in the work section." visible={activeSection === "#portfolio"}>
             {draft.portfolio.items.map((project, index) => (
               <div key={index} className="rounded-2xl border border-white/10 p-4">
                 <div className="mb-4 flex items-center justify-between">
@@ -878,7 +1069,7 @@ export default function AdminPanel() {
             </SecondaryButton>
           </Section>
 
-          <Section title="Stats">
+          <Section id="stats" title="Stats" description="Animated number counters used as quick proof points." visible={activeSection === "#stats"}>
             {draft.stats.map((stat, index) => (
               <div key={index} className="grid gap-4 rounded-2xl border border-white/10 p-4 md:grid-cols-[1fr_1fr_140px_auto]">
                 <Input
@@ -940,7 +1131,7 @@ export default function AdminPanel() {
             </SecondaryButton>
           </Section>
 
-          <Section title="Team">
+          <Section id="team" title="Team Capabilities" description="Capability cards. No employee photos are required here." visible={activeSection === "#team"}>
             <div className="grid gap-4 md:grid-cols-2">
               <Field label="Eyebrow">
                 <Input
@@ -1069,7 +1260,7 @@ export default function AdminPanel() {
             </SecondaryButton>
           </Section>
 
-          <Section title="Testimonials">
+          <Section id="testimonials" title="Testimonials" description="Client quotes and review cards." visible={activeSection === "#testimonials"}>
             {draft.testimonials.map((testimonial, index) => (
               <div key={index} className="rounded-2xl border border-white/10 p-4">
                 <div className="mb-4 flex items-center justify-between">
@@ -1148,7 +1339,7 @@ export default function AdminPanel() {
             </SecondaryButton>
           </Section>
 
-          <Section title="Process">
+          <Section id="process" title="Process" description="Step-by-step delivery workflow shown on the homepage." visible={activeSection === "#process"}>
             {draft.process.map((step, index) => (
               <div key={index} className="rounded-2xl border border-white/10 p-4">
                 <div className="mb-4 flex items-center justify-between">
@@ -1223,166 +1414,7 @@ export default function AdminPanel() {
             </SecondaryButton>
           </Section>
 
-          <Section title="Pricing">
-            {draft.pricing.map((plan, index) => (
-              <div key={index} className="rounded-2xl border border-white/10 p-4">
-                <div className="mb-4 flex items-center justify-between">
-                  <p className="text-sm text-gray-300">Plan {index + 1}</p>
-                  <SecondaryButton
-                    onClick={() =>
-                      setDraft({
-                        ...draft,
-                        pricing: draft.pricing.filter((_, i) => i !== index),
-                      })
-                    }
-                  >
-                    <Trash2 size={14} /> Remove
-                  </SecondaryButton>
-                </div>
-                <div className="grid gap-4 md:grid-cols-2">
-                  <Field label="Plan Name">
-                    <Input
-                      value={plan.name}
-                      onChange={(e) =>
-                        setDraft({
-                          ...draft,
-                          pricing: draft.pricing.map((item, i) =>
-                            i === index ? { ...item, name: e.target.value } : item
-                          ),
-                        })
-                      }
-                    />
-                  </Field>
-                  <Field label="Price">
-                    <Input
-                      value={plan.price}
-                      onChange={(e) =>
-                        setDraft({
-                          ...draft,
-                          pricing: draft.pricing.map((item, i) =>
-                            i === index ? { ...item, price: e.target.value } : item
-                          ),
-                        })
-                      }
-                    />
-                  </Field>
-                </div>
-                <Field label="Description">
-                  <Textarea
-                    rows={3}
-                    value={plan.description}
-                    onChange={(e) =>
-                      setDraft({
-                        ...draft,
-                        pricing: draft.pricing.map((item, i) =>
-                          i === index
-                            ? { ...item, description: e.target.value }
-                            : item
-                        ),
-                      })
-                    }
-                  />
-                </Field>
-                <label className="flex items-center gap-3 text-sm text-gray-300">
-                  <input
-                    type="checkbox"
-                    checked={Boolean(plan.recommended)}
-                    onChange={(e) =>
-                      setDraft({
-                        ...draft,
-                        pricing: draft.pricing.map((item, i) =>
-                          i === index
-                            ? { ...item, recommended: e.target.checked }
-                            : item
-                        ),
-                      })
-                    }
-                  />
-                  Mark as recommended
-                </label>
-                <div className="space-y-3">
-                  <p className="text-xs uppercase tracking-[0.2em] text-gray-500">
-                    Features
-                  </p>
-                  {plan.features.map((feature, featureIndex) => (
-                    <div key={featureIndex} className="flex gap-3">
-                      <Input
-                        value={feature}
-                        onChange={(e) =>
-                          setDraft({
-                            ...draft,
-                            pricing: draft.pricing.map((item, i) =>
-                              i === index
-                                ? {
-                                    ...item,
-                                    features: item.features.map((line, j) =>
-                                      j === featureIndex ? e.target.value : line
-                                    ),
-                                  }
-                                : item
-                            ),
-                          })
-                        }
-                      />
-                      <SecondaryButton
-                        onClick={() =>
-                          setDraft({
-                            ...draft,
-                            pricing: draft.pricing.map((item, i) =>
-                              i === index
-                                ? {
-                                    ...item,
-                                    features: item.features.filter(
-                                      (_, j) => j !== featureIndex
-                                    ),
-                                  }
-                                : item
-                            ),
-                          })
-                        }
-                      >
-                        <Trash2 size={14} />
-                      </SecondaryButton>
-                    </div>
-                  ))}
-                  <SecondaryButton
-                    onClick={() =>
-                      setDraft({
-                        ...draft,
-                        pricing: draft.pricing.map((item, i) =>
-                          i === index
-                            ? { ...item, features: [...item.features, "New Feature"] }
-                            : item
-                        ),
-                      })
-                    }
-                  >
-                    <Plus size={14} /> Add Feature
-                  </SecondaryButton>
-                </div>
-              </div>
-            ))}
-            <SecondaryButton
-              onClick={() =>
-                setDraft({
-                  ...draft,
-                  pricing: [
-                    ...draft.pricing,
-                    {
-                      name: "New Plan",
-                      price: "INR 0",
-                      description: "Plan description",
-                      features: ["Feature"],
-                    },
-                  ],
-                })
-              }
-            >
-              <Plus size={14} /> Add Plan
-            </SecondaryButton>
-          </Section>
-
-          <Section title="Industries">
+          <Section id="industries" title="Industries" description="Industry cards shown for the types of clients you serve." visible={activeSection === "#industries"}>
             {draft.industries.map((industry, index) => (
               <div key={index} className="grid gap-4 rounded-2xl border border-white/10 p-4 md:grid-cols-[1fr_220px_auto]">
                 <Input
@@ -1442,7 +1474,7 @@ export default function AdminPanel() {
             </SecondaryButton>
           </Section>
 
-          <Section title="Policies">
+          <Section id="policies" title="Policies" description="Payment, delivery, revision, refund, and other policy content." visible={activeSection === "#policies"}>
             <Field label="Section Title">
               <Input
                 value={draft.policies.title}
@@ -1527,7 +1559,7 @@ export default function AdminPanel() {
             </SecondaryButton>
           </Section>
 
-          <Section title="Contact and Vision">
+          <Section id="contact-vision" title="Contact and Vision" description="Final call-to-action copy and long-term vision line." visible={activeSection === "#contact-vision"}>
             <div className="grid gap-6 md:grid-cols-2">
               <div className="space-y-4 rounded-2xl border border-white/10 p-4">
                 <h3 className="text-lg font-medium">Contact Block</h3>
@@ -1620,6 +1652,7 @@ export default function AdminPanel() {
             </div>
           </Section>
         </div>
+      </div>
       </div>
     </div>
   );

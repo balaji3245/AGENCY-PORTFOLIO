@@ -44,6 +44,11 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
+  icons: {
+    icon: "/yj-mark.svg",
+    shortcut: "/yj-mark.svg",
+    apple: "/yj-mark.svg",
+  },
 };
 
 export default function RootLayout({
