@@ -26,6 +26,12 @@ export default function Navbar() {
     { name: "Process", href: "#process" },
     { name: "Pricing", href: "#pricing" },
   ];
+  const openContact = () => {
+    document
+      .querySelector("#contact")
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    setMobileMenuOpen(false);
+  };
 
   return (
     <>
@@ -61,7 +67,11 @@ export default function Navbar() {
                 Admin
               </Link>
             </div>
-            <MagneticButton variant="primary" className="py-2 px-5 text-sm">
+            <MagneticButton
+              variant="primary"
+              className="py-2 px-5 text-sm"
+              onClick={openContact}
+            >
               Start Project
             </MagneticButton>
           </div>
@@ -70,6 +80,8 @@ export default function Navbar() {
           <button
             className="md:hidden relative z-50 p-2"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+            aria-expanded={mobileMenuOpen}
           >
             <div className="flex flex-col gap-1.5">
               <span className={`block w-6 h-0.5 bg-white transition-transform ${mobileMenuOpen ? "rotate-45 translate-y-2" : ""}`} />
@@ -107,7 +119,7 @@ export default function Navbar() {
               >
                 Admin
               </Link>
-              <MagneticButton variant="primary" className="mt-8">
+              <MagneticButton variant="primary" className="mt-8" onClick={openContact}>
                 Start Project
               </MagneticButton>
             </div>

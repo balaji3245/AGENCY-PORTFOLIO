@@ -5,7 +5,7 @@ import {
   useCallback,
   useContext,
   useMemo,
-  useState,
+  useSyncExternalStore,
 } from "react";
 import {
   defaultSiteContent,
@@ -21,35 +21,51 @@ type SiteContentContextValue = {
 
 const SiteContentContext = createContext<SiteContentContextValue | null>(null);
 
+function readStoredContent() {
+  return window.localStorage.getItem(SITE_CONTENT_STORAGE_KEY) ?? "";
+}
+
+function notifyContentSubscribers() {
+  window.dispatchEvent(new Event("site-content-change"));
+}
+
 export default function SiteContentProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [content, setContent] = useState<SiteContent>(() => {
-    if (typeof window === "undefined") return defaultSiteContent;
-    const stored = window.localStorage.getItem(SITE_CONTENT_STORAGE_KEY);
-    if (!stored) return defaultSiteContent;
+  const subscribe = useCallback((listener: () => void) => {
+    window.addEventListener("storage", listener);
+    window.addEventListener("site-content-change", listener);
+    return () => {
+      window.removeEventListener("storage", listener);
+      window.removeEventListener("site-content-change", listener);
+    };
+  }, []);
 
+  const storedContent = useSyncExternalStore(subscribe, readStoredContent, () => "");
+
+  const content = useMemo(() => {
+    if (!storedContent) return defaultSiteContent;
     try {
-      return JSON.parse(stored) as SiteContent;
+      return JSON.parse(storedContent) as SiteContent;
     } catch {
       window.localStorage.removeItem(SITE_CONTENT_STORAGE_KEY);
       return defaultSiteContent;
     }
-  });
+  }, [storedContent]);
 
   const saveContent = useCallback((nextContent: SiteContent) => {
-    setContent(nextContent);
     window.localStorage.setItem(
       SITE_CONTENT_STORAGE_KEY,
       JSON.stringify(nextContent)
     );
+    notifyContentSubscribers();
   }, []);
 
   const resetContent = useCallback(() => {
-    setContent(defaultSiteContent);
     window.localStorage.removeItem(SITE_CONTENT_STORAGE_KEY);
+    notifyContentSubscribers();
   }, []);
 
   const value = useMemo(

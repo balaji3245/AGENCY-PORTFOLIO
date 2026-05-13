@@ -10,7 +10,7 @@ export default function Policies() {
   const { content } = useSiteContent();
 
   return (
-    <section className="py-24 bg-[#050505]">
+    <section id="policies" className="py-24 bg-[#050505]">
       <div className="container mx-auto px-6 md:px-12 max-w-4xl">
         <h2 className="text-2xl md:text-3xl font-bold mb-10">
           {content.policies.title}

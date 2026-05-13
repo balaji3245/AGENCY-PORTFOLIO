@@ -6,11 +6,44 @@ import CustomCursor from "@/components/ui/CustomCursor";
 import SiteContentProvider from "@/components/SiteContentProvider";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const siteUrl = new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://yjdevelopers.com");
 
 export const metadata: Metadata = {
-  title: "YJ DEVELOPERS | Digital, Creative, Web & Branding Agency",
+  metadataBase: siteUrl,
+  title: {
+    default: "YJ DEVELOPERS | Digital, Creative, Web & Branding Agency",
+    template: "%s | YJ DEVELOPERS",
+  },
   description:
     "YJ DEVELOPERS builds websites, brand systems, digital campaigns, and creative experiences for ambitious businesses.",
+  applicationName: "YJ DEVELOPERS",
+  keywords: [
+    "YJ DEVELOPERS",
+    "web development agency",
+    "branding agency",
+    "digital agency",
+    "creative agency",
+    "Next.js websites",
+  ],
+  authors: [{ name: "YJ DEVELOPERS" }],
+  creator: "YJ DEVELOPERS",
+  openGraph: {
+    title: "YJ DEVELOPERS | Digital, Creative, Web & Branding Agency",
+    description:
+      "Websites, brand systems, digital campaigns, and creative experiences for ambitious businesses.",
+    url: "/",
+    siteName: "YJ DEVELOPERS",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "YJ DEVELOPERS | Digital, Creative, Web & Branding Agency",
+    description:
+      "Websites, brand systems, digital campaigns, and creative experiences for ambitious businesses.",
+  },
+  alternates: {
+    canonical: "/",
+  },
 };
 
 export default function RootLayout({

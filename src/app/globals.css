@@ -35,6 +35,10 @@ body {
   cursor: none; /* For custom cursor */
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 ::selection {
   background-color: rgba(255, 255, 255, 0.2);
   color: #ffffff;
@@ -94,4 +98,14 @@ body {
 .admin-panel,
 .admin-panel * {
   cursor: auto !important;
+}
+
+@media (hover: none), (pointer: coarse) {
+  body {
+    cursor: auto;
+  }
+
+  .custom-cursor {
+    display: none;
+  }
 }

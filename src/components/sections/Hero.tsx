@@ -8,6 +8,11 @@ import { useSiteContent } from "@/components/SiteContentProvider";
 
 export default function Hero() {
   const { content } = useSiteContent();
+  const scrollToSection = (sectionId: string) => {
+    document
+      .querySelector(sectionId)
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
@@ -49,10 +54,17 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.7 }}
           className="flex flex-col sm:flex-row items-center gap-4"
         >
-          <MagneticButton className="px-8 py-4 text-base">
+          <MagneticButton
+            className="px-8 py-4 text-base"
+            onClick={() => scrollToSection("#work")}
+          >
             {content.hero.primaryCta} <ArrowRight size={18} />
           </MagneticButton>
-          <MagneticButton variant="outline" className="px-8 py-4 text-base">
+          <MagneticButton
+            variant="outline"
+            className="px-8 py-4 text-base"
+            onClick={() => scrollToSection("#contact")}
+          >
             {content.hero.secondaryCta}
           </MagneticButton>
         </motion.div>

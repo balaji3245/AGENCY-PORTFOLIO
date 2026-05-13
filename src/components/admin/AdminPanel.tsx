@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Save, RotateCcw, Plus, Trash2, ExternalLink } from "lucide-react";
 import {
   defaultSiteContent,
@@ -129,7 +129,25 @@ export default function AdminPanel() {
   const [draft, setDraft] = useState<SiteContent>(() => cloneContent(content));
   const [status, setStatus] = useState("Unsaved changes can be edited here.");
 
+  useEffect(() => {
+    const syncDraft = window.setTimeout(() => {
+      setDraft(cloneContent(content));
+    }, 0);
+
+    return () => window.clearTimeout(syncDraft);
+  }, [content]);
+
   const save = () => {
+    if (!draft.brand.name.trim() || !draft.brand.email.trim()) {
+      setStatus("Agency name and email are required before saving.");
+      return;
+    }
+
+    if (!draft.services.items.length || !draft.portfolio.items.length) {
+      setStatus("Keep at least one service and one portfolio item before saving.");
+      return;
+    }
+
     const next = cloneContent(draft);
     saveContent(next);
     setDraft(next);

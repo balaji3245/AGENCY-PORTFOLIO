@@ -1,5 +1,6 @@
 "use client";
 
+import type { FormEvent } from "react";
 import { motion } from "framer-motion";
 import { Mail, Phone, Send } from "lucide-react";
 import { useSiteContent } from "@/components/SiteContentProvider";
@@ -7,6 +8,19 @@ import MagneticButton from "@/components/ui/MagneticButton";
 
 export default function Contact() {
   const { content } = useSiteContent();
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const name = String(formData.get("name") ?? "").trim();
+    const email = String(formData.get("email") ?? "").trim();
+    const message = String(formData.get("message") ?? "").trim();
+    const subject = encodeURIComponent(`Project inquiry from ${name || "website"}`);
+    const body = encodeURIComponent(
+      [`Name: ${name}`, `Email: ${email}`, "", message].join("\n")
+    );
+
+    window.location.href = `mailto:${content.brand.email}?subject=${subject}&body=${body}`;
+  };
 
   return (
     <section
@@ -57,38 +71,47 @@ export default function Contact() {
             viewport={{ once: true }}
             className="glass-card p-10 rounded-3xl"
           >
-            <form className="flex flex-col gap-8">
+            <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
               <div className="flex flex-col gap-2">
-                <label className="text-xs uppercase tracking-widest text-gray-500">
+                <label htmlFor="contact-name" className="text-xs uppercase tracking-widest text-gray-500">
                   Name
                 </label>
                 <input
+                  id="contact-name"
+                  name="name"
                   type="text"
+                  required
                   className="w-full bg-transparent border-b border-white/20 py-3 text-lg focus:outline-none focus:border-white transition-colors"
                   placeholder="John Doe"
                 />
               </div>
               <div className="flex flex-col gap-2">
-                <label className="text-xs uppercase tracking-widest text-gray-500">
+                <label htmlFor="contact-email" className="text-xs uppercase tracking-widest text-gray-500">
                   Email
                 </label>
                 <input
+                  id="contact-email"
+                  name="email"
                   type="email"
+                  required
                   className="w-full bg-transparent border-b border-white/20 py-3 text-lg focus:outline-none focus:border-white transition-colors"
                   placeholder="john@example.com"
                 />
               </div>
               <div className="flex flex-col gap-2">
-                <label className="text-xs uppercase tracking-widest text-gray-500">
+                <label htmlFor="contact-message" className="text-xs uppercase tracking-widest text-gray-500">
                   Message
                 </label>
                 <textarea
+                  id="contact-message"
+                  name="message"
                   rows={4}
+                  required
                   className="w-full bg-transparent border-b border-white/20 py-3 text-lg focus:outline-none focus:border-white transition-colors resize-none"
                   placeholder="Tell us about your project..."
                 />
               </div>
-              <MagneticButton className="self-start mt-4 py-4 px-8">
+              <MagneticButton type="submit" className="self-start mt-4 py-4 px-8">
                 Send Message <Send size={16} />
               </MagneticButton>
             </form>
