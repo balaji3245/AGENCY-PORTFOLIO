@@ -166,6 +166,7 @@ export default function AdminPanel() {
     []
   );
   const [isLoadingLeads, setIsLoadingLeads] = useState(true);
+  const [leadsTab, setLeadsTab] = useState<"contact" | "start-project">("contact");
 
   const refreshContactSubmissions = useCallback(async () => {
     try {
@@ -368,16 +369,38 @@ export default function AdminPanel() {
           </aside>
 
           <div className="grid gap-6">
-          <Section id="leads" title="Leads" description="Contact form submissions from the website." visible={activeSection === "#leads"}>
+          <Section id="leads" title="Leads" description="All form submissions from the website, separated by source." visible={activeSection === "#leads"}>
+            {/* Tab toggle */}
+            <div className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.03] p-1.5">
+              {(["contact", "start-project"] as const).map((tab) => {
+                const count = contactSubmissions.filter((s) => (s.source ?? "contact") === tab).length;
+                return (
+                  <button
+                    key={tab}
+                    type="button"
+                    onClick={() => setLeadsTab(tab)}
+                    className={`flex-1 flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-200 ${
+                      leadsTab === tab ? "bg-white text-black shadow-sm" : "text-gray-400 hover:text-white"
+                    }`}
+                  >
+                    {tab === "contact" ? "📩 Contact Form" : "🚀 Start Project"}
+                    <span className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${
+                      leadsTab === tab ? "bg-black/10 text-black" : "bg-white/10 text-gray-300"
+                    }`}>{count}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Header row */}
             <div className="flex flex-col gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4 md:flex-row md:items-center md:justify-between">
               <div>
                 <p className="text-lg font-medium">
-                  {contactSubmissions.length} submission
-                  {contactSubmissions.length === 1 ? "" : "s"}
+                  {contactSubmissions.filter((s) => (s.source ?? "contact") === leadsTab).length}{" "}
+                  {leadsTab === "contact" ? "contact message" : "project brief"}
+                  {contactSubmissions.filter((s) => (s.source ?? "contact") === leadsTab).length === 1 ? "" : "s"}
                 </p>
-                <p className="mt-1 text-sm text-gray-400">
-                  Newest messages appear first.
-                </p>
+                <p className="mt-1 text-sm text-gray-400">Newest first.</p>
               </div>
               <SecondaryButton
                 onClick={removeAllContactSubmissions}
@@ -393,47 +416,62 @@ export default function AdminPanel() {
                 <div className="h-8 w-8 animate-spin rounded-full border-2 border-cyan-400 border-t-transparent mb-4" />
                 <p className="text-sm text-gray-400">Fetching leads from storage...</p>
               </div>
-            ) : contactSubmissions.length ? (
+            ) : contactSubmissions.filter((s) => (s.source ?? "contact") === leadsTab).length ? (
               <div className="grid gap-4">
-                {contactSubmissions.map((submission) => (
-                  <article
-                    key={submission.id}
-                    className="rounded-2xl border border-white/10 bg-white/[0.03] p-4"
-                  >
-                    <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-                      <div>
-                        <h3 className="text-lg font-semibold">{submission.name}</h3>
-                        <a
-                          href={`mailto:${submission.email}`}
-                          className="text-sm text-cyan-300 transition hover:text-cyan-100"
-                        >
-                          {submission.email}
-                        </a>
-                        <a
-                          href={submission.phone ? `tel:${submission.phone.replace(/\s/g, "")}` : "#"}
-                          className="mt-1 block text-sm text-gray-300 transition hover:text-white"
-                        >
-                          {submission.phone || "No phone provided"}
-                        </a>
-                        <p className="mt-1 text-xs text-gray-500" suppressHydrationWarning>
+                {contactSubmissions
+                  .filter((s) => (s.source ?? "contact") === leadsTab)
+                  .map((submission) => (
+                    <article
+                      key={submission.id}
+                      className={`rounded-2xl border p-4 ${
+                        leadsTab === "start-project"
+                          ? "border-cyan-400/20 bg-cyan-400/5"
+                          : "border-white/10 bg-white/[0.03]"
+                      }`}
+                    >
+                      <div className="mb-3 flex items-center gap-2">
+                        <span className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-widest ${
+                          leadsTab === "start-project" ? "bg-cyan-400/20 text-cyan-300" : "bg-white/10 text-gray-300"
+                        }`}>
+                          {leadsTab === "start-project" ? "🚀 Project Brief" : "📩 Contact"}
+                        </span>
+                        <span className="text-xs text-gray-500" suppressHydrationWarning>
                           {new Date(submission.createdAt).toLocaleString()}
-                        </p>
+                        </span>
                       </div>
-                      <SecondaryButton
-                        onClick={() => removeContactSubmission(submission.id)}
-                      >
-                        <Trash2 size={14} /> Delete
-                      </SecondaryButton>
-                    </div>
-                    <p className="whitespace-pre-wrap rounded-2xl border border-white/10 bg-black/20 p-4 text-sm leading-6 text-gray-300">
-                      {submission.message}
-                    </p>
-                  </article>
-                ))}
+                      <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+                        <div>
+                          <h3 className="text-lg font-semibold">{submission.name}</h3>
+                          <a
+                            href={`mailto:${submission.email}`}
+                            className="text-sm text-cyan-300 transition hover:text-cyan-100"
+                          >
+                            {submission.email}
+                          </a>
+                          {submission.phone && (
+                            <a
+                              href={`tel:${submission.phone.replace(/\s/g, "")}`}
+                              className="mt-1 block text-sm text-gray-300 transition hover:text-white"
+                            >
+                              {submission.phone}
+                            </a>
+                          )}
+                        </div>
+                        <SecondaryButton
+                          onClick={() => removeContactSubmission(submission.id)}
+                        >
+                          <Trash2 size={14} /> Delete
+                        </SecondaryButton>
+                      </div>
+                      <p className="whitespace-pre-wrap rounded-2xl border border-white/10 bg-black/20 p-4 text-sm leading-6 text-gray-300">
+                        {submission.message}
+                      </p>
+                    </article>
+                  ))}
               </div>
             ) : (
               <div className="rounded-2xl border border-dashed border-white/15 p-8 text-center text-sm text-gray-400">
-                No contact form submissions yet.
+                No {leadsTab === "contact" ? "contact form" : "start project"} submissions yet.
               </div>
             )}
           </Section>

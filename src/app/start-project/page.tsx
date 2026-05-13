@@ -91,13 +91,14 @@ export default function StartProjectPage() {
         body: JSON.stringify({
           name: form.name,
           email: form.email,
+          phone: form.phone || "",
+          source: "start-project",
           message: `
-Phone: ${form.phone || "N/A"}
 Company: ${form.company || "N/A"}
 Services: ${form.services.join(", ")}
 Budget: ${form.budget}
 Timeline: ${form.timeline}
-Description: ${form.description}
+Description: ${form.description || "N/A"}
 How did you hear about us: ${form.referral || "N/A"}
           `.trim(),
         }),

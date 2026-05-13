@@ -27,7 +27,7 @@ export default function Contact() {
       const response = await fetch("/api/contact-submissions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, phone, message }),
+        body: JSON.stringify({ name, email, phone, message, source: "contact" }),
       });
 
       if (!response.ok) {
