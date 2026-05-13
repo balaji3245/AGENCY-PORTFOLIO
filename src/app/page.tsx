@@ -8,10 +8,8 @@ import Stats from "@/components/sections/Stats";
 import Team from "@/components/sections/Team";
 import Testimonials from "@/components/sections/Testimonials";
 import Process from "@/components/sections/Process";
-import Industries from "@/components/sections/Industries";
 import Contact from "@/components/sections/Contact";
 import Policies from "@/components/sections/Policies";
-import Vision from "@/components/sections/Vision";
 import Footer from "@/components/layout/Footer";
 
 export default function Home() {
@@ -27,10 +25,8 @@ export default function Home() {
       <Team />
       <Testimonials />
       <Process />
-      <Industries />
       <Contact />
       <Policies />
-      <Vision />
       <Footer />
     </main>
   );

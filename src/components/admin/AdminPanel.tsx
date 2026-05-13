@@ -46,10 +46,9 @@ const adminNavigation = [
   { href: "#team", label: "Team", hint: "Capability cards" },
   { href: "#testimonials", label: "Reviews", hint: "Client quotes" },
   { href: "#process", label: "Process", hint: "Workflow steps" },
-  { href: "#industries", label: "Industries", hint: "Business categories" },
   { href: "#pricing", label: "Pricing", hint: "Plans and features" },
   { href: "#policies", label: "Policies", hint: "Terms and delivery" },
-  { href: "#contact-vision", label: "Contact", hint: "CTA and vision" },
+  { href: "#contact-vision", label: "Contact", hint: "CTA and contact info" },
 ];
 
 function cloneContent(content: SiteContent) {
@@ -1719,65 +1718,6 @@ export default function AdminPanel() {
             </SecondaryButton>
           </Section>
 
-          <Section id="industries" title="Industries" description="Industry cards shown for the types of clients you serve." visible={activeSection === "#industries"}>
-            {draft.industries.map((industry, index) => (
-              <div key={index} className="grid gap-4 rounded-2xl border border-white/10 p-4 md:grid-cols-[1fr_220px_auto]">
-                <Input
-                  value={industry.name}
-                  onChange={(e) =>
-                    setDraft({
-                      ...draft,
-                      industries: draft.industries.map((item, i) =>
-                        i === index ? { ...item, name: e.target.value } : item
-                      ),
-                    })
-                  }
-                />
-                <Select
-                  value={industry.icon}
-                  onChange={(e) =>
-                    setDraft({
-                      ...draft,
-                      industries: draft.industries.map((item, i) =>
-                        i === index
-                          ? { ...item, icon: e.target.value as IconName }
-                          : item
-                      ),
-                    })
-                  }
-                >
-                  {iconOptions.map((icon) => (
-                    <option key={icon} value={icon}>
-                      {icon}
-                    </option>
-                  ))}
-                </Select>
-                <SecondaryButton
-                  onClick={() =>
-                    setDraft({
-                      ...draft,
-                      industries: draft.industries.filter((_, i) => i !== index),
-                    })
-                  }
-                >
-                  <Trash2 size={14} />
-                </SecondaryButton>
-              </div>
-            ))}
-            <SecondaryButton
-              onClick={() =>
-                setDraft({
-                  ...draft,
-                  industries: [
-                    ...draft.industries,
-                    { name: "New Industry", icon: "briefcase" },
-                  ],
-                })
-              }
-            >
-              <Plus size={14} /> Add Industry
-            </SecondaryButton>
-          </Section>
 
           <Section id="policies" title="Policies" description="Payment, delivery, revision, refund, and other policy content." visible={activeSection === "#policies"}>
             <Field label="Section Title">
@@ -1864,8 +1804,8 @@ export default function AdminPanel() {
             </SecondaryButton>
           </Section>
 
-          <Section id="contact-vision" title="Contact and Vision" description="Final call-to-action copy and long-term vision line." visible={activeSection === "#contact-vision"}>
-            <div className="grid gap-6 md:grid-cols-2">
+          <Section id="contact-vision" title="Contact" description="Final call-to-action copy and contact section details." visible={activeSection === "#contact-vision"}>
+            <div className="grid gap-6">
               <div className="space-y-4 rounded-2xl border border-white/10 p-4">
                 <h3 className="text-lg font-medium">Contact Block</h3>
                 <Field label="Eyebrow">
@@ -1912,43 +1852,6 @@ export default function AdminPanel() {
                           ...draft.contact,
                           description: e.target.value,
                         },
-                      })
-                    }
-                  />
-                </Field>
-              </div>
-
-              <div className="space-y-4 rounded-2xl border border-white/10 p-4">
-                <h3 className="text-lg font-medium">Vision Block</h3>
-                <Field label="Prefix">
-                  <Input
-                    value={draft.vision.prefix}
-                    onChange={(e) =>
-                      setDraft({
-                        ...draft,
-                        vision: { ...draft.vision, prefix: e.target.value },
-                      })
-                    }
-                  />
-                </Field>
-                <Field label="Highlight">
-                  <Input
-                    value={draft.vision.highlight}
-                    onChange={(e) =>
-                      setDraft({
-                        ...draft,
-                        vision: { ...draft.vision, highlight: e.target.value },
-                      })
-                    }
-                  />
-                </Field>
-                <Field label="Suffix">
-                  <Input
-                    value={draft.vision.suffix}
-                    onChange={(e) =>
-                      setDraft({
-                        ...draft,
-                        vision: { ...draft.vision, suffix: e.target.value },
                       })
                     }
                   />
