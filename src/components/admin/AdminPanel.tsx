@@ -42,7 +42,6 @@ const adminNavigation = [
   { href: "#services", label: "Services", hint: "Service cards" },
   { href: "#tech-stack", label: "Tech", hint: "Tools and platforms" },
   { href: "#portfolio", label: "Projects", hint: "Case study cards" },
-  { href: "#stats", label: "Stats", hint: "Number counters" },
   { href: "#team", label: "Team", hint: "Capability cards" },
   { href: "#testimonials", label: "Reviews", hint: "Client quotes" },
   { href: "#process", label: "Process", hint: "Workflow steps" },
@@ -1145,67 +1144,6 @@ export default function AdminPanel() {
             </SecondaryButton>
           </Section>
 
-          <Section id="stats" title="Stats" description="Animated number counters used as quick proof points." visible={activeSection === "#stats"}>
-            {draft.stats.map((stat, index) => (
-              <div key={index} className="grid gap-4 rounded-2xl border border-white/10 p-4 md:grid-cols-[1fr_1fr_140px_auto]">
-                <Input
-                  value={String(stat.value)}
-                  onChange={(e) =>
-                    setDraft({
-                      ...draft,
-                      stats: draft.stats.map((item, i) =>
-                        i === index
-                          ? { ...item, value: Number(e.target.value) || 0 }
-                          : item
-                      ),
-                    })
-                  }
-                />
-                <Input
-                  value={stat.label}
-                  onChange={(e) =>
-                    setDraft({
-                      ...draft,
-                      stats: draft.stats.map((item, i) =>
-                        i === index ? { ...item, label: e.target.value } : item
-                      ),
-                    })
-                  }
-                />
-                <Input
-                  value={stat.suffix}
-                  onChange={(e) =>
-                    setDraft({
-                      ...draft,
-                      stats: draft.stats.map((item, i) =>
-                        i === index ? { ...item, suffix: e.target.value } : item
-                      ),
-                    })
-                  }
-                />
-                <SecondaryButton
-                  onClick={() =>
-                    setDraft({
-                      ...draft,
-                      stats: draft.stats.filter((_, i) => i !== index),
-                    })
-                  }
-                >
-                  <Trash2 size={14} />
-                </SecondaryButton>
-              </div>
-            ))}
-            <SecondaryButton
-              onClick={() =>
-                setDraft({
-                  ...draft,
-                  stats: [...draft.stats, { value: 0, label: "New Stat", suffix: "" }],
-                })
-              }
-            >
-              <Plus size={14} /> Add Stat
-            </SecondaryButton>
-          </Section>
 
           <Section id="team" title="Team Capabilities" description="Capability cards. No employee photos are required here." visible={activeSection === "#team"}>
             <div className="grid gap-4 md:grid-cols-2">
