@@ -4,97 +4,115 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import MagneticButton from "@/components/ui/MagneticButton";
 import { useSiteContent } from "@/components/SiteContentProvider";
-import type { SiteContent } from "@/lib/siteContent";
-
-function ProjectCard({ project, index }: { project: SiteContent["portfolio"]["items"][0], index: number }) {
-  const cardRef = useRef<HTMLDivElement>(null);
-
-  // Track scroll progress of this specific card's container
-  // It starts when the card hits the top of the viewport (0)
-  // It ends when the card's bottom hits the top of the viewport (1)
-  const { scrollYProgress } = useScroll({
-    target: cardRef,
-    offset: ["start start", "end start"]
-  });
-
-  // As the next card scrolls up, this card scales down and fades out
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.9]);
-  const opacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
-
-  // Adjust top spacing so they stack nicely with a slight offset
-  const topOffset = `calc(5vh + ${index * 20}px)`;
-
-  return (
-    <div ref={cardRef} className="h-screen w-full relative">
-      <div className="sticky flex items-center justify-center h-screen w-full" style={{ top: topOffset }}>
-        <motion.div 
-          style={{ scale, opacity }}
-          className={`w-full max-w-6xl rounded-3xl overflow-hidden border border-white/10 bg-zinc-950 p-8 md:p-12 shadow-2xl relative`}
-          initial={{ y: 50, opacity: 0 }}
-          whileInView={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          viewport={{ once: true, margin: "-10%" }}
-        >
-          {/* Subtle gradient overlay based on project color */}
-          <div className={`absolute inset-0 bg-gradient-to-br ${project.color} opacity-20 pointer-events-none`} />
-        
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
-          <div className="order-2 lg:order-1">
-            <span className="text-xs font-medium uppercase tracking-widest text-white/50 mb-4 block">
-              {project.category}
-            </span>
-            <h3 className="text-4xl md:text-5xl font-bold mb-6">{project.title}</h3>
-            <p className="text-gray-300 font-light text-lg mb-8 leading-relaxed">
-              {project.description}
-            </p>
-            
-            <div className="flex flex-wrap gap-2 mb-10">
-              {project.tech.map((tech: string, j: number) => (
-                <span key={j} className="px-4 py-1.5 rounded-full border border-white/10 text-xs font-medium bg-white/5 backdrop-blur-sm text-gray-300">
-                  {tech}
-                </span>
-              ))}
-            </div>
-
-            <MagneticButton variant="secondary" className="px-8 py-3 text-sm">
-              View Case Study
-            </MagneticButton>
-          </div>
-
-          <div className="order-1 lg:order-2 relative aspect-[4/3] rounded-xl overflow-hidden group">
-            <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500 z-10" />
-            <div className="w-full h-full bg-[#111] flex items-center justify-center border border-white/5 relative overflow-hidden">
-               {/* Abstract placeholder image effect */}
-               <div className={`absolute inset-0 bg-gradient-to-tr ${project.color} opacity-40 mix-blend-overlay scale-150 group-hover:scale-100 transition-transform duration-1000 ease-out`} />
-               <div className="text-white/40 font-light text-sm uppercase tracking-widest relative z-20 mix-blend-difference">Project Preview</div>
-            </div>
-          </div>
-        </div>
-      </motion.div>
-      </div>
-    </div>
-  );
-}
+import { ArrowUpRight } from "lucide-react";
 
 export default function Portfolio() {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const targetRef = useRef<HTMLDivElement>(null);
   const { content } = useSiteContent();
+  
+  const { scrollYProgress } = useScroll({
+    target: targetRef,
+  });
+
+  // Calculate the horizontal movement based on the number of items
+  // Total width = items * 100vw
+  const x = useTransform(scrollYProgress, [0, 1], ["0%", `-${(content.portfolio.items.length - 1) * 100}%`]);
 
   return (
-    <section ref={containerRef} id="work" className="relative bg-transparent py-20">
-      <div className="container mx-auto px-6 md:px-12 mb-12">
-        <h2 className="text-xs uppercase tracking-widest text-gray-500 mb-4">Selected Work</h2>
-        <h3 className="text-4xl md:text-5xl font-bold tracking-tight">Recent Projects</h3>
-      </div>
+    <section ref={targetRef} id="work" className="relative h-[400vh] bg-zinc-950">
+      <div className="sticky top-0 flex h-screen items-center overflow-hidden">
+        <motion.div style={{ x }} className="flex gap-4 px-10 md:px-20">
+          {content.portfolio.items.map((project, i) => (
+            <div
+              key={i}
+              className="group relative h-[70vh] w-[85vw] md:w-[70vw] shrink-0 overflow-hidden rounded-3xl border border-white/10 bg-zinc-900/50 backdrop-blur-sm"
+            >
+              {/* Image Preview Area */}
+              <div className="absolute inset-0 z-0">
+                <div className={`absolute inset-0 bg-gradient-to-br ${project.color} opacity-40 mix-blend-overlay`} />
+                <div className="h-full w-full bg-[#050505] flex items-center justify-center">
+                   <motion.div 
+                     initial={{ scale: 1.2, opacity: 0 }}
+                     whileInView={{ scale: 1, opacity: 0.1 }}
+                     transition={{ duration: 1.5 }}
+                     className="text-[20vw] font-black text-white pointer-events-none select-none uppercase"
+                   >
+                     {project.category.split(' ')[0]}
+                   </motion.div>
+                </div>
+              </div>
 
-      <div className="relative z-10 px-4 md:px-12 pb-32">
-        {content.portfolio.items.map((project, i) => (
-          <ProjectCard 
-            key={i} 
-            project={project} 
-            index={i} 
+              {/* Content Overlay */}
+              <div className="relative z-10 h-full w-full p-8 md:p-16 flex flex-col justify-between">
+                <div>
+                  <motion.span 
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.2 }}
+                    className="inline-block px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-[10px] uppercase tracking-[0.3em] font-bold text-cyan-400 mb-6"
+                  >
+                    {project.category}
+                  </motion.span>
+                  
+                  <motion.h3 
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3, duration: 0.8 }}
+                    className="text-4xl md:text-7xl font-bold tracking-tighter leading-none mb-6 max-w-3xl"
+                  >
+                    {project.title}
+                  </motion.h3>
+                  
+                  <motion.p 
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    transition={{ delay: 0.5 }}
+                    className="text-gray-400 text-lg md:text-xl font-light max-w-xl leading-relaxed"
+                  >
+                    {project.description}
+                  </motion.p>
+                </div>
+
+                <div className="flex flex-wrap items-end justify-between gap-8 mt-auto">
+                  <div className="flex flex-wrap gap-2">
+                    {project.tech.map((t, j) => (
+                      <span key={j} className="text-xs font-medium text-white/40 border-b border-white/10 pb-1">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+
+                  <MagneticButton className="px-10 py-4 group/btn bg-white text-black rounded-full flex items-center gap-2">
+                    <span className="text-sm font-bold uppercase tracking-widest">Case Study</span>
+                    <ArrowUpRight size={18} className="group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform" />
+                  </MagneticButton>
+                </div>
+              </div>
+
+              {/* Index Number */}
+              <div className="absolute top-8 right-12 text-8xl font-black text-white/5 pointer-events-none">
+                0{i + 1}
+              </div>
+            </div>
+          ))}
+
+          {/* End spacer */}
+          <div className="w-[20vw] shrink-0" />
+        </motion.div>
+
+        {/* Section Title - Pinned */}
+        <div className="absolute top-12 left-10 md:left-20 z-20">
+          <h2 className="text-xs uppercase tracking-[0.5em] text-gray-500 mb-2">Featured Work</h2>
+          <div className="h-[1px] w-20 bg-cyan-400/50" />
+        </div>
+
+        {/* Scroll Progress Bar */}
+        <div className="absolute bottom-12 left-10 md:left-20 right-10 md:right-20 h-[1px] bg-white/10 z-20">
+          <motion.div 
+            style={{ scaleX: scrollYProgress }} 
+            className="h-full bg-cyan-400 origin-left"
           />
-        ))}
+        </div>
       </div>
     </section>
   );
