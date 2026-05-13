@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
-import { Save, RotateCcw, Plus, Trash2, ExternalLink, LogOut } from "lucide-react";
-import { logout } from "@/app/admin/actions";
+import { Save, RotateCcw, Plus, Trash2, ExternalLink, LogOut, X } from "lucide-react";
+import { logout, verifyPassword } from "@/app/admin/actions";
 import {
   defaultSiteContent,
   type IconName,
@@ -158,7 +158,10 @@ export default function AdminPanel() {
   const { content, saveContent, resetContent } = useSiteContent();
   const [draft, setDraft] = useState<SiteContent>(() => cloneContent(content));
   const [status, setStatus] = useState("Unsaved changes can be edited here.");
-  const [activeSection, setActiveSection] = useState("#leads");
+  const [activeSection, setActiveSection] = useState<string>("#brand");
+  const [showSavePrompt, setShowSavePrompt] = useState<boolean>(false);
+  const [savePassword, setSavePassword] = useState<string>("");
+  const [isVerifying, setIsVerifying] = useState<boolean>(false);
   const [contactSubmissions, setContactSubmissions] = useState<ContactSubmission[]>(
     []
   );
@@ -215,10 +218,26 @@ export default function AdminPanel() {
       return;
     }
 
-    const next = cloneContent(draft);
-    saveContent(next);
-    setDraft(next);
-    setStatus("Changes saved. Homepage preview is now updated.");
+    setShowSavePrompt(true);
+    setSavePassword("");
+  };
+
+  const confirmSave = async () => {
+    if (!savePassword) return;
+    setIsVerifying(true);
+    const isCorrect = await verifyPassword(savePassword);
+    setIsVerifying(false);
+
+    if (isCorrect) {
+      const next = cloneContent(draft);
+      saveContent(next);
+      setDraft(next);
+      setStatus("Changes saved. Homepage preview is now updated.");
+      setShowSavePrompt(false);
+    } else {
+      setStatus("Incorrect password. Cannot save changes.");
+      setShowSavePrompt(false);
+    }
   };
 
   const reset = () => {
@@ -1883,7 +1902,47 @@ export default function AdminPanel() {
           </Section>
         </div>
       </div>
-      </div>
+      
+      {/* Password Prompt Modal */}
+      {showSavePrompt && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+          <div className="w-full max-w-md rounded-3xl border border-white/10 bg-zinc-950 p-8 shadow-2xl relative">
+            <button 
+              onClick={() => setShowSavePrompt(false)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-white transition"
+            >
+              <X size={20} />
+            </button>
+            <h3 className="text-xl font-bold mb-2">Confirm Save</h3>
+            <p className="text-gray-400 text-sm mb-6">Enter admin password to save your changes to the live site.</p>
+            <Field label="Admin Password">
+              <Input
+                type="password"
+                value={savePassword}
+                onChange={(e) => setSavePassword(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") confirmSave();
+                }}
+                autoFocus
+              />
+            </Field>
+            <div className="mt-6 flex justify-end gap-3">
+              <SecondaryButton onClick={() => setShowSavePrompt(false)}>
+                Cancel
+              </SecondaryButton>
+              <button
+                type="button"
+                onClick={confirmSave}
+                disabled={isVerifying || !savePassword}
+                className="rounded-full bg-cyan-400 px-5 py-2 text-sm font-medium text-black transition hover:bg-cyan-300 disabled:opacity-50"
+              >
+                {isVerifying ? "Verifying..." : "Save Changes"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
+  </div>
   );
 }
