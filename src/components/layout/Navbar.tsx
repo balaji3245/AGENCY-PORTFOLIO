@@ -38,12 +38,13 @@ export default function Navbar() {
         animate={{ y: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled ? "py-4 glass border-b border-white/5" : "py-6 bg-transparent"
+          isScrolled ? "py-6 bg-transparent" : "py-6 bg-transparent"
         }`}
       >
         <div className="container mx-auto px-6 md:px-12 flex items-center justify-between">
-          <Link href="/" aria-label="YJ Developers home">
+          <Link href="/" aria-label="YJ Developers home" className="flex items-center gap-3">
             <BrandLogo compact imageClassName="h-11 w-11" />
+            <span className="font-bold text-xl tracking-wider text-white hidden sm:block">YJ DEVELOPERS</span>
           </Link>
 
           {/* Desktop Nav */}
