@@ -4,8 +4,9 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import MagneticButton from "@/components/ui/MagneticButton";
 import { useSiteContent } from "@/components/SiteContentProvider";
+import type { SiteContent } from "@/lib/siteContent";
 
-function ProjectCard({ project, index, total }: { project: any, index: number, total: number }) {
+function ProjectCard({ project, index }: { project: SiteContent["portfolio"]["items"][0], index: number }) {
   const cardRef = useRef<HTMLDivElement>(null);
 
   // Track scroll progress of this specific card's container
@@ -92,7 +93,6 @@ export default function Portfolio() {
             key={i} 
             project={project} 
             index={i} 
-            total={content.portfolio.items.length} 
           />
         ))}
       </div>
