@@ -250,70 +250,70 @@ export const defaultSiteContent: SiteContent = {
     { value: 100, label: "On-time Delivery", suffix: "%" },
   ],
   team: {
-    eyebrow: "How we work",
-    title: "A complete delivery team without staff photo dependency.",
+    eyebrow: "Meet the Team",
+    title: "The people building your next big project.",
     description:
-      "Every project is handled through clear specialist roles, structured reviews, and one coordinated delivery flow from first idea to launch.",
+      "We are a passionate team of designers, developers, and strategists dedicated to delivering world-class digital experiences.",
     members: [
       { 
-        name: "Strategy & Discovery", 
-        role: "Lead Strategist",
-        intro: "We clarify goals, audience, positioning, content needs, and the right website structure before design begins.",
+        name: "Yash Joshi", 
+        role: "Founder & Full Stack Developer",
+        intro: "Yash leads the agency with 5+ years of experience building high-performance web apps. He architects solutions that are fast, scalable, and beautiful.",
         image: "from-cyan-400 to-blue-500",
-        skills: ["Strategy", "Research", "Planning"],
-        portfolio: "https://example.com/portfolio",
-        github: "https://github.com/example",
-        email: "strategy@yjdevelopers.com"
+        skills: ["Next.js", "React", "Node.js", "System Design"],
+        portfolio: "https://yjdevelopers.com",
+        github: "https://github.com/yjdeveloper",
+        email: "yash@yjdevelopers.com"
       },
       { 
-        name: "Brand & Creative Direction", 
-        role: "Creative Director",
-        intro: "We shape the visual system, campaign feel, messaging, and assets so the business looks consistent everywhere.",
-        image: "from-fuchsia-400 to-rose-500",
-        skills: ["Branding", "Creative", "Visual Design"],
-        portfolio: "",
-        github: "",
-        email: "creative@yjdevelopers.com"
-      },
-      { 
-        name: "UI/UX Design", 
+        name: "Jai Sharma", 
         role: "UI/UX Designer",
-        intro: "We create clean, responsive interfaces focused on trust, readability, conversion, and smooth user journeys.",
-        image: "from-amber-300 to-orange-500",
-        skills: ["Figma", "UI", "UX", "Wireframing"],
-        portfolio: "",
+        intro: "Jai crafts pixel-perfect interfaces and seamless user experiences. He turns complex ideas into intuitive, beautiful designs that users love.",
+        image: "from-fuchsia-400 to-rose-500",
+        skills: ["Figma", "UI Design", "UX Research", "Prototyping"],
+        portfolio: "https://jaisharmdesigns.com",
         github: "",
-        email: "design@yjdevelopers.com"
+        email: "jai@yjdevelopers.com"
       },
       { 
-        name: "Frontend Development", 
+        name: "Priya Verma", 
         role: "Frontend Developer",
-        intro: "We build fast, polished pages with modern React, Next.js, animation, and mobile-first implementation.",
-        image: "from-emerald-400 to-teal-500",
-        skills: ["React", "Next.js", "Tailwind CSS", "Framer Motion"],
-        portfolio: "https://example.com/frontend",
-        github: "https://github.com/frontenddev",
-        email: "frontend@yjdevelopers.com"
-      },
-      { 
-        name: "Backend & Integrations", 
-        role: "Backend Developer",
-        intro: "We connect forms, dashboards, CMS flows, payments, APIs, automations, and business tools when needed.",
-        image: "from-violet-400 to-indigo-500",
-        skills: ["Node.js", "PostgreSQL", "APIs", "AWS"],
+        intro: "Priya specializes in building fast, responsive, and animated interfaces. She brings designs to life with clean code and attention to detail.",
+        image: "from-amber-300 to-orange-500",
+        skills: ["React", "Tailwind CSS", "Framer Motion", "TypeScript"],
         portfolio: "",
-        github: "https://github.com/backenddev",
-        email: "backend@yjdevelopers.com"
+        github: "https://github.com/priyaverma",
+        email: "priya@yjdevelopers.com"
       },
       { 
-        name: "SEO & Launch Support", 
-        role: "SEO Specialist",
-        intro: "We prepare metadata, performance checks, analytics, launch testing, and improvement notes after handover.",
-        image: "from-lime-300 to-green-500",
-        skills: ["SEO", "Analytics", "Performance"],
+        name: "Arjun Mehta", 
+        role: "Backend Developer",
+        intro: "Arjun builds the engine behind every product — APIs, databases, integrations, and automation pipelines that keep everything running smoothly.",
+        image: "from-emerald-400 to-teal-500",
+        skills: ["Node.js", "PostgreSQL", "AWS", "REST APIs"],
+        portfolio: "",
+        github: "https://github.com/arjunmehta",
+        email: "arjun@yjdevelopers.com"
+      },
+      { 
+        name: "Sneha Patil", 
+        role: "SEO & Digital Marketing",
+        intro: "Sneha drives organic growth through strategic SEO, content planning, and performance analytics. She ensures every site ranks and converts.",
+        image: "from-violet-400 to-indigo-500",
+        skills: ["SEO", "Google Analytics", "Content Strategy", "SEM"],
         portfolio: "",
         github: "",
-        email: "seo@yjdevelopers.com"
+        email: "sneha@yjdevelopers.com"
+      },
+      { 
+        name: "Rohan Gupta", 
+        role: "Project Manager",
+        intro: "Rohan keeps every project on track, on time, and on budget. He acts as the bridge between clients and the team to ensure smooth delivery.",
+        image: "from-lime-300 to-green-500",
+        skills: ["Agile", "Jira", "Client Relations", "Delivery"],
+        portfolio: "",
+        github: "",
+        email: "rohan@yjdevelopers.com"
       },
     ],
   },
