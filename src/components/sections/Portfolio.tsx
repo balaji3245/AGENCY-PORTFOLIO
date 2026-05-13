@@ -70,6 +70,7 @@ function ProjectCard({ project, index, total }: { project: any, index: number, t
           </div>
         </div>
       </motion.div>
+      </div>
     </div>
   );
 }
