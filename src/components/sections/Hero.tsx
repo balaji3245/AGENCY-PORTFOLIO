@@ -67,19 +67,6 @@ export default function Hero() {
           </MagneticButton>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 1.2 }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-        >
-          <span className="text-xs text-gray-500 uppercase tracking-widest">Scroll to explore</span>
-          <motion.div 
-            animate={{ y: [0, 10, 0] }} 
-            transition={{ repeat: Infinity, duration: 2 }}
-            className="w-[1px] h-12 bg-gradient-to-b from-gray-500 to-transparent"
-          />
-        </motion.div>
       </div>
       
       {/* Background gradients */}
