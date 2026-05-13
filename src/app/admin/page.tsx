@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import AdminPanel from "@/components/admin/AdminPanel";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Admin | YJ DEVELOPERS",
@@ -10,6 +12,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function AdminPage() {
+export default async function AdminPage() {
+  const cookieStore = await cookies();
+  const authCookie = cookieStore.get("admin_session");
+
+  if (!authCookie || authCookie.value !== "authenticated") {
+    redirect("/admin/login");
+  }
+
   return <AdminPanel />;
 }

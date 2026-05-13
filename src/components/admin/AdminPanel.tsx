@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
-import { Save, RotateCcw, Plus, Trash2, ExternalLink } from "lucide-react";
+import { Save, RotateCcw, Plus, Trash2, ExternalLink, LogOut } from "lucide-react";
+import { logout } from "@/app/admin/actions";
 import {
   defaultSiteContent,
   type IconName,
@@ -277,6 +278,13 @@ export default function AdminPanel() {
             >
               Open Website <ExternalLink size={16} />
             </Link>
+            <button
+              type="button"
+              onClick={() => logout()}
+              className="inline-flex items-center gap-2 rounded-full border border-red-500/30 bg-red-500/10 px-5 py-3 text-sm text-red-200 transition hover:bg-red-500/20"
+            >
+              Logout <LogOut size={16} />
+            </button>
             <button
               type="button"
               onClick={reset}
