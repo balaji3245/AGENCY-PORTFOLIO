@@ -251,47 +251,6 @@ export default function AdminPanel() {
     setStatus("All leads cleared from admin panel.");
   };
 
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [password, setPassword] = useState("");
-  const [authError, setAuthError] = useState("");
-
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Simple client-side hardcoded password for portfolio admin access
-    if (password === "yjadmin123" || password === process.env.NEXT_PUBLIC_ADMIN_PASSWORD) {
-      setIsAuthenticated(true);
-      setAuthError("");
-    } else {
-      setAuthError("Incorrect password.");
-    }
-  };
-
-  if (!isAuthenticated) {
-    return (
-      <div className="flex min-h-dvh items-center justify-center bg-[radial-gradient(circle_at_top,_rgba(78,91,135,0.25),_transparent_35%),linear-gradient(180deg,_#060606_0%,_#0b0b0d_100%)] px-4 text-white">
-        <form onSubmit={handleLogin} className="w-full max-w-sm rounded-[24px] border border-white/10 bg-black/30 p-8 shadow-2xl backdrop-blur-xl text-center">
-          <BrandLogo compact className="mx-auto mb-6 flex justify-center" />
-          <h1 className="mb-2 text-2xl font-semibold">Admin Access</h1>
-          <p className="mb-6 text-sm text-gray-400">Enter password to manage portfolio content.</p>
-          
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-            className="mb-4 w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-sm text-white outline-none transition focus:border-cyan-400/50 focus:bg-black/60"
-          />
-          
-          {authError && <p className="mb-4 text-sm text-red-400">{authError}</p>}
-          
-          <button type="submit" className="w-full rounded-full bg-white px-4 py-3 text-sm font-medium text-black transition hover:bg-white/90">
-            Login
-          </button>
-        </form>
-      </div>
-    );
-  }
-
   return (
     <div className="admin-panel min-h-dvh bg-[radial-gradient(circle_at_top,_rgba(78,91,135,0.25),_transparent_35%),linear-gradient(180deg,_#060606_0%,_#0b0b0d_100%)] px-4 py-8 text-white md:px-8">
       <div className="mx-auto max-w-7xl">
