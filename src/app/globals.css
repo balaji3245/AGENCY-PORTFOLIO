@@ -90,3 +90,8 @@ body {
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+
+.admin-panel,
+.admin-panel * {
+  cursor: auto !important;
+}

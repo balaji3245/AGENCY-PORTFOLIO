@@ -19,7 +19,7 @@ export default function MagneticButton({
   const ref = useRef<HTMLButtonElement>(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
-  const handleMouse = (e: any) => {
+  const handleMouse = (e: React.MouseEvent<HTMLButtonElement>) => {
     const { clientX, clientY } = e;
     const { height, width, left, top } = ref.current!.getBoundingClientRect();
     const middleX = clientX - (left + width / 2);

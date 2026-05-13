@@ -4,10 +4,12 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import MagneticButton from "@/components/ui/MagneticButton";
+import { useSiteContent } from "@/components/SiteContentProvider";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { content } = useSiteContent();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -20,6 +22,7 @@ export default function Navbar() {
   const navLinks = [
     { name: "Services", href: "#services" },
     { name: "Work", href: "#work" },
+    { name: "Team", href: "#team" },
     { name: "Process", href: "#process" },
     { name: "Pricing", href: "#pricing" },
   ];
@@ -36,7 +39,7 @@ export default function Navbar() {
       >
         <div className="container mx-auto px-6 md:px-12 flex items-center justify-between">
           <Link href="/" className="text-2xl font-bold tracking-tighter">
-            ELEVATE<span className="text-muted">.</span>
+            {content.brand.name}<span className="text-muted">.</span>
           </Link>
 
           {/* Desktop Nav */}
@@ -51,6 +54,12 @@ export default function Navbar() {
                   {link.name}
                 </Link>
               ))}
+              <Link
+                href="/admin"
+                className="text-sm text-cyan-300 hover:text-white transition-colors"
+              >
+                Admin
+              </Link>
             </div>
             <MagneticButton variant="primary" className="py-2 px-5 text-sm">
               Start Project
@@ -91,6 +100,13 @@ export default function Navbar() {
                   {link.name}
                 </Link>
               ))}
+              <Link
+                href="/admin"
+                className="text-cyan-300 hover:text-white transition-colors"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Admin
+              </Link>
               <MagneticButton variant="primary" className="mt-8">
                 Start Project
               </MagneticButton>

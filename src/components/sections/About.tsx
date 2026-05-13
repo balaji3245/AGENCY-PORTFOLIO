@@ -2,9 +2,15 @@
 
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
+import { useSiteContent } from "@/components/SiteContentProvider";
 
 export default function About() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const { content } = useSiteContent();
+  const hasHighlight = content.about.title.includes(content.about.highlightedWord);
+  const titleParts = hasHighlight
+    ? content.about.title.split(content.about.highlightedWord)
+    : [content.about.title, ""];
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "end start"],
@@ -19,26 +25,34 @@ export default function About() {
       <div className="container mx-auto px-6 md:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <motion.div style={{ opacity }} className="max-w-xl">
-            <h2 className="text-xs uppercase tracking-widest text-gray-500 mb-4">About Elevate</h2>
+            <h2 className="text-xs uppercase tracking-widest text-gray-500 mb-4">{content.about.eyebrow}</h2>
             <h3 className="text-4xl md:text-5xl font-bold tracking-tight mb-8 leading-tight">
-              We engineer <span className="text-gradient">digital perfection</span> for visionary brands.
+              {hasHighlight ? (
+                <>
+                  {titleParts[0]}
+                  <span className="text-gradient">{content.about.highlightedWord}</span>
+                  {titleParts[1]}
+                </>
+              ) : (
+                content.about.title
+              )}
             </h3>
-            <p className="text-gray-400 text-lg mb-6 font-light leading-relaxed">
-              We don't just build websites; we craft digital ecosystems. Our mission is to transform complex problems into elegant, intuitive, and highly performant web experiences.
-            </p>
-            <p className="text-gray-400 text-lg mb-8 font-light leading-relaxed">
-              By blending world-class design with cutting-edge engineering, we help businesses establish a premium digital presence that outshines the competition.
-            </p>
+            {content.about.paragraphs.map((paragraph, index) => (
+              <p
+                key={paragraph}
+                className={`text-gray-400 text-lg font-light leading-relaxed ${index === content.about.paragraphs.length - 1 ? "mb-8" : "mb-6"}`}
+              >
+                {paragraph}
+              </p>
+            ))}
             
             <div className="flex gap-8">
-              <div>
-                <h4 className="text-3xl font-bold mb-2">15+</h4>
-                <p className="text-sm text-gray-500 uppercase tracking-wider">Enterprise Clients</p>
-              </div>
-              <div>
-                <h4 className="text-3xl font-bold mb-2">Awwwards</h4>
-                <p className="text-sm text-gray-500 uppercase tracking-wider">Site of the Day</p>
-              </div>
+              {content.about.stats.map((stat) => (
+                <div key={stat.label}>
+                  <h4 className="text-3xl font-bold mb-2">{stat.value}</h4>
+                  <p className="text-sm text-gray-500 uppercase tracking-wider">{stat.label}</p>
+                </div>
+              ))}
             </div>
           </motion.div>
 

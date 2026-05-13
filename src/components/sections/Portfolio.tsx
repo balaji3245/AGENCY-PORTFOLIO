@@ -1,40 +1,13 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
-import Image from "next/image";
+import { motion } from "framer-motion";
 import MagneticButton from "@/components/ui/MagneticButton";
-
-const projects = [
-  {
-    title: "FinTech Dashboard",
-    category: "Web Application",
-    description: "A highly complex, data-heavy dashboard for a modern financial institution featuring real-time analytics and a dark-mode first design system.",
-    tech: ["Next.js", "Tailwind", "D3.js", "WebSockets"],
-    color: "from-blue-900/40 to-black",
-  },
-  {
-    title: "Aura E-Commerce",
-    category: "Headless Shopify",
-    description: "A premium headless e-commerce experience for a luxury fashion brand. Features seamless page transitions, 3D product viewers, and sub-second load times.",
-    tech: ["React", "Shopify Storefront API", "Framer Motion"],
-    color: "from-orange-900/40 to-black",
-  },
-  {
-    title: "Nexus Architecture",
-    category: "Corporate Website",
-    description: "An award-winning portfolio website for a top-tier architecture firm, emphasizing large typography, smooth scrolling, and cinematic image reveals.",
-    tech: ["Next.js", "GSAP", "Lenis", "Three.js"],
-    color: "from-zinc-800/40 to-black",
-  }
-];
+import { useSiteContent } from "@/components/SiteContentProvider";
 
 export default function Portfolio() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"],
-  });
+  const { content } = useSiteContent();
 
   return (
     <section ref={containerRef} id="work" className="relative bg-[#050505]">
@@ -48,7 +21,7 @@ export default function Portfolio() {
       </div>
 
       <div className="relative z-10 -mt-[80vh]">
-        {projects.map((project, i) => {
+        {content.portfolio.items.map((project, i) => {
           return (
             <div key={i} className="min-h-screen flex items-center justify-center py-20 sticky top-0">
               <motion.div 
@@ -85,7 +58,7 @@ export default function Portfolio() {
                     <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500 z-10" />
                     {/* Placeholder for project image */}
                     <div className="w-full h-full bg-[#111] flex items-center justify-center border border-white/5">
-                       <div className="text-white/20 font-light text-sm uppercase tracking-widest">Project Preview</div>
+                       <div className="text-white/20 font-light text-sm uppercase tracking-widest">YJ Project Preview</div>
                     </div>
                   </div>
                 </div>

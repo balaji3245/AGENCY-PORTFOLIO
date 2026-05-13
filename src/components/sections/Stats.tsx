@@ -1,14 +1,8 @@
 "use client";
 
 import { useRef, useEffect } from "react";
-import { motion, useInView, useAnimation } from "framer-motion";
-
-const stats = [
-  { value: 15, label: "Projects Delivered", suffix: "+" },
-  { value: 98, label: "Client Satisfaction", suffix: "%" },
-  { value: 24, label: "Hours Support", suffix: "/7" },
-  { value: 100, label: "On-time Delivery", suffix: "%" },
-];
+import { motion, useInView } from "framer-motion";
+import { useSiteContent } from "@/components/SiteContentProvider";
 
 function Counter({ from, to, suffix }: { from: number; to: number; suffix: string }) {
   const nodeRef = useRef<HTMLSpanElement>(null);
@@ -16,7 +10,7 @@ function Counter({ from, to, suffix }: { from: number; to: number; suffix: strin
 
   useEffect(() => {
     if (inView && nodeRef.current) {
-      let start = from;
+      const start = from;
       const duration = 2000;
       const startTime = performance.now();
 
@@ -45,13 +39,15 @@ function Counter({ from, to, suffix }: { from: number; to: number; suffix: strin
 }
 
 export default function Stats() {
+  const { content } = useSiteContent();
+
   return (
     <section className="py-24 bg-[#0a0a0a] relative overflow-hidden">
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[300px] bg-gradient-to-r from-blue-900/10 via-purple-900/10 to-blue-900/10 blur-[100px] pointer-events-none" />
       
       <div className="container mx-auto px-6 relative z-10">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
-          {stats.map((stat, i) => (
+          {content.stats.map((stat, i) => (
             <motion.div 
               key={i}
               initial={{ opacity: 0, y: 20 }}

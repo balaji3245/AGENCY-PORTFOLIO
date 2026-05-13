@@ -3,9 +3,12 @@
 import { motion } from "framer-motion";
 import MagneticButton from "@/components/ui/MagneticButton";
 import Scene from "@/components/3d/Scene";
-import { ArrowRight, Star } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import { useSiteContent } from "@/components/SiteContentProvider";
 
 export default function Hero() {
+  const { content } = useSiteContent();
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
       <Scene />
@@ -18,7 +21,7 @@ export default function Hero() {
           className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm mb-8"
         >
           <span className="flex h-2 w-2 rounded-full bg-green-500 animate-pulse"></span>
-          <span className="text-xs font-medium text-gray-300">Available for new projects</span>
+          <span className="text-xs font-medium text-gray-300">{content.hero.badge}</span>
         </motion.div>
 
         <motion.h1
@@ -27,8 +30,8 @@ export default function Hero() {
           transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
           className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter leading-[1.1] mb-6 max-w-5xl"
         >
-          Digital experiences that <br className="hidden md:block" />
-          <span className="text-gradient">redefine boundaries.</span>
+          {content.hero.title} <br className="hidden md:block" />
+          <span className="text-gradient">{content.hero.highlight}</span>
         </motion.h1>
 
         <motion.p
@@ -37,8 +40,7 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.5 }}
           className="text-lg md:text-xl text-gray-400 max-w-2xl mb-10 font-light"
         >
-          We are a premium digital agency specializing in high-end web applications, 
-          immersive 3D experiences, and conversion-driven landing pages.
+          {content.hero.description}
         </motion.p>
 
         <motion.div
@@ -48,10 +50,10 @@ export default function Hero() {
           className="flex flex-col sm:flex-row items-center gap-4"
         >
           <MagneticButton className="px-8 py-4 text-base">
-            View Our Work <ArrowRight size={18} />
+            {content.hero.primaryCta} <ArrowRight size={18} />
           </MagneticButton>
           <MagneticButton variant="outline" className="px-8 py-4 text-base">
-            Book a Call
+            {content.hero.secondaryCta}
           </MagneticButton>
         </motion.div>
 

@@ -1,64 +1,29 @@
 "use client";
 
 import { motion } from "framer-motion";
-import MagneticButton from "@/components/ui/MagneticButton";
 import { Check } from "lucide-react";
-
-const plans = [
-  {
-    name: "Basic Website",
-    price: "₹5k",
-    description: "Perfect for establishing a professional online presence.",
-    features: [
-      "Up to 5 Pages",
-      "Responsive Design",
-      "Basic SEO Setup",
-      "Contact Form Integration",
-      "1 Month Free Support",
-    ],
-  },
-  {
-    name: "Business Website",
-    price: "₹15k",
-    description: "Advanced features and custom animations for growing brands.",
-    recommended: true,
-    features: [
-      "Up to 10 Pages",
-      "Custom Animations (GSAP/Framer)",
-      "CMS Integration",
-      "Advanced SEO & Analytics",
-      "3 Months Free Support",
-      "Performance Optimization",
-    ],
-  },
-  {
-    name: "Ecommerce",
-    price: "₹30k+",
-    description: "Full-scale online stores built for high conversion.",
-    features: [
-      "Unlimited Products",
-      "Custom Cart & Checkout",
-      "Payment Gateway Setup",
-      "Inventory Management",
-      "User Accounts",
-      "6 Months Free Support",
-    ],
-  }
-];
+import { useSiteContent } from "@/components/SiteContentProvider";
+import MagneticButton from "@/components/ui/MagneticButton";
 
 export default function Pricing() {
+  const { content } = useSiteContent();
+
   return (
     <section id="pricing" className="py-32 bg-[#0a0a0a]">
       <div className="container mx-auto px-6 md:px-12">
         <div className="text-center mb-20">
-          <h2 className="text-xs uppercase tracking-widest text-gray-500 mb-4">Investment</h2>
-          <h3 className="text-4xl md:text-5xl font-bold tracking-tight">Transparent pricing.</h3>
+          <h2 className="text-xs uppercase tracking-widest text-gray-500 mb-4">
+            Investment
+          </h2>
+          <h3 className="text-4xl md:text-5xl font-bold tracking-tight">
+            Transparent pricing.
+          </h3>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {plans.map((plan, i) => (
+          {content.pricing.map((plan, i) => (
             <motion.div
-              key={i}
+              key={`${plan.name}-${plan.price}`}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -72,17 +37,17 @@ export default function Pricing() {
                   Recommended
                 </div>
               )}
-              
+
               <h4 className="text-2xl font-bold mb-2">{plan.name}</h4>
               <p className="text-gray-400 text-sm mb-6">{plan.description}</p>
-              
+
               <div className="mb-8">
                 <span className="text-5xl font-bold">{plan.price}</span>
               </div>
-              
+
               <div className="space-y-4 mb-10 flex-grow">
-                {plan.features.map((feature, j) => (
-                  <div key={j} className="flex items-start gap-3">
+                {plan.features.map((feature) => (
+                  <div key={feature} className="flex items-start gap-3">
                     <div className="mt-1 shrink-0 bg-white/10 p-1 rounded-full text-white">
                       <Check size={12} />
                     </div>
@@ -90,9 +55,9 @@ export default function Pricing() {
                   </div>
                 ))}
               </div>
-              
-              <MagneticButton 
-                variant={plan.recommended ? "primary" : "outline"} 
+
+              <MagneticButton
+                variant={plan.recommended ? "primary" : "outline"}
                 className="w-full"
               >
                 Choose Plan

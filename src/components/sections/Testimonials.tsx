@@ -2,40 +2,25 @@
 
 import { motion } from "framer-motion";
 import { Quote } from "lucide-react";
-
-const testimonials = [
-  {
-    client: "David O.",
-    company: "TechNova Inc.",
-    content: "Elevate entirely transformed our brand's digital presence. The attention to detail in the micro-animations and the overall performance is simply unparalleled.",
-  },
-  {
-    client: "Samantha W.",
-    company: "Aura Luxury",
-    content: "Working with them felt like an extension of our own team. They understood the premium aesthetic we needed and delivered an e-commerce platform that increased our conversions by 40%.",
-  },
-  {
-    client: "Michael T.",
-    company: "Nexus Architecture",
-    content: "The best agency we've ever partnered with. Their technical expertise combined with their design sensibilities resulted in a masterpiece.",
-  }
-];
+import { useSiteContent } from "@/components/SiteContentProvider";
 
 export default function Testimonials() {
+  const { content } = useSiteContent();
+
   return (
     <section className="py-32 bg-[#0a0a0a] relative">
       <div className="container mx-auto px-6 md:px-12">
-         <div className="mb-20">
+        <div className="mb-20">
           <h2 className="text-xs uppercase tracking-widest text-gray-500 mb-4">Client Feedback</h2>
           <h3 className="text-4xl md:text-5xl font-bold tracking-tight">
-            Don't just take <br className="hidden md:block"/> our word for it.
+            Do not just take <br className="hidden md:block" /> our word for it.
           </h3>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {testimonials.map((test, i) => (
+          {content.testimonials.map((test, i) => (
             <motion.div
-              key={i}
+              key={`${test.client}-${test.company}`}
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
@@ -51,7 +36,7 @@ export default function Testimonials() {
                 ))}
               </div>
               <p className="text-lg text-gray-300 font-light mb-8 leading-relaxed">
-                "{test.content}"
+                &quot;{test.content}&quot;
               </p>
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-xl font-bold">

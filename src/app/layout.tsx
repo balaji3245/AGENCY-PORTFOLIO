@@ -3,12 +3,14 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/ui/SmoothScroll";
 import CustomCursor from "@/components/ui/CustomCursor";
+import SiteContentProvider from "@/components/SiteContentProvider";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-  title: "Elevate | Premium Digital Agency",
-  description: "We build world-class digital experiences for premium brands.",
+  title: "YJ DEVELOPERS | Digital, Creative, Web & Branding Agency",
+  description:
+    "YJ DEVELOPERS builds websites, brand systems, digital campaigns, and creative experiences for ambitious businesses.",
 };
 
 export default function RootLayout({
@@ -21,9 +23,9 @@ export default function RootLayout({
       <body className={`${inter.variable} font-sans antialiased`}>
         <div className="noise-bg"></div>
         <CustomCursor />
-        <SmoothScroll>
-          {children}
-        </SmoothScroll>
+        <SiteContentProvider>
+          <SmoothScroll>{children}</SmoothScroll>
+        </SiteContentProvider>
       </body>
     </html>
   );
