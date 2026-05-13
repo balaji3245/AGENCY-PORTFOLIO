@@ -7,37 +7,35 @@ import { useSiteContent } from "@/components/SiteContentProvider";
 
 function ProjectCard({ project, index, total }: { project: any, index: number, total: number }) {
   const cardRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: cardRef,
-    offset: ["start end", "start start"]
-  });
 
-  // We want the card to fade out/scale down when the NEXT card scrolls up.
-  // Since each card is min-h-screen, when this card is sticky at top, 
-  // the next card will take 1 full viewport height to scroll up.
-  const { scrollYProgress: scrollYProgressExit } = useScroll({
+  // Track scroll progress of this specific card's container
+  // It starts when the card hits the top of the viewport (0)
+  // It ends when the card's bottom hits the top of the viewport (1)
+  const { scrollYProgress } = useScroll({
     target: cardRef,
     offset: ["start start", "end start"]
   });
 
-  const scale = useTransform(scrollYProgressExit, [0, 1], [1, 0.9]);
-  const opacity = useTransform(scrollYProgressExit, [0, 1], [1, 0]);
+  // As the next card scrolls up, this card scales down and fades out
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.9]);
+  const opacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
 
   // Adjust top spacing so they stack nicely with a slight offset
   const topOffset = `calc(5vh + ${index * 20}px)`;
 
   return (
-    <div ref={cardRef} className="h-screen flex items-center justify-center sticky" style={{ top: topOffset }}>
-      <motion.div 
-        style={{ scale, opacity }}
-        className={`w-full max-w-6xl rounded-3xl overflow-hidden glass-card border border-white/10 bg-black p-8 md:p-12 shadow-2xl relative`}
-        initial={{ y: 50, opacity: 0 }}
-        whileInView={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        viewport={{ once: true, margin: "-10%" }}
-      >
-        {/* Subtle gradient overlay based on project color */}
-        <div className={`absolute inset-0 bg-gradient-to-br ${project.color} opacity-20 pointer-events-none`} />
+    <div ref={cardRef} className="h-screen w-full relative">
+      <div className="sticky flex items-center justify-center h-screen w-full" style={{ top: topOffset }}>
+        <motion.div 
+          style={{ scale, opacity }}
+          className={`w-full max-w-6xl rounded-3xl overflow-hidden border border-white/10 bg-zinc-950 p-8 md:p-12 shadow-2xl relative`}
+          initial={{ y: 50, opacity: 0 }}
+          whileInView={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          viewport={{ once: true, margin: "-10%" }}
+        >
+          {/* Subtle gradient overlay based on project color */}
+          <div className={`absolute inset-0 bg-gradient-to-br ${project.color} opacity-20 pointer-events-none`} />
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
           <div className="order-2 lg:order-1">
