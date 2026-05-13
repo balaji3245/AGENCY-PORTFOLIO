@@ -49,16 +49,6 @@ export default function Footer() {
                   About Us
                 </Link>
               </li>
-              <li>
-                <Link href="#pricing" className="hover:text-white transition-colors">
-                  Pricing
-                </Link>
-              </li>
-              <li>
-                <Link href="/admin" className="hover:text-white transition-colors">
-                  Admin
-                </Link>
-              </li>
             </ul>
           </div>
 
@@ -79,14 +69,6 @@ export default function Footer() {
                   className="hover:text-white transition-colors flex items-center gap-2"
                 >
                   Case Studies <ArrowUpRight size={14} />
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="#pricing"
-                  className="hover:text-white transition-colors flex items-center gap-2"
-                >
-                  Packages <ArrowUpRight size={14} />
                 </Link>
               </li>
               <li>

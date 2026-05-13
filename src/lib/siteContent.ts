@@ -123,7 +123,7 @@ export const defaultSiteContent: SiteContent = {
     ],
     stats: [
       { value: "45+", label: "Projects Planned" },
-      { value: "9", label: "Core Team Members" },
+      { value: "6", label: "Core Capabilities" },
     ],
   },
   services: {
@@ -178,7 +178,7 @@ export const defaultSiteContent: SiteContent = {
       {
         title: "Backend & Integrations",
         description:
-          "APIs, admin panels, CMS setup, forms, payments, and integrations that make your website useful.",
+          "APIs, private dashboards, CMS setup, forms, payments, and integrations that make your website useful.",
         icon: "server",
       },
       {
@@ -237,24 +237,21 @@ export const defaultSiteContent: SiteContent = {
   stats: [
     { value: 45, label: "Projects Planned", suffix: "+" },
     { value: 98, label: "Client Satisfaction", suffix: "%" },
-    { value: 9, label: "Team Specialists", suffix: "" },
+    { value: 6, label: "Service Capabilities", suffix: "" },
     { value: 100, label: "On-time Delivery", suffix: "%" },
   ],
   team: {
-    eyebrow: "The Minds Behind YJ DEVELOPERS",
-    title: "A complete agency team.",
+    eyebrow: "How we work",
+    title: "A complete delivery team without staff photo dependency.",
     description:
-      "Strategists, designers, developers, marketers, and SEO specialists working together from first idea to launch.",
+      "Every project is handled through clear specialist roles, structured reviews, and one coordinated delivery flow from first idea to launch.",
     members: [
-      { name: "Yash Jadhav", role: "Founder & Strategy Lead", image: "from-cyan-500/25 via-zinc-800 to-black" },
-      { name: "Nisha Sharma", role: "Creative Director", image: "from-fuchsia-500/25 via-zinc-800 to-black" },
-      { name: "Aarav Mehta", role: "Lead Web Developer", image: "from-emerald-500/25 via-zinc-800 to-black" },
-      { name: "Priya Nair", role: "Brand Identity Designer", image: "from-amber-500/25 via-zinc-800 to-black" },
-      { name: "Rohan Patil", role: "Frontend Engineer", image: "from-blue-500/25 via-zinc-800 to-black" },
-      { name: "Meera Kapoor", role: "Digital Marketing Manager", image: "from-rose-500/25 via-zinc-800 to-black" },
-      { name: "Kabir Singh", role: "Backend Developer", image: "from-violet-500/25 via-zinc-800 to-black" },
-      { name: "Ananya Rao", role: "UI/UX Designer", image: "from-teal-500/25 via-zinc-800 to-black" },
-      { name: "Dev Malhotra", role: "SEO & Analytics Specialist", image: "from-lime-500/25 via-zinc-800 to-black" },
+      { name: "Strategy & Discovery", role: "We clarify goals, audience, positioning, content needs, and the right website structure before design begins.", image: "from-cyan-400 to-blue-500" },
+      { name: "Brand & Creative Direction", role: "We shape the visual system, campaign feel, messaging, and assets so the business looks consistent everywhere.", image: "from-fuchsia-400 to-rose-500" },
+      { name: "UI/UX Design", role: "We create clean, responsive interfaces focused on trust, readability, conversion, and smooth user journeys.", image: "from-amber-300 to-orange-500" },
+      { name: "Frontend Development", role: "We build fast, polished pages with modern React, Next.js, animation, and mobile-first implementation.", image: "from-emerald-400 to-teal-500" },
+      { name: "Backend & Integrations", role: "We connect forms, dashboards, CMS flows, payments, APIs, automations, and business tools when needed.", image: "from-violet-400 to-indigo-500" },
+      { name: "SEO & Launch Support", role: "We prepare metadata, performance checks, analytics, launch testing, and improvement notes after handover.", image: "from-lime-300 to-green-500" },
     ],
   },
   testimonials: [

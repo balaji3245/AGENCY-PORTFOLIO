@@ -24,7 +24,6 @@ export default function Navbar() {
     { name: "Work", href: "#work" },
     { name: "Team", href: "#team" },
     { name: "Process", href: "#process" },
-    { name: "Pricing", href: "#pricing" },
   ];
   const openContact = () => {
     document
@@ -60,12 +59,6 @@ export default function Navbar() {
                   {link.name}
                 </Link>
               ))}
-              <Link
-                href="/admin"
-                className="text-sm text-cyan-300 hover:text-white transition-colors"
-              >
-                Admin
-              </Link>
             </div>
             <MagneticButton
               variant="primary"
@@ -112,13 +105,6 @@ export default function Navbar() {
                   {link.name}
                 </Link>
               ))}
-              <Link
-                href="/admin"
-                className="text-cyan-300 hover:text-white transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Admin
-              </Link>
               <MagneticButton variant="primary" className="mt-8" onClick={openContact}>
                 Start Project
               </MagneticButton>

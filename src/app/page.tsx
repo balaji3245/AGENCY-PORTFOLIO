@@ -8,7 +8,6 @@ import Stats from "@/components/sections/Stats";
 import Team from "@/components/sections/Team";
 import Testimonials from "@/components/sections/Testimonials";
 import Process from "@/components/sections/Process";
-import Pricing from "@/components/sections/Pricing";
 import Industries from "@/components/sections/Industries";
 import Contact from "@/components/sections/Contact";
 import Policies from "@/components/sections/Policies";
@@ -28,7 +27,6 @@ export default function Home() {
       <Team />
       <Testimonials />
       <Process />
-      <Pricing />
       <Industries />
       <Contact />
       <Policies />

@@ -980,7 +980,7 @@ export default function AdminPanel() {
             {draft.team.members.map((member, index) => (
               <div key={index} className="rounded-2xl border border-white/10 p-4">
                 <div className="mb-4 flex items-center justify-between">
-                  <p className="text-sm text-gray-300">Team Member {index + 1}</p>
+                  <p className="text-sm text-gray-300">Team Capability {index + 1}</p>
                   <SecondaryButton
                     onClick={() =>
                       setDraft({
@@ -996,7 +996,7 @@ export default function AdminPanel() {
                   </SecondaryButton>
                 </div>
                 <div className="grid gap-4 md:grid-cols-2">
-                  <Field label="Name">
+                  <Field label="Capability Title">
                     <Input
                       value={member.name}
                       onChange={(e) =>
@@ -1012,7 +1012,7 @@ export default function AdminPanel() {
                       }
                     />
                   </Field>
-                  <Field label="Role">
+                  <Field label="Description">
                     <Input
                       value={member.role}
                       onChange={(e) =>
@@ -1029,7 +1029,7 @@ export default function AdminPanel() {
                     />
                   </Field>
                 </div>
-                <Field label="Gradient Classes">
+                <Field label="Accent Gradient Classes">
                   <Input
                     value={member.image}
                     onChange={(e) =>
@@ -1056,16 +1056,16 @@ export default function AdminPanel() {
                     members: [
                       ...draft.team.members,
                       {
-                        name: "New Team Member",
-                        role: "Role",
-                        image: "from-zinc-500/25 via-zinc-800 to-black",
+                        name: "New Capability",
+                        role: "Describe what this part of the team handles.",
+                        image: "from-zinc-400 to-slate-500",
                       },
                     ],
                   },
                 })
               }
             >
-              <Plus size={14} /> Add Member
+              <Plus size={14} /> Add Capability
             </SecondaryButton>
           </Section>
 
