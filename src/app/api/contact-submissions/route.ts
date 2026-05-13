@@ -46,9 +46,9 @@ export async function POST(request: Request) {
     return Response.json({ error: "Invalid request body." }, { status: 400 });
   }
 
-  if (!input.name || !input.email || !input.phone || !input.message) {
+  if (!input.name || !input.email || !input.message) {
     return Response.json(
-      { error: "Name, email, phone, and message are required." },
+      { error: "Name, email, and message are required." },
       { status: 400 }
     );
   }

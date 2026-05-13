@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import MagneticButton from "@/components/ui/MagneticButton";
 import BrandLogo from "@/components/layout/BrandLogo";
 
 export default function Navbar() {
@@ -24,12 +23,6 @@ export default function Navbar() {
     { name: "Team", href: "#team" },
     { name: "Process", href: "#process" },
   ];
-  const openContact = () => {
-    document
-      .querySelector("#contact")
-      ?.scrollIntoView({ behavior: "smooth", block: "start" });
-    setMobileMenuOpen(false);
-  };
 
   return (
     <>
