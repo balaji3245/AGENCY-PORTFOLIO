@@ -21,7 +21,7 @@ function ProjectCard({ project, index, total }: { project: any, index: number, t
   });
 
   const scale = useTransform(scrollYProgressExit, [0, 1], [1, 0.9]);
-  const opacity = useTransform(scrollYProgressExit, [0, 1], [1, 0.3]);
+  const opacity = useTransform(scrollYProgressExit, [0, 1], [1, 0]);
 
   // Adjust top spacing so they stack nicely with a slight offset
   const topOffset = `calc(5vh + ${index * 20}px)`;
