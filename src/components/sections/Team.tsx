@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
+import { Mail, ArrowUpRight } from "lucide-react";
 import { useSiteContent } from "@/components/SiteContentProvider";
 
 export default function Team() {
@@ -26,24 +26,13 @@ export default function Team() {
               transition={{ duration: 0.6, delay: i * 0.1 }}
               className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-colors hover:border-white/25 flex flex-col"
             >
+              {/* Top accent gradient bar */}
               <div className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${member.image}`} />
-              <div className="mb-6 flex items-start justify-between gap-4">
-                <span className="text-xs font-semibold uppercase tracking-widest text-gray-500">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <div className="flex gap-3">
-                  {member.github && (
-                    <a href={member.github} target="_blank" rel="noreferrer" className="text-gray-600 hover:text-white transition-colors" aria-label="GitHub">
-                      <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
-                    </a>
-                  )}
-                  {member.portfolio && (
-                    <a href={member.portfolio} target="_blank" rel="noreferrer" className="text-gray-600 hover:text-white transition-colors" aria-label="Portfolio">
-                      <ArrowUpRight size={18} />
-                    </a>
-                  )}
-                </div>
-              </div>
+
+              {/* Serial number */}
+              <span className="text-xs font-semibold uppercase tracking-widest text-gray-500 mb-5 block">
+                {String(i + 1).padStart(2, "0")}
+              </span>
 
               {/* Name */}
               <h4 className="mb-1 text-xl font-semibold tracking-tight">{member.name}</h4>
@@ -60,7 +49,8 @@ export default function Team() {
                 {member.intro || member.role}
               </p>
 
-              <div className="mt-auto space-y-4 pt-4 border-t border-white/5">
+              {/* Skills */}
+              <div className="mt-auto pt-4 border-t border-white/5 space-y-4">
                 {member.skills && member.skills.length > 0 && (
                   <div className="flex flex-wrap gap-2">
                     {member.skills.map((skill, sIndex) => (
@@ -70,12 +60,46 @@ export default function Team() {
                     ))}
                   </div>
                 )}
-                
-                {member.email && (
-                  <a href={`mailto:${member.email}`} className="text-sm text-cyan-400 hover:text-cyan-300 transition-colors block">
-                    {member.email}
-                  </a>
-                )}
+
+                {/* Action buttons row — Email, GitHub, Portfolio */}
+                <div className="flex items-center gap-2 flex-wrap">
+                  {member.email && (
+                    <a
+                      href={`mailto:${member.email}`}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-white/5 border border-white/10 text-cyan-300 hover:bg-cyan-400/10 hover:border-cyan-400/30 transition-colors"
+                      aria-label="Email"
+                    >
+                      <Mail size={12} />
+                      Email
+                    </a>
+                  )}
+                  {member.github && (
+                    <a
+                      href={member.github}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10 hover:text-white transition-colors"
+                      aria-label="GitHub"
+                    >
+                      <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                      </svg>
+                      GitHub
+                    </a>
+                  )}
+                  {member.portfolio && (
+                    <a
+                      href={member.portfolio}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10 hover:text-white transition-colors"
+                      aria-label="Portfolio"
+                    >
+                      <ArrowUpRight size={12} />
+                      Portfolio
+                    </a>
+                  )}
+                </div>
               </div>
             </motion.div>
           ))}
