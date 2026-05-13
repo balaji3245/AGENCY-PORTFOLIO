@@ -227,11 +227,43 @@ export const defaultSiteContent: SiteContent = {
       },
       {
         title: "DineFlow Restaurant Suite",
-        category: "Web Development Agency",
+        category: "Web Development",
         description:
           "A restaurant website with menu management, reservation flows, WhatsApp ordering, local SEO, and campaign-ready landing pages.",
         tech: ["React", "CMS", "Analytics", "Payments"],
         color: "from-orange-900/40 to-black",
+      },
+      {
+        title: "Zenith Ecommerce Experience",
+        category: "Ecommerce Solutions",
+        description:
+          "High-performance store with custom product filtering, checkout optimization, inventory sync, and SEO-ready architecture for a growing retail brand.",
+        tech: ["Next.js", "Stripe", "PostgreSQL", "Tailwind"],
+        color: "from-purple-900/40 to-black",
+      },
+      {
+        title: "Pulse Mobile App Launch",
+        category: "Mobile Experiences",
+        description:
+          "A mobile-first progressive web app with seamless transitions, offline support, push notifications, and a polished user interface for real-time tracking.",
+        tech: ["PWA", "Framer Motion", "TypeScript", "Node.js"],
+        color: "from-fuchsia-900/40 to-black",
+      },
+      {
+        title: "GrowthLab SEO Funnel",
+        category: "SEO & Landing Pages",
+        description:
+          "Technical SEO overhaul combined with high-converting landing pages that increased organic traffic by 150% and lead conversion by 40%.",
+        tech: ["Technical SEO", "Copywriting", "AB Testing", "Analytics"],
+        color: "from-emerald-900/40 to-black",
+      },
+      {
+        title: "Insight Enterprise Dashboard",
+        category: "Backend & Integrations",
+        description:
+          "Internal data visualization tool with custom API integrations, real-time analytics, user role management, and automated reporting systems.",
+        tech: ["GraphQL", "React Query", "AWS", "Dashboard"],
+        color: "from-cyan-900/40 to-black",
       },
       {
         title: "ScaleUp Creative Campaign",
