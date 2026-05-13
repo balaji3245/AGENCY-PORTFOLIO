@@ -44,8 +44,21 @@ export default function Team() {
                   )}
                 </div>
               </div>
-              <h4 className="mb-2 text-xl font-semibold tracking-tight">{member.name}</h4>
-              <p className="mb-4 text-sm leading-6 text-gray-400 flex-grow">{member.role}</p>
+
+              {/* Name */}
+              <h4 className="mb-1 text-xl font-semibold tracking-tight">{member.name}</h4>
+
+              {/* Role badge */}
+              {member.role && (
+                <span className="inline-block mb-3 px-3 py-1 rounded-full text-[11px] font-semibold uppercase tracking-widest bg-white/10 text-cyan-300 border border-cyan-400/20">
+                  {member.role}
+                </span>
+              )}
+
+              {/* Intro */}
+              <p className="mb-4 text-sm leading-6 text-gray-400 flex-grow">
+                {member.intro || member.role}
+              </p>
 
               <div className="mt-auto space-y-4 pt-4 border-t border-white/5">
                 {member.skills && member.skills.length > 0 && (

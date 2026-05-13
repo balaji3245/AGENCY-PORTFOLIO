@@ -1226,7 +1226,7 @@ export default function AdminPanel() {
                   </SecondaryButton>
                 </div>
                 <div className="grid gap-4 md:grid-cols-2">
-                  <Field label="Capability Title">
+                  <Field label="Name">
                     <Input
                       value={member.name}
                       onChange={(e) =>
@@ -1242,7 +1242,7 @@ export default function AdminPanel() {
                       }
                     />
                   </Field>
-                  <Field label="Description">
+                  <Field label="Role (e.g. Frontend Developer)">
                     <Input
                       value={member.role}
                       onChange={(e) =>
@@ -1259,6 +1259,23 @@ export default function AdminPanel() {
                     />
                   </Field>
                 </div>
+                <Field label="Intro (short description about the person)">
+                  <Textarea
+                    rows={3}
+                    value={member.intro || ""}
+                    onChange={(e) =>
+                      setDraft({
+                        ...draft,
+                        team: {
+                          ...draft.team,
+                          members: draft.team.members.map((item, i) =>
+                            i === index ? { ...item, intro: e.target.value } : item
+                          ),
+                        },
+                      })
+                    }
+                  />
+                </Field>
                 <Field label="Accent Gradient Classes">
                   <Input
                     value={member.image}
@@ -1354,8 +1371,9 @@ export default function AdminPanel() {
                     members: [
                       ...draft.team.members,
                       {
-                        name: "New Capability",
-                        role: "Describe what this part of the team handles.",
+                        name: "New Member",
+                        role: "Role / Title",
+                        intro: "Short intro about this person.",
                         image: "from-zinc-400 to-slate-500",
                         email: "",
                         portfolio: "",

@@ -70,6 +70,7 @@ export type SiteContent = {
     members: {
       name: string;
       role: string;
+      intro?: string;
       image: string;
       skills?: string[];
       portfolio?: string;
@@ -256,7 +257,8 @@ export const defaultSiteContent: SiteContent = {
     members: [
       { 
         name: "Strategy & Discovery", 
-        role: "We clarify goals, audience, positioning, content needs, and the right website structure before design begins.", 
+        role: "Lead Strategist",
+        intro: "We clarify goals, audience, positioning, content needs, and the right website structure before design begins.",
         image: "from-cyan-400 to-blue-500",
         skills: ["Strategy", "Research", "Planning"],
         portfolio: "https://example.com/portfolio",
@@ -265,7 +267,8 @@ export const defaultSiteContent: SiteContent = {
       },
       { 
         name: "Brand & Creative Direction", 
-        role: "We shape the visual system, campaign feel, messaging, and assets so the business looks consistent everywhere.", 
+        role: "Creative Director",
+        intro: "We shape the visual system, campaign feel, messaging, and assets so the business looks consistent everywhere.",
         image: "from-fuchsia-400 to-rose-500",
         skills: ["Branding", "Creative", "Visual Design"],
         portfolio: "",
@@ -274,7 +277,8 @@ export const defaultSiteContent: SiteContent = {
       },
       { 
         name: "UI/UX Design", 
-        role: "We create clean, responsive interfaces focused on trust, readability, conversion, and smooth user journeys.", 
+        role: "UI/UX Designer",
+        intro: "We create clean, responsive interfaces focused on trust, readability, conversion, and smooth user journeys.",
         image: "from-amber-300 to-orange-500",
         skills: ["Figma", "UI", "UX", "Wireframing"],
         portfolio: "",
@@ -283,7 +287,8 @@ export const defaultSiteContent: SiteContent = {
       },
       { 
         name: "Frontend Development", 
-        role: "We build fast, polished pages with modern React, Next.js, animation, and mobile-first implementation.", 
+        role: "Frontend Developer",
+        intro: "We build fast, polished pages with modern React, Next.js, animation, and mobile-first implementation.",
         image: "from-emerald-400 to-teal-500",
         skills: ["React", "Next.js", "Tailwind CSS", "Framer Motion"],
         portfolio: "https://example.com/frontend",
@@ -292,7 +297,8 @@ export const defaultSiteContent: SiteContent = {
       },
       { 
         name: "Backend & Integrations", 
-        role: "We connect forms, dashboards, CMS flows, payments, APIs, automations, and business tools when needed.", 
+        role: "Backend Developer",
+        intro: "We connect forms, dashboards, CMS flows, payments, APIs, automations, and business tools when needed.",
         image: "from-violet-400 to-indigo-500",
         skills: ["Node.js", "PostgreSQL", "APIs", "AWS"],
         portfolio: "",
@@ -301,7 +307,8 @@ export const defaultSiteContent: SiteContent = {
       },
       { 
         name: "SEO & Launch Support", 
-        role: "We prepare metadata, performance checks, analytics, launch testing, and improvement notes after handover.", 
+        role: "SEO Specialist",
+        intro: "We prepare metadata, performance checks, analytics, launch testing, and improvement notes after handover.",
         image: "from-lime-300 to-green-500",
         skills: ["SEO", "Analytics", "Performance"],
         portfolio: "",
