@@ -60,13 +60,12 @@ export default function Navbar() {
                 </Link>
               ))}
             </div>
-            <MagneticButton
-              variant="primary"
-              className="py-2 px-5 text-sm"
-              onClick={openContact}
+            <Link
+              href="/start-project"
+              className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2 text-sm font-medium text-black transition hover:bg-white/90"
             >
               Start Project
-            </MagneticButton>
+            </Link>
           </div>
 
           {/* Mobile Toggle */}
@@ -105,9 +104,13 @@ export default function Navbar() {
                   {link.name}
                 </Link>
               ))}
-              <MagneticButton variant="primary" className="mt-8" onClick={openContact}>
+              <Link
+                href="/start-project"
+                onClick={() => setMobileMenuOpen(false)}
+                className="inline-flex items-center gap-2 mt-8 px-6 py-3 rounded-full bg-white text-black font-medium text-sm hover:bg-white/90 transition-colors"
+              >
                 Start Project
-              </MagneticButton>
+              </Link>
             </div>
           </motion.div>
         )}

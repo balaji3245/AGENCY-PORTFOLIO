@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import MagneticButton from "@/components/ui/MagneticButton";
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 import { useSiteContent } from "@/components/SiteContentProvider";
 
 export default function Hero() {
@@ -51,12 +52,12 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.7 }}
           className="flex flex-col sm:flex-row items-center gap-4"
         >
-          <MagneticButton
-            className="px-8 py-4 text-base"
-            onClick={() => scrollToSection("#work")}
+          <Link
+            href="/start-project"
+            className="inline-flex items-center gap-2 px-8 py-4 text-base rounded-full bg-white text-black font-medium hover:bg-white/90 transition-colors"
           >
             {content.hero.primaryCta} <ArrowRight size={18} />
-          </MagneticButton>
+          </Link>
           <MagneticButton
             variant="outline"
             className="px-8 py-4 text-base"
