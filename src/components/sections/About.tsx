@@ -149,19 +149,7 @@ export default function About() {
               </motion.div>
             ))}
 
-            {/* Bottom CTA card */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className="sm:col-span-2 rounded-2xl border border-cyan-400/20 bg-gradient-to-br from-cyan-400/10 to-transparent p-6"
-            >
-              <p className="text-xs uppercase tracking-widest text-cyan-400 mb-2">Our Mission</p>
-              <p className="text-white font-medium leading-relaxed">
-                To make world-class digital design accessible to every ambitious brand — not just Fortune 500 companies.
-              </p>
-            </motion.div>
+
           </motion.div>
         </div>
       </div>
