@@ -32,7 +32,6 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans), sans-serif;
   overflow-x: hidden;
-  cursor: none; /* For custom cursor */
 }
 
 html {
@@ -93,19 +92,4 @@ html {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-}
-
-.admin-panel,
-.admin-panel * {
-  cursor: auto !important;
-}
-
-@media (hover: none), (pointer: coarse) {
-  body {
-    cursor: auto;
-  }
-
-  .custom-cursor {
-    display: none;
-  }
 }

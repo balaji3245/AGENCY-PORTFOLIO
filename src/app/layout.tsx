@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/ui/SmoothScroll";
-import CustomCursor from "@/components/ui/CustomCursor";
 import SiteContentProvider from "@/components/SiteContentProvider";
 import MovingBackground from "@/components/ui/MovingBackground";
 
@@ -62,7 +61,6 @@ export default function RootLayout({
       <body className={`${inter.variable} font-sans antialiased`}>
         <MovingBackground />
         <div className="noise-bg"></div>
-        <CustomCursor />
         <SiteContentProvider>
           <SmoothScroll>{children}</SmoothScroll>
         </SiteContentProvider>
