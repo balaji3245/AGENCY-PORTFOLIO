@@ -9,18 +9,18 @@ export default function Footer() {
   const { content } = useSiteContent();
 
   return (
-    <footer className="bg-transparent pt-32 pb-10 border-t border-white/5 relative overflow-hidden">
+    <footer className="bg-transparent pt-16 pb-8 border-t border-white/5 relative overflow-hidden">
       <div className="container mx-auto px-6 md:px-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
           <div className="lg:col-span-2">
             <Link
               href="/"
               className="mb-6 inline-flex"
               aria-label="YJ Developers home"
             >
-              <BrandLogo imageClassName="h-16" />
+              <BrandLogo imageClassName="h-10" />
             </Link>
-            <p className="text-gray-400 font-light max-w-sm mb-8">
+            <p className="text-gray-400 font-light max-w-sm mb-5 text-sm">
               {content.brand.footerDescription}
             </p>
             <a
