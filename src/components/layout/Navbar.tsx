@@ -3,108 +3,131 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import BrandLogo from "@/components/layout/BrandLogo";
+import { ArrowRight } from "lucide-react";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
+    const handleScroll = () => setIsScrolled(window.scrollY > 60);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const navLinks = [
-    { name: "Services", href: "#services" },
     { name: "Work", href: "#work" },
-    { name: "Team", href: "#team" },
+    { name: "Services", href: "#services" },
+    { name: "About", href: "#about" },
     { name: "Process", href: "#process" },
   ];
 
   return (
     <>
-      <motion.nav
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
+      <motion.header
+        initial={{ y: -80, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled ? "py-6 bg-transparent" : "py-6 bg-transparent"
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+          isScrolled
+            ? "py-4 bg-[#080808]/90 backdrop-blur-xl border-b border-white/5"
+            : "py-6 bg-transparent"
         }`}
       >
-        <div className="container mx-auto px-6 md:px-12 flex items-center justify-between">
-          <Link href="/" aria-label="YJ Developers home" className="flex items-center gap-3">
-            <BrandLogo compact imageClassName="h-11 w-11" />
-            <span className="font-bold text-xl tracking-wider text-white hidden sm:block">YJ DEVELOPERS</span>
+        <div className="container mx-auto px-6 md:px-12 lg:px-20 flex items-center justify-between">
+          {/* Logo */}
+          <Link
+            href="/"
+            aria-label="YJ Developers home"
+            className="flex items-center gap-2.5 group"
+          >
+            <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center">
+              <span className="font-display font-black text-black text-sm tracking-tight">YJ</span>
+            </div>
+            <span className="font-display font-bold text-white tracking-tight text-base hidden sm:block">
+              Developers
+            </span>
           </Link>
 
-          {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-8">
-            <div className="flex items-center gap-6 glass px-6 py-2 rounded-full border border-white/10">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  className="text-sm text-gray-300 hover:text-white transition-colors"
-                >
-                  {link.name}
-                </Link>
-              ))}
-            </div>
-            <Link
-              href="/start-project"
-              className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2 text-sm font-medium text-black transition hover:bg-white/90"
-            >
-              Start Project
+          {/* Desktop nav */}
+          <nav className="hidden md:flex items-center gap-8">
+            {navLinks.map((link) => (
+              <Link
+                key={link.name}
+                href={link.href}
+                className="text-sm text-[#71717a] hover:text-white transition-colors duration-200 font-medium"
+              >
+                {link.name}
+              </Link>
+            ))}
+          </nav>
+
+          {/* CTA */}
+          <div className="hidden md:block">
+            <Link href="/start-project" className="btn-primary text-sm py-2.5 px-5">
+              Start a Project
+              <ArrowRight size={14} />
             </Link>
           </div>
 
-          {/* Mobile Toggle */}
+          {/* Mobile burger */}
           <button
-            className="md:hidden relative z-50 p-2"
+            className="md:hidden p-2 relative z-50"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileMenuOpen}
           >
-            <div className="flex flex-col gap-1.5">
-              <span className={`block w-6 h-0.5 bg-white transition-transform ${mobileMenuOpen ? "rotate-45 translate-y-2" : ""}`} />
-              <span className={`block w-6 h-0.5 bg-white transition-opacity ${mobileMenuOpen ? "opacity-0" : ""}`} />
-              <span className={`block w-6 h-0.5 bg-white transition-transform ${mobileMenuOpen ? "-rotate-45 -translate-y-2" : ""}`} />
+            <div className="flex flex-col gap-[5px] w-6">
+              <span className={`block h-[1.5px] bg-white rounded transition-all duration-300 origin-center ${mobileMenuOpen ? "rotate-45 translate-y-[6.5px]" : ""}`} />
+              <span className={`block h-[1.5px] bg-white rounded transition-all duration-300 ${mobileMenuOpen ? "opacity-0 w-0" : "w-full"}`} />
+              <span className={`block h-[1.5px] bg-white rounded transition-all duration-300 origin-center ${mobileMenuOpen ? "-rotate-45 -translate-y-[6.5px]" : ""}`} />
             </div>
           </button>
         </div>
-      </motion.nav>
+      </motion.header>
 
-      {/* Mobile Menu */}
+      {/* Mobile menu */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-40 bg-black/95 backdrop-blur-xl flex items-center justify-center"
+            initial={{ opacity: 0, clipPath: "inset(0 0 100% 0)" }}
+            animate={{ opacity: 1, clipPath: "inset(0 0 0% 0)" }}
+            exit={{ opacity: 0, clipPath: "inset(0 0 100% 0)" }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed inset-0 z-40 bg-[#050505] flex flex-col items-start justify-center px-10"
           >
-            <div className="flex flex-col items-center gap-8 text-2xl font-light">
-              {navLinks.map((link) => (
-                <Link
+            <nav className="flex flex-col gap-8">
+              {navLinks.map((link, i) => (
+                <motion.div
                   key={link.name}
-                  href={link.href}
-                  className="hover:text-gray-400 transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.08, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                 >
-                  {link.name}
-                </Link>
+                  <Link
+                    href={link.href}
+                    className="font-display text-4xl font-bold text-white hover:text-[#71717a] transition-colors duration-200"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {link.name}
+                  </Link>
+                </motion.div>
               ))}
+            </nav>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.4 }}
+              className="mt-14"
+            >
               <Link
                 href="/start-project"
+                className="btn-primary"
                 onClick={() => setMobileMenuOpen(false)}
-                className="inline-flex items-center gap-2 mt-8 px-6 py-3 rounded-full bg-white text-black font-medium text-sm hover:bg-white/90 transition-colors"
               >
-                Start Project
+                Start a Project <ArrowRight size={16} />
               </Link>
-            </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

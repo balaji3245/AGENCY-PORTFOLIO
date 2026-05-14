@@ -2,29 +2,23 @@ import Navbar from "@/components/layout/Navbar";
 import Hero from "@/components/sections/Hero";
 import About from "@/components/sections/About";
 import Services from "@/components/sections/Services";
-import TechStack from "@/components/sections/TechStack";
 import Portfolio from "@/components/sections/Portfolio";
-import Team from "@/components/sections/Team";
-import Testimonials from "@/components/sections/Testimonials";
 import Process from "@/components/sections/Process";
+import Testimonials from "@/components/sections/Testimonials";
 import Contact from "@/components/sections/Contact";
-import Policies from "@/components/sections/Policies";
 import Footer from "@/components/layout/Footer";
 
 export default function Home() {
   return (
-    <main className="bg-transparent min-h-screen">
+    <main className="min-h-screen overflow-x-hidden">
       <Navbar />
       <Hero />
       <About />
       <Services />
-      <TechStack />
       <Portfolio />
-      <Team />
-      <Testimonials />
       <Process />
+      <Testimonials />
       <Contact />
-      <Policies />
       <Footer />
     </main>
   );
