@@ -90,10 +90,10 @@ export default function Contact() {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="glass-card p-10 rounded-3xl"
+            className="glass-card p-8 rounded-3xl"
           >
-            <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
-              <div className="flex flex-col gap-2">
+            <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
+              <div className="flex flex-col gap-1.5">
                 <label htmlFor="contact-name" className="text-xs uppercase tracking-widest text-gray-500">
                   Name
                 </label>
@@ -102,11 +102,11 @@ export default function Contact() {
                   name="name"
                   type="text"
                   required
-                  className="w-full bg-transparent border-b border-white/20 py-3 text-lg focus:outline-none focus:border-white transition-colors"
+                  className="w-full bg-transparent border-b border-white/20 py-2 text-lg focus:outline-none focus:border-white transition-colors"
                   placeholder="John Doe"
                 />
               </div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-1.5">
                 <label htmlFor="contact-email" className="text-xs uppercase tracking-widest text-gray-500">
                   Email
                 </label>
@@ -115,11 +115,11 @@ export default function Contact() {
                   name="email"
                   type="email"
                   required
-                  className="w-full bg-transparent border-b border-white/20 py-3 text-lg focus:outline-none focus:border-white transition-colors"
+                  className="w-full bg-transparent border-b border-white/20 py-2 text-lg focus:outline-none focus:border-white transition-colors"
                   placeholder="john@example.com"
                 />
               </div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-1.5">
                 <label htmlFor="contact-phone" className="text-xs uppercase tracking-widest text-gray-500">
                   Mobile No
                 </label>
@@ -128,26 +128,26 @@ export default function Contact() {
                   name="phone"
                   type="tel"
                   required
-                  className="w-full bg-transparent border-b border-white/20 py-3 text-lg focus:outline-none focus:border-white transition-colors"
+                  className="w-full bg-transparent border-b border-white/20 py-2 text-lg focus:outline-none focus:border-white transition-colors"
                   placeholder="+91 98765 43210"
                 />
               </div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-1.5">
                 <label htmlFor="contact-message" className="text-xs uppercase tracking-widest text-gray-500">
                   Message
                 </label>
                 <textarea
                   id="contact-message"
                   name="message"
-                  rows={4}
+                  rows={2}
                   required
-                  className="w-full bg-transparent border-b border-white/20 py-3 text-lg focus:outline-none focus:border-white transition-colors resize-none"
+                  className="w-full bg-transparent border-b border-white/20 py-2 text-lg focus:outline-none focus:border-white transition-colors resize-none"
                   placeholder="Tell us about your project..."
                 />
               </div>
               <MagneticButton
                 type="submit"
-                className="self-start mt-4 py-4 px-8"
+                className="self-start mt-2 py-3 px-8"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? "Sending..." : "Send Message"} <Send size={16} />
