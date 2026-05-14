@@ -15,7 +15,7 @@ export default function Hero() {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
       <div className="container relative z-10 mx-auto px-6 md:px-12 text-center flex flex-col items-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -31,7 +31,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter leading-[1.1] mb-5 max-w-4xl"
+          className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter leading-[1.1] mb-6 max-w-5xl"
         >
           {content.hero.title} <br className="hidden md:block" />
           <span className="text-gradient">{content.hero.highlight}</span>
@@ -41,7 +41,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.5 }}
-          className="text-sm md:text-base text-gray-400 max-w-xl mb-8 font-light"
+          className="text-lg md:text-xl text-gray-400 max-w-2xl mb-10 font-light"
         >
           {content.hero.description}
         </motion.p>
@@ -54,13 +54,13 @@ export default function Hero() {
         >
           <Link
             href="/start-project"
-            className="inline-flex items-center gap-2 px-6 py-3 text-sm rounded-full bg-white text-black font-medium hover:bg-white/90 transition-colors"
+            className="inline-flex items-center gap-2 px-8 py-4 text-base rounded-full bg-white text-black font-medium hover:bg-white/90 transition-colors"
           >
             {content.hero.primaryCta} <ArrowRight size={18} />
           </Link>
           <MagneticButton
             variant="outline"
-            className="px-6 py-3 text-sm"
+            className="px-8 py-4 text-base"
             onClick={() => scrollToSection("#contact")}
           >
             {content.hero.secondaryCta}

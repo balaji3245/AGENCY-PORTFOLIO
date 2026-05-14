@@ -8,17 +8,17 @@ export default function Services() {
   const { content } = useSiteContent();
 
   return (
-    <section id="services" className="py-20 relative bg-transparent">
+    <section id="services" className="py-32 relative bg-transparent">
       <div className="container mx-auto px-6 md:px-12">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-12">
+        <div className="flex flex-col md:flex-row justify-between items-end mb-20">
           <div className="max-w-2xl">
             <h2 className="text-xs uppercase tracking-widest text-gray-500 mb-4">{content.services.eyebrow}</h2>
-            <h3 className="text-2xl md:text-3xl font-bold tracking-tight">
+            <h3 className="text-4xl md:text-5xl font-bold tracking-tight">
               {content.services.title} <br />
               <span className="text-gray-500">{content.services.mutedTitle}</span>
             </h3>
           </div>
-          <p className="text-gray-400 max-w-sm mt-4 md:mt-0 font-light text-sm">
+          <p className="text-gray-400 max-w-sm mt-6 md:mt-0 font-light">
             {content.services.description}
           </p>
         </div>
@@ -31,15 +31,15 @@ export default function Services() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="group glass-card p-6 rounded-2xl relative overflow-hidden transition-all duration-500 hover:border-white/20"
+              className="group glass-card p-8 rounded-2xl relative overflow-hidden transition-all duration-500 hover:border-white/20"
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-3xl -mr-10 -mt-10 transition-all duration-500 group-hover:bg-white/10" />
               
-              <div className="w-11 h-11 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-4 text-white group-hover:scale-110 transition-transform duration-500">
+              <div className="w-14 h-14 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-6 text-white group-hover:scale-110 transition-transform duration-500">
                 <IconByName name={service.icon} />
               </div>
               
-              <h4 className="text-base font-semibold mb-2">{service.title}</h4>
+              <h4 className="text-xl font-semibold mb-3">{service.title}</h4>
               <p className="text-gray-400 font-light leading-relaxed text-sm">
                 {service.description}
               </p>

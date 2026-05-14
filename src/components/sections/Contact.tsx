@@ -46,7 +46,7 @@ export default function Contact() {
   return (
     <section
       id="contact"
-      className="py-20 bg-transparent relative overflow-hidden"
+      className="py-32 bg-transparent relative overflow-hidden"
     >
       <div className="absolute -bottom-[20%] -right-[10%] w-[50%] h-[50%] bg-blue-600/20 blur-[120px] rounded-full pointer-events-none" />
 
@@ -56,11 +56,11 @@ export default function Contact() {
             <h2 className="text-xs uppercase tracking-widest text-gray-500 mb-4">
               {content.contact.eyebrow}
             </h2>
-            <h3 className="text-3xl md:text-4xl font-bold tracking-tight mb-6">>
+            <h3 className="text-5xl md:text-7xl font-bold tracking-tight mb-8">
               {content.contact.title} <br />
               <span className="text-gradient">{content.contact.highlight}</span>
             </h3>
-            <p className="text-gray-400 font-light text-sm mb-8 max-w-md">>
+            <p className="text-gray-400 font-light text-lg mb-12 max-w-md">
               {content.contact.description}
             </p>
 
@@ -72,7 +72,7 @@ export default function Contact() {
                 <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-colors">
                   <Mail size={18} />
                 </div>
-                <span className="text-base font-light">{content.brand.email}</span>
+                <span className="text-xl font-light">{content.brand.email}</span>
               </a>
               <a
                 href={`tel:${content.brand.phone.replace(/\s/g, "")}`}
@@ -81,7 +81,7 @@ export default function Contact() {
                 <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-colors">
                   <Phone size={18} />
                 </div>
-                <span className="text-base font-light">{content.brand.phone}</span>
+                <span className="text-xl font-light">{content.brand.phone}</span>
               </a>
             </div>
           </div>

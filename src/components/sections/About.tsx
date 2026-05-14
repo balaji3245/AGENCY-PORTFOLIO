@@ -54,7 +54,7 @@ export default function About() {
   const y = useTransform(scrollYProgress, [0, 1], [60, -60]);
 
   return (
-    <section ref={containerRef} id="about" className="py-20 relative z-10 bg-transparent overflow-hidden">
+    <section ref={containerRef} id="about" className="py-32 relative z-10 bg-transparent overflow-hidden">
       {/* Background accent */}
       <div className="absolute -left-40 top-1/3 w-[500px] h-[500px] bg-cyan-500/5 blur-[120px] rounded-full pointer-events-none" />
 
@@ -71,7 +71,7 @@ export default function About() {
           <h2 className="text-xs uppercase tracking-widest text-gray-500 mb-4">
             {content.about.eyebrow}
           </h2>
-          <h3 className="text-3xl md:text-4xl font-bold tracking-tight leading-tight max-w-3xl">
+          <h3 className="text-4xl md:text-6xl font-bold tracking-tight leading-tight max-w-3xl">
             {hasHighlight ? (
               <>
                 {titleParts[0]}
@@ -92,7 +92,7 @@ export default function About() {
             {content.about.paragraphs.map((paragraph, index) => (
               <p
                 key={index}
-                className="text-gray-400 text-sm font-light leading-relaxed"
+                className="text-gray-400 text-lg font-light leading-relaxed"
               >
                 {paragraph}
               </p>
@@ -127,7 +127,7 @@ export default function About() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: i * 0.1 }}
                 >
-                  <h4 className="text-2xl font-bold text-white mb-1">{stat.value}</h4>
+                  <h4 className="text-4xl font-bold text-white mb-1">{stat.value}</h4>
                   <p className="text-xs text-gray-500 uppercase tracking-wider">{stat.label}</p>
                 </motion.div>
               ))}
@@ -138,7 +138,7 @@ export default function About() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.2 }}
               >
-                <h4 className="text-2xl font-bold text-white mb-1">100%</h4>
+                <h4 className="text-4xl font-bold text-white mb-1">100%</h4>
                 <p className="text-xs text-gray-500 uppercase tracking-wider">On-time Delivery</p>
               </motion.div>
               <motion.div
@@ -147,7 +147,7 @@ export default function About() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.3 }}
               >
-                <h4 className="text-2xl font-bold text-white mb-1">2022</h4>
+                <h4 className="text-4xl font-bold text-white mb-1">2022</h4>
                 <p className="text-xs text-gray-500 uppercase tracking-wider">Founded</p>
               </motion.div>
             </div>

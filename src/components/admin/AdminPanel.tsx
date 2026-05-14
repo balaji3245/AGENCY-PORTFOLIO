@@ -1133,6 +1133,8 @@ export default function AdminPanel() {
                         category: "Category",
                         description: "Project summary",
                         tech: ["Next.js"],
+                        image: "/projects/placeholder.png",
+                        link: "https://example.com",
                         color: "from-zinc-800/40 to-black",
                       },
                     ],
