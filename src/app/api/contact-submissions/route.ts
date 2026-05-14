@@ -3,10 +3,7 @@ import type {
   ContactSubmissionInput,
 } from "@/lib/contactSubmissions";
 import { sendContactSubmissionEmail } from "@/lib/contactEmail";
-import {
-  readContactSubmissions,
-  writeContactSubmissions,
-} from "@/lib/githubContactStorage";
+import { supabase } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -23,8 +20,14 @@ function cleanSubmission(input: Partial<ContactSubmissionInput>) {
 
 export async function GET() {
   try {
-    const submissions = await readContactSubmissions();
-    return Response.json({ submissions });
+    const { data, error } = await supabase
+      .from("contact_submissions")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return Response.json({ submissions: data });
   } catch (error) {
     return Response.json(
       {
@@ -54,15 +57,17 @@ export async function POST(request: Request) {
     );
   }
 
-  const submission: ContactSubmission = {
-    ...input,
-    id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
-    createdAt: new Date().toISOString(),
-  };
-
   try {
-    const submissions = [submission, ...(await readContactSubmissions())];
-    await writeContactSubmissions(submissions);
+    const { data, error } = await supabase
+      .from("contact_submissions")
+      .insert([input])
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    const submission = data as ContactSubmission;
+
     const email = await sendContactSubmissionEmail(submission).catch(
       (error) => ({
         sent: false,
@@ -91,15 +96,21 @@ export async function DELETE(request: Request) {
 
   try {
     if (!id) {
-      await writeContactSubmissions([]);
+      const { error } = await supabase
+        .from("contact_submissions")
+        .delete()
+        .neq("id", "00000000-0000-0000-0000-000000000000"); // Delete all
+
+      if (error) throw error;
       return Response.json({ ok: true });
     }
 
-    const submissions = (await readContactSubmissions()).filter(
-      (submission) => submission.id !== id
-    );
+    const { error } = await supabase
+      .from("contact_submissions")
+      .delete()
+      .eq("id", id);
 
-    await writeContactSubmissions(submissions);
+    if (error) throw error;
 
     return Response.json({ ok: true });
   } catch (error) {
@@ -114,3 +125,4 @@ export async function DELETE(request: Request) {
     );
   }
 }
+

@@ -1,39 +1,66 @@
 import { defaultSiteContent, type SiteContent } from "@/lib/siteContent";
-import {
-  deleteSharedJson,
-  readSharedJson,
-  writeSharedJson,
-} from "@/lib/serverStorage";
+import { supabase } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
-
-const siteContentKey = "yj-developers:site-content";
-const siteContentFile = "site-content.json";
 
 function cleanContent(input: SiteContent) {
   return input;
 }
 
 export async function GET() {
-  const content = await readSharedJson<SiteContent>(
-    siteContentKey,
-    siteContentFile,
-    defaultSiteContent
-  );
+  try {
+    const { data, error } = await supabase
+      .from("site_content")
+      .select("content")
+      .eq("id", "yj-developers:site-content")
+      .single();
 
-  return Response.json({ content });
+    if (error) {
+      if (error.code === "PGRST116") {
+        // Not found, return default
+        return Response.json({ content: defaultSiteContent });
+      }
+      throw error;
+    }
+
+    return Response.json({ content: data.content });
+  } catch (error) {
+    console.error("Error fetching site content:", error);
+    return Response.json({ content: defaultSiteContent });
+  }
 }
 
 export async function POST(request: Request) {
   const content = cleanContent((await request.json()) as SiteContent);
 
-  await writeSharedJson(siteContentKey, siteContentFile, content);
+  try {
+    const { error } = await supabase.from("site_content").upsert({
+      id: "yj-developers:site-content",
+      content,
+      updated_at: new Date().toISOString(),
+    });
 
-  return Response.json({ content });
+    if (error) throw error;
+
+    return Response.json({ content });
+  } catch (error) {
+    console.error("Error saving site content:", error);
+    return Response.json({ error: "Failed to save content" }, { status: 500 });
+  }
 }
 
 export async function DELETE() {
-  await deleteSharedJson(siteContentKey, siteContentFile);
+  try {
+    const { error } = await supabase
+      .from("site_content")
+      .delete()
+      .eq("id", "yj-developers:site-content");
 
-  return Response.json({ content: defaultSiteContent });
+    if (error) throw error;
+
+    return Response.json({ content: defaultSiteContent });
+  } catch (error) {
+    return Response.json({ error: "Failed to delete content" }, { status: 500 });
+  }
 }
+
