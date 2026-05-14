@@ -1,5 +1,6 @@
 import { defaultSiteContent, type SiteContent } from "@/lib/siteContent";
 import { supabase } from "@/lib/supabase";
+import { revalidatePath } from "next/cache";
 
 export const dynamic = "force-dynamic";
 
@@ -42,6 +43,9 @@ export async function POST(request: Request) {
 
     if (error) throw error;
 
+    // Clear cache to show new data immediately
+    revalidatePath("/");
+
     return Response.json({ content });
   } catch (error) {
     console.error("Error saving site content:", error);
@@ -58,9 +62,12 @@ export async function DELETE() {
 
     if (error) throw error;
 
+    revalidatePath("/");
+
     return Response.json({ content: defaultSiteContent });
   } catch (error) {
     return Response.json({ error: "Failed to delete content" }, { status: 500 });
   }
 }
+
 

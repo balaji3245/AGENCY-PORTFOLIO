@@ -51,19 +51,40 @@ export default function SiteContentProvider({
     return () => abortController.abort();
   }, []);
 
-  const saveContent = useCallback((nextContent: SiteContent) => {
-    setContent(nextContent);
-    void fetch("/api/site-content", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(nextContent),
-    });
+  const saveContent = useCallback(async (nextContent: SiteContent) => {
+    try {
+      const response = await fetch("/api/site-content", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(nextContent),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save content to server");
+      }
+
+      setContent(nextContent);
+      return true;
+    } catch (error) {
+      console.error("Save error:", error);
+      return false;
+    }
   }, []);
 
-  const resetContent = useCallback(() => {
-    setContent(defaultSiteContent);
-    void fetch("/api/site-content", { method: "DELETE" });
+  const resetContent = useCallback(async () => {
+    try {
+      const response = await fetch("/api/site-content", { method: "DELETE" });
+      if (response.ok) {
+        setContent(defaultSiteContent);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error("Reset error:", error);
+      return false;
+    }
   }, []);
+
 
   const value = useMemo(
     () => ({ content, saveContent, resetContent }),

@@ -229,11 +229,17 @@ export default function AdminPanel() {
 
     if (isCorrect) {
       const next = cloneContent(draft);
-      saveContent(next);
-      setDraft(next);
-      setStatus("Changes saved. Homepage preview is now updated.");
+      const success = await saveContent(next);
+      
+      if (success) {
+        setDraft(next);
+        setStatus("Changes saved. Homepage preview is now updated.");
+      } else {
+        setStatus("Error: Database update failed. Please check your connection.");
+      }
       setShowSavePrompt(false);
     } else {
+
       setStatus("Incorrect password. Cannot save changes.");
       setShowSavePrompt(false);
     }
