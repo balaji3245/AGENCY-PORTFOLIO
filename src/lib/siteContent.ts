@@ -59,6 +59,7 @@ export type SiteContent = {
       category: string;
       description: string;
       tech: string[];
+      image: string;
       color: string;
     }[];
   };
@@ -191,32 +192,36 @@ export const defaultSiteContent: SiteContent = {
         title: "UrbanEdge Brand Launch",
         category: "Brand Strategy & Design",
         description:
-          "A complete identity system with logo direction, visual language, launch creatives, and a conversion-focused website for a modern local brand.",
+          "A complete identity system with logo direction and visual language for a modern local brand.",
         tech: ["Brand Strategy", "Identity", "Logo Design"],
+        image: "/projects/branding.png",
         color: "from-blue-900/40 to-black",
       },
       {
         title: "DineFlow Platform",
         category: "Web & App Development",
         description:
-          "A comprehensive restaurant management platform with real-time reservation flows, menu control, and mobile-first ordering.",
+          "A comprehensive restaurant management platform with real-time reservation flows.",
         tech: ["Next.js", "CMS", "Payments"],
+        image: "/projects/restaurant.png",
         color: "from-orange-900/40 to-black",
       },
       {
         title: "GrowthLab Campaign",
         category: "Digital Marketing & SEO",
         description:
-          "Full-funnel marketing strategy and technical SEO overhaul that increased client conversion rates by 150% in 6 months.",
+          "Full-funnel marketing strategy and technical SEO overhaul that increased conversion rates.",
         tech: ["SEO", "Performance Marketing", "Analytics"],
+        image: "/projects/marketing.png",
         color: "from-emerald-900/40 to-black",
       },
       {
         title: "Insight Enterprise Dashboard",
         category: "Cloud & Software Solutions",
         description:
-          "A custom enterprise dashboard for data visualization, user role management, and real-time backend synchronization.",
+          "A custom enterprise dashboard for data visualization and real-time backend sync.",
         tech: ["Software Architecture", "GraphQL", "SaaS"],
+        image: "/projects/dashboard.png",
         color: "from-cyan-900/40 to-black",
       },
     ],
