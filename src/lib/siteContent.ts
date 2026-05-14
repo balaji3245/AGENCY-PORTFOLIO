@@ -60,6 +60,7 @@ export type SiteContent = {
       description: string;
       tech: string[];
       image: string;
+      link: string;
       color: string;
     }[];
   };
@@ -195,6 +196,7 @@ export const defaultSiteContent: SiteContent = {
           "A complete identity system with logo direction and visual language for a modern local brand.",
         tech: ["Brand Strategy", "Identity", "Logo Design"],
         image: "/projects/branding.png",
+        link: "https://urbanedge.yjdevelopers.com",
         color: "from-blue-900/40 to-black",
       },
       {
@@ -204,6 +206,7 @@ export const defaultSiteContent: SiteContent = {
           "A comprehensive restaurant management platform with real-time reservation flows.",
         tech: ["Next.js", "CMS", "Payments"],
         image: "/projects/restaurant.png",
+        link: "https://dineflow.yjdevelopers.com",
         color: "from-orange-900/40 to-black",
       },
       {
@@ -213,6 +216,7 @@ export const defaultSiteContent: SiteContent = {
           "Full-funnel marketing strategy and technical SEO overhaul that increased conversion rates.",
         tech: ["SEO", "Performance Marketing", "Analytics"],
         image: "/projects/marketing.png",
+        link: "https://growthlab.yjdevelopers.com",
         color: "from-emerald-900/40 to-black",
       },
       {
@@ -222,6 +226,7 @@ export const defaultSiteContent: SiteContent = {
           "A custom enterprise dashboard for data visualization and real-time backend sync.",
         tech: ["Software Architecture", "GraphQL", "SaaS"],
         image: "/projects/dashboard.png",
+        link: "https://insight.yjdevelopers.com",
         color: "from-cyan-900/40 to-black",
       },
     ],

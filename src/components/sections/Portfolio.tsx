@@ -64,44 +64,54 @@ export default function Portfolio() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="group relative aspect-[4/5] overflow-hidden rounded-2xl bg-zinc-900 border border-white/5"
+                className="group relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-zinc-900 border border-white/5 shadow-2xl"
               >
                 {/* Image */}
                 <div className="absolute inset-0 z-0">
                   <img
                     src={project.image}
                     alt={project.title}
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-60 group-hover:opacity-40"
                   />
-                  <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-500" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
                 </div>
 
-                {/* Compact Content */}
-                <div className="absolute inset-0 z-10 p-6 flex flex-col justify-end">
-                  <div className="translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                    <span className="text-[9px] uppercase tracking-widest text-cyan-400 font-bold mb-2 block">
+                {/* Content */}
+                <div className="absolute inset-0 z-10 p-8 flex flex-col justify-end">
+                  <div className="mb-4">
+                    <span className="text-[10px] uppercase tracking-[0.2em] text-cyan-400 font-bold mb-2 block">
                       {project.category}
                     </span>
-                    <h4 className="text-xl font-bold text-white mb-2 leading-tight">
+                    <h4 className="text-2xl md:text-3xl font-bold text-white mb-3 tracking-tighter">
                       {project.title}
                     </h4>
-                    <div className="flex flex-wrap gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <p className="text-gray-300 text-sm line-clamp-2 mb-6 font-light leading-relaxed">
+                      {project.description}
+                    </p>
+                  </div>
+                  
+                  <div className="flex items-center justify-between mt-auto">
+                    <div className="flex gap-2">
                       {project.tech.slice(0, 2).map((t, j) => (
-                        <span key={j} className="text-[8px] uppercase tracking-wider text-gray-400">
+                        <span key={j} className="text-[8px] uppercase tracking-wider px-2 py-1 rounded-md bg-white/5 border border-white/10 text-gray-400">
                           {t}
                         </span>
                       ))}
                     </div>
-                  </div>
-                  
-                  {/* Action Icon */}
-                  <div className="absolute top-6 right-6 w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/10 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all duration-300">
-                    <ArrowUpRight size={18} />
+                    
+                    <a 
+                      href={project.link} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-black text-[10px] font-bold uppercase tracking-widest hover:bg-cyan-400 transition-colors duration-300"
+                    >
+                      View Site <ArrowUpRight size={14} />
+                    </a>
                   </div>
                 </div>
                 
-                <a href="#" className="absolute inset-0 z-20" aria-label={`View ${project.title}`} />
+                {/* Click Overlay (Only if button is not clicked) */}
+                <a href={project.link} target="_blank" rel="noopener noreferrer" className="absolute inset-0 z-0" aria-label={`View ${project.title}`} />
               </motion.div>
             ))}
           </AnimatePresence>
