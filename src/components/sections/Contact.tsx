@@ -90,7 +90,7 @@ export default function Contact() {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="glass-card p-10 rounded-[2rem] max-w-xl lg:ml-auto"
+            className="glass-card p-10 rounded-3xl"
           >
             <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
               <div className="flex flex-col gap-2">
