@@ -53,67 +53,54 @@ export default function Portfolio() {
 
         <motion.div 
           layout
-          className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
         >
           <AnimatePresence mode="popLayout">
             {filteredItems.map((project, i) => (
               <motion.div
                 layout
                 key={project.title}
-                initial={{ opacity: 0, y: 40 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.8, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                className={`group relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-zinc-900 shadow-2xl ${
-                  i === 0 || i === 3 ? "md:col-span-2 aspect-[16/10] md:aspect-[21/9]" : "aspect-[4/5] md:aspect-[1/1]"
-                }`}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className="group relative aspect-[4/5] overflow-hidden rounded-2xl bg-zinc-900 border border-white/5"
               >
-                {/* Image Container */}
-                <div className="absolute inset-0 z-0 overflow-hidden">
-                  <motion.img
+                {/* Image */}
+                <div className="absolute inset-0 z-0">
+                  <img
                     src={project.image}
                     alt={project.title}
-                    className="h-full w-full object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                   />
-                  {/* Overlays */}
-                  <div className="absolute inset-0 bg-black/50 group-hover:bg-black/30 transition-colors duration-700" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-90" />
-                  <div className={`absolute inset-0 bg-gradient-to-br ${project.color} mix-blend-overlay opacity-20 group-hover:opacity-40 transition-opacity duration-700`} />
+                  <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-500" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
                 </div>
 
-                {/* Content */}
-                <div className="absolute inset-0 z-10 p-8 md:p-16 flex flex-col justify-end">
-                  <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-                    <div className="max-w-2xl">
-                      <div className="flex flex-wrap gap-2 mb-6">
-                        <span className="px-4 py-1 rounded-full border border-white/20 bg-white/10 backdrop-blur-xl text-[9px] uppercase tracking-[0.2em] font-bold text-white">
-                          {project.category}
+                {/* Compact Content */}
+                <div className="absolute inset-0 z-10 p-6 flex flex-col justify-end">
+                  <div className="translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                    <span className="text-[9px] uppercase tracking-widest text-cyan-400 font-bold mb-2 block">
+                      {project.category}
+                    </span>
+                    <h4 className="text-xl font-bold text-white mb-2 leading-tight">
+                      {project.title}
+                    </h4>
+                    <div className="flex flex-wrap gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      {project.tech.slice(0, 2).map((t, j) => (
+                        <span key={j} className="text-[8px] uppercase tracking-wider text-gray-400">
+                          {t}
                         </span>
-                        {project.tech.slice(0, 2).map((t, j) => (
-                          <span key={j} className="px-4 py-1 rounded-full border border-white/5 bg-black/20 backdrop-blur-md text-[9px] uppercase tracking-[0.2em] font-medium text-gray-400">
-                            {t}
-                          </span>
-                        ))}
-                      </div>
-                      
-                      <h4 className="text-4xl md:text-6xl font-bold tracking-tighter text-white mb-4 leading-tight">
-                        {project.title}
-                      </h4>
-                      <p className="text-gray-400 text-base md:text-lg max-w-xl opacity-0 group-hover:opacity-100 transition-all duration-700 translate-y-4 group-hover:translate-y-0 font-light">
-                        {project.description}
-                      </p>
+                      ))}
                     </div>
-
-                    <div className="flex items-center gap-4">
-                      <div className="w-16 h-16 rounded-full border border-white/20 bg-white text-black flex items-center justify-center -rotate-45 group-hover:rotate-0 transition-all duration-700 ease-[0.16,1,0.3,1] scale-75 group-hover:scale-100 shadow-xl">
-                        <ArrowUpRight size={28} />
-                      </div>
-                    </div>
+                  </div>
+                  
+                  {/* Action Icon */}
+                  <div className="absolute top-6 right-6 w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/10 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all duration-300">
+                    <ArrowUpRight size={18} />
                   </div>
                 </div>
                 
-                {/* Click Overlay */}
                 <a href="#" className="absolute inset-0 z-20" aria-label={`View ${project.title}`} />
               </motion.div>
             ))}
