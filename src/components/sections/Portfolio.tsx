@@ -120,8 +120,8 @@ export default function Portfolio() {
           </AnimatePresence>
         </motion.div>
 
-        <div className="mt-20 text-center">
-          <MagneticButton className="px-12 py-5 rounded-full border border-white/10 hover:bg-white hover:text-black transition-all duration-500 text-sm font-bold uppercase tracking-widest">
+        <div className="mt-16 text-center">
+          <MagneticButton className="px-8 py-3 rounded-full border border-white/10 hover:bg-white hover:text-black transition-all duration-500 text-[10px] font-bold uppercase tracking-widest">
             View All Projects
           </MagneticButton>
         </div>
