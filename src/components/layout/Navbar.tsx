@@ -54,7 +54,7 @@ export default function Navbar() {
               ))}
             </div>
             <Link
-              href="/start-project"
+              href="#contact"
               className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2 text-sm font-medium text-black transition hover:bg-white/90"
             >
               Start Project
@@ -98,7 +98,7 @@ export default function Navbar() {
                 </Link>
               ))}
               <Link
-                href="/start-project"
+                href="#contact"
                 onClick={() => setMobileMenuOpen(false)}
                 className="inline-flex items-center gap-2 mt-8 px-6 py-3 rounded-full bg-white text-black font-medium text-sm hover:bg-white/90 transition-colors"
               >
