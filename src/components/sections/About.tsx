@@ -28,13 +28,7 @@ const VALUES = [
   },
 ];
 
-const WHY_US = [
-  "Full-stack: strategy → design → development",
-  "Clean, modern code that scales with you",
-  "Direct communication — no account managers",
-  "Post-launch support and improvement cycles",
-  "Delivered on time, every time",
-];
+
 
 export default function About() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -98,24 +92,7 @@ export default function About() {
               </p>
             ))}
 
-            {/* Why us checklist */}
-            <div className="space-y-3 pt-2">
-              {WHY_US.map((item, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: i * 0.08 }}
-                  className="flex items-center gap-3 text-sm text-gray-300"
-                >
-                  <span className="flex-shrink-0 w-5 h-5 rounded-full bg-cyan-400/15 border border-cyan-400/30 flex items-center justify-center">
-                    <CheckCircle2 size={11} className="text-cyan-400" />
-                  </span>
-                  {item}
-                </motion.div>
-              ))}
-            </div>
+
 
             {/* Stats row */}
             <div className="flex flex-wrap gap-8 pt-6 border-t border-white/5">
