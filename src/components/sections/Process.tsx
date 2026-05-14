@@ -7,56 +7,43 @@ export default function Process() {
   const { content } = useSiteContent();
 
   return (
-    <section id="process" className="section-pad relative overflow-hidden">
-      {/* Ambient */}
-      <div className="absolute right-0 top-0 w-[500px] h-[500px] rounded-full bg-blue-600/5 blur-[150px] pointer-events-none" />
-
-      <div className="container mx-auto px-6 md:px-12 lg:px-20">
-        {/* Heading */}
-        <motion.div
-          className="mb-20"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <span className="eyebrow mb-5 block">How We Work</span>
-          <h2 className="font-display text-[clamp(2.5rem,5vw,5rem)] font-extrabold tracking-[-0.03em] leading-[1.0]">
-            Our proven <br />
-            <span className="text-gradient-white">process.</span>
+    <section id="process" className="py-32 bg-transparent relative overflow-hidden">
+      <div className="container mx-auto px-6 md:px-12 relative z-10">
+        <div className="text-center mb-24">
+          <h2 className="text-xs uppercase tracking-widest text-gray-500 mb-4">
+            How we work
           </h2>
-        </motion.div>
+          <h3 className="text-4xl md:text-5xl font-bold tracking-tight">
+            Our proven process.
+          </h3>
+        </div>
 
-        {/* Steps — full width horizontal timeline on desktop */}
-        <div className="relative">
-          {/* Horizontal line */}
-          <div className="hidden md:block absolute top-[3.25rem] left-0 right-0 h-px bg-white/5" />
+        <div className="max-w-4xl mx-auto">
+          {content.process.map((step, i) => (
+            <motion.div
+              key={`${step.num}-${step.title}`}
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.6 }}
+              className="flex gap-8 md:gap-16 items-start relative group mb-16 last:mb-0"
+            >
+              {i !== content.process.length - 1 && (
+                <div className="absolute left-6 md:left-10 top-16 bottom-[-64px] w-[1px] bg-white/10 group-hover:bg-white/30 transition-colors duration-500" />
+              )}
 
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-0 md:gap-px bg-transparent md:bg-white/5">
-            {content.process.map((step, i) => (
-              <motion.div
-                key={step.num}
-                className="relative bg-[#080808] p-8 md:p-10 group"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
-              >
-                {/* Step number with dot */}
-                <div className="flex items-center gap-3 mb-8">
-                  <div className="w-3 h-3 rounded-full border-2 border-[#222] group-hover:border-blue-400 transition-colors duration-300 flex-shrink-0 bg-[#080808] relative z-10" />
-                  <span className="text-[10px] font-bold text-[#3b3b3b] tracking-[0.2em]">{step.num}</span>
-                </div>
+              <div className="w-12 h-12 md:w-20 md:h-20 shrink-0 rounded-full border border-white/20 flex items-center justify-center text-xl md:text-3xl font-bold text-white/50 group-hover:text-white group-hover:border-white transition-all duration-500 bg-transparent relative z-10">
+                {step.num}
+              </div>
 
-                <h3 className="font-display text-lg font-bold text-white tracking-tight mb-3 group-hover:text-white transition-colors">
+              <div className="pt-2 md:pt-4">
+                <h4 className="text-2xl md:text-3xl font-bold mb-4">
                   {step.title}
-                </h3>
-                <p className="text-xs text-[#52525b] leading-relaxed font-light group-hover:text-[#71717a] transition-colors duration-300">
-                  {step.desc}
-                </p>
-              </motion.div>
-            ))}
-          </div>
+                </h4>
+                <p className="text-gray-400 font-light text-lg">{step.desc}</p>
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>

@@ -2,9 +2,9 @@
 
 import { useState, type FormEvent } from "react";
 import { motion } from "framer-motion";
-import { Mail, Phone, ArrowRight, Send } from "lucide-react";
+import { Mail, Phone, Send } from "lucide-react";
 import { useSiteContent } from "@/components/SiteContentProvider";
-import Link from "next/link";
+import MagneticButton from "@/components/ui/MagneticButton";
 
 export default function Contact() {
   const { content } = useSiteContent();
@@ -22,137 +22,141 @@ export default function Contact() {
 
     setIsSubmitting(true);
     setStatus("");
+
     try {
       const response = await fetch("/api/contact-submissions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, phone, message, source: "contact" }),
       });
-      if (!response.ok) throw new Error();
+
+      if (!response.ok) {
+        throw new Error("Unable to send message.");
+      }
+
       form.reset();
-      setStatus("Message received. We'll get back to you within 24 hours.");
+      setStatus("Message received. We will get back to you soon.");
     } catch {
-      setStatus("Something went wrong. Please try again.");
+      setStatus("Message could not be sent. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <section id="contact" className="section-pad relative overflow-hidden">
-      {/* Strong CTA above */}
-      <div className="border-y border-white/5 mb-0">
-        <div className="container mx-auto px-6 md:px-12 lg:px-20 py-24 md:py-32">
-          <motion.div
-            className="flex flex-col md:flex-row md:items-end justify-between gap-10"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <div className="max-w-3xl">
-              <span className="eyebrow mb-5 block">Ready to start?</span>
-              <h2 className="font-display text-[clamp(2.8rem,7vw,7rem)] font-extrabold tracking-[-0.04em] leading-[0.95] text-balance">
-                Let&rsquo;s build something <span className="text-gradient-accent">remarkable.</span>
-              </h2>
-            </div>
-            <div className="flex-shrink-0">
-              <Link href="/start-project" className="btn-primary text-base px-8 py-4">
-                Start a Project <ArrowRight size={18} />
-              </Link>
-            </div>
-          </motion.div>
-        </div>
-      </div>
+    <section
+      id="contact"
+      className="py-32 bg-transparent relative overflow-hidden"
+    >
+      <div className="absolute -bottom-[20%] -right-[10%] w-[50%] h-[50%] bg-blue-600/20 blur-[120px] rounded-full pointer-events-none" />
 
-      {/* Contact info + form */}
-      <div className="container mx-auto px-6 md:px-12 lg:px-20 pt-24">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
-
-          {/* Left — info */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <span className="eyebrow mb-6 block">Get in Touch</span>
-            <p className="text-[#71717a] text-lg font-light leading-relaxed mb-12 max-w-sm">
+      <div className="container mx-auto px-6 md:px-12 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
+          <div>
+            <h2 className="text-xs uppercase tracking-widest text-gray-500 mb-4">
+              {content.contact.eyebrow}
+            </h2>
+            <h3 className="text-5xl md:text-7xl font-bold tracking-tight mb-8">
+              {content.contact.title} <br />
+              <span className="text-gradient">{content.contact.highlight}</span>
+            </h3>
+            <p className="text-gray-400 font-light text-lg mb-12 max-w-md">
               {content.contact.description}
             </p>
 
             <div className="space-y-6">
-              <a href={`mailto:${content.brand.email}`} className="flex items-center gap-4 group">
-                <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black group-hover:border-white transition-all duration-300 text-[#52525b]">
-                  <Mail size={17} />
+              <a
+                href={`mailto:${content.brand.email}`}
+                className="flex items-center gap-4 group"
+              >
+                <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-colors">
+                  <Mail size={18} />
                 </div>
-                <span className="text-[#a1a1aa] group-hover:text-white transition-colors duration-300">{content.brand.email}</span>
+                <span className="text-xl font-light">{content.brand.email}</span>
               </a>
-              <a href={`tel:${content.brand.phone.replace(/\s/g, "")}`} className="flex items-center gap-4 group">
-                <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black group-hover:border-white transition-all duration-300 text-[#52525b]">
-                  <Phone size={17} />
+              <a
+                href={`tel:${content.brand.phone.replace(/\s/g, "")}`}
+                className="flex items-center gap-4 group"
+              >
+                <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-colors">
+                  <Phone size={18} />
                 </div>
-                <span className="text-[#a1a1aa] group-hover:text-white transition-colors duration-300">{content.brand.phone}</span>
+                <span className="text-xl font-light">{content.brand.phone}</span>
               </a>
             </div>
-          </motion.div>
+          </div>
 
-          {/* Right — form */}
           <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            className="glass-card p-10 rounded-3xl"
           >
-            <form className="space-y-8" onSubmit={handleSubmit}>
-              {[
-                { id: "contact-name", name: "name", label: "Full Name", type: "text", placeholder: "Jane Smith" },
-                { id: "contact-email", name: "email", label: "Email Address", type: "email", placeholder: "jane@company.com" },
-                { id: "contact-phone", name: "phone", label: "Phone Number", type: "tel", placeholder: "+91 98765 43210" },
-              ].map((field) => (
-                <div key={field.id}>
-                  <label htmlFor={field.id} className="block text-[10px] font-bold uppercase tracking-[0.15em] text-[#52525b] mb-3">
-                    {field.label}
-                  </label>
-                  <input
-                    id={field.id}
-                    name={field.name}
-                    type={field.type}
-                    required
-                    placeholder={field.placeholder}
-                    className="w-full bg-transparent border-b border-white/10 pb-3 text-base text-white placeholder-[#3b3b3b] focus:outline-none focus:border-blue-400 transition-colors duration-300"
-                  />
-                </div>
-              ))}
-
-              <div>
-                <label htmlFor="contact-message" className="block text-[10px] font-bold uppercase tracking-[0.15em] text-[#52525b] mb-3">
-                  Your Message
+            <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
+              <div className="flex flex-col gap-2">
+                <label htmlFor="contact-name" className="text-xs uppercase tracking-widest text-gray-500">
+                  Name
+                </label>
+                <input
+                  id="contact-name"
+                  name="name"
+                  type="text"
+                  required
+                  className="w-full bg-transparent border-b border-white/20 py-3 text-lg focus:outline-none focus:border-white transition-colors"
+                  placeholder="John Doe"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label htmlFor="contact-email" className="text-xs uppercase tracking-widest text-gray-500">
+                  Email
+                </label>
+                <input
+                  id="contact-email"
+                  name="email"
+                  type="email"
+                  required
+                  className="w-full bg-transparent border-b border-white/20 py-3 text-lg focus:outline-none focus:border-white transition-colors"
+                  placeholder="john@example.com"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label htmlFor="contact-phone" className="text-xs uppercase tracking-widest text-gray-500">
+                  Mobile No
+                </label>
+                <input
+                  id="contact-phone"
+                  name="phone"
+                  type="tel"
+                  required
+                  className="w-full bg-transparent border-b border-white/20 py-3 text-lg focus:outline-none focus:border-white transition-colors"
+                  placeholder="+91 98765 43210"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label htmlFor="contact-message" className="text-xs uppercase tracking-widest text-gray-500">
+                  Message
                 </label>
                 <textarea
                   id="contact-message"
                   name="message"
                   rows={4}
                   required
-                  placeholder="Tell us about your project, goals, and timeline..."
-                  className="w-full bg-transparent border-b border-white/10 pb-3 text-base text-white placeholder-[#3b3b3b] focus:outline-none focus:border-blue-400 transition-colors duration-300 resize-none"
+                  className="w-full bg-transparent border-b border-white/20 py-3 text-lg focus:outline-none focus:border-white transition-colors resize-none"
+                  placeholder="Tell us about your project..."
                 />
               </div>
-
-              <button
+              <MagneticButton
                 type="submit"
+                className="self-start mt-4 py-4 px-8"
                 disabled={isSubmitting}
-                className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isSubmitting ? "Sending..." : "Send Message"}
-                <Send size={15} />
-              </button>
-
-              {status && (
-                <p className={`text-sm ${status.includes("wrong") ? "text-red-400" : "text-emerald-400"}`} role="status">
+                {isSubmitting ? "Sending..." : "Send Message"} <Send size={16} />
+              </MagneticButton>
+              {status ? (
+                <p className="text-sm text-emerald-300" role="status">
                   {status}
                 </p>
-              )}
+              ) : null}
             </form>
           </motion.div>
         </div>
