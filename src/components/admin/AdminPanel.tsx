@@ -37,7 +37,9 @@ const iconOptions: IconName[] = [
 const adminNavigation = [
   { href: "#leads", label: "Leads", hint: "Form submissions" },
   { href: "#brand", label: "Brand", hint: "Name, email, phone" },
+  { href: "#theme", label: "Theme", hint: "Colors and fonts" },
   { href: "#hero", label: "Hero", hint: "First screen copy" },
+
   { href: "#about", label: "About", hint: "Intro and proof points" },
   { href: "#services", label: "Services", hint: "Service cards" },
   { href: "#tech-stack", label: "Tech", hint: "Tools and platforms" },
@@ -532,6 +534,174 @@ export default function AdminPanel() {
               />
             </Field>
           </Section>
+
+          <Section id="theme" title="Theme" description="Customize website colors and typography." visible={activeSection === "#theme"}>
+            <div className="grid gap-4 md:grid-cols-2">
+              <Field label="Primary Color">
+                <div className="flex gap-2">
+                  <Input
+                    type="color"
+                    className="h-11 w-20 p-1"
+                    value={draft.theme?.primary || "#4B7DFF"}
+                    onChange={(e) =>
+                      setDraft({
+                        ...draft,
+                        theme: { ...draft.theme, primary: e.target.value },
+                      })
+                    }
+                  />
+                  <Input
+                    value={draft.theme?.primary || "#4B7DFF"}
+                    onChange={(e) =>
+                      setDraft({
+                        ...draft,
+                        theme: { ...draft.theme, primary: e.target.value },
+                      })
+                    }
+                  />
+                </div>
+              </Field>
+              <Field label="Accent Color">
+                <div className="flex gap-2">
+                  <Input
+                    type="color"
+                    className="h-11 w-20 p-1"
+                    value={draft.theme?.accent || "#A15BFF"}
+                    onChange={(e) =>
+                      setDraft({
+                        ...draft,
+                        theme: { ...draft.theme, accent: e.target.value },
+                      })
+                    }
+                  />
+                  <Input
+                    value={draft.theme?.accent || "#A15BFF"}
+                    onChange={(e) =>
+                      setDraft({
+                        ...draft,
+                        theme: { ...draft.theme, accent: e.target.value },
+                      })
+                    }
+                  />
+                </div>
+              </Field>
+              <Field label="Background Color">
+                <div className="flex gap-2">
+                  <Input
+                    type="color"
+                    className="h-11 w-20 p-1"
+                    value={draft.theme?.background || "#030612"}
+                    onChange={(e) =>
+                      setDraft({
+                        ...draft,
+                        theme: { ...draft.theme, background: e.target.value },
+                      })
+                    }
+                  />
+                  <Input
+                    value={draft.theme?.background || "#030612"}
+                    onChange={(e) =>
+                      setDraft({
+                        ...draft,
+                        theme: { ...draft.theme, background: e.target.value },
+                      })
+                    }
+                  />
+                </div>
+              </Field>
+              <Field label="Text Color">
+                <div className="flex gap-2">
+                  <Input
+                    type="color"
+                    className="h-11 w-20 p-1"
+                    value={draft.theme?.foreground || "#ffffff"}
+                    onChange={(e) =>
+                      setDraft({
+                        ...draft,
+                        theme: { ...draft.theme, foreground: e.target.value },
+                      })
+                    }
+                  />
+                  <Input
+                    value={draft.theme?.foreground || "#ffffff"}
+                    onChange={(e) =>
+                      setDraft({
+                        ...draft,
+                        theme: { ...draft.theme, foreground: e.target.value },
+                      })
+                    }
+                  />
+                </div>
+              </Field>
+              <Field label="Card Background">
+                <div className="flex gap-2">
+                  <Input
+                    type="color"
+                    className="h-11 w-20 p-1"
+                    value={draft.theme?.card || "#060b19"}
+                    onChange={(e) =>
+                      setDraft({
+                        ...draft,
+                        theme: { ...draft.theme, card: e.target.value },
+                      })
+                    }
+                  />
+                  <Input
+                    value={draft.theme?.card || "#060b19"}
+                    onChange={(e) =>
+                      setDraft({
+                        ...draft,
+                        theme: { ...draft.theme, card: e.target.value },
+                      })
+                    }
+                  />
+                </div>
+              </Field>
+              <Field label="Border Color">
+                <div className="flex gap-2">
+                  <Input
+                    type="color"
+                    className="h-11 w-20 p-1"
+                    value={draft.theme?.border || "#141d33"}
+                    onChange={(e) =>
+                      setDraft({
+                        ...draft,
+                        theme: { ...draft.theme, border: e.target.value },
+                      })
+                    }
+                  />
+                  <Input
+                    value={draft.theme?.border || "#141d33"}
+                    onChange={(e) =>
+                      setDraft({
+                        ...draft,
+                        theme: { ...draft.theme, border: e.target.value },
+                      })
+                    }
+                  />
+                </div>
+              </Field>
+              <Field label="Font Family">
+                <Select
+                  value={draft.theme?.fontFamily || "Inter"}
+                  onChange={(e) =>
+                    setDraft({
+                      ...draft,
+                      theme: { ...draft.theme, fontFamily: e.target.value },
+                    })
+                  }
+                >
+                  <option value="Inter">Inter (Sans)</option>
+                  <option value="Roboto">Roboto</option>
+                  <option value="Outfit">Outfit</option>
+                  <option value="Plus Jakarta Sans">Plus Jakarta Sans</option>
+                  <option value="Poppins">Poppins</option>
+                  <option value="Geist">Geist</option>
+                </Select>
+              </Field>
+            </div>
+          </Section>
+
 
           <Section id="hero" title="Hero" description="Homepage ka first screen: badge, headline, description, and buttons." visible={activeSection === "#hero"}>
             <div className="grid gap-4 md:grid-cols-2">

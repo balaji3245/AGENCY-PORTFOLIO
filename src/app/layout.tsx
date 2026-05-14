@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Outfit, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/ui/SmoothScroll";
 import SiteContentProvider from "@/components/SiteContentProvider";
 import MovingBackground from "@/components/ui/MovingBackground";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
+const jakarta = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-jakarta" });
+
 const siteUrl = new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://yjdevelopers.com");
 
 export const metadata: Metadata = {
@@ -58,7 +61,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
-      <body className={`${inter.variable} font-sans antialiased`}>
+      <body className={`${inter.variable} ${outfit.variable} ${jakarta.variable} font-sans antialiased`}>
+
         <MovingBackground />
         <div className="noise-bg"></div>
         <SiteContentProvider>

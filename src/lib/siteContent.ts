@@ -105,7 +105,17 @@ export type SiteContent = {
     highlight: string;
     suffix: string;
   };
+  theme: {
+    primary: string;
+    accent: string;
+    background: string;
+    foreground: string;
+    card: string;
+    border: string;
+    fontFamily: string;
+  };
 };
+
 
 export const defaultSiteContent: SiteContent = {
   brand: {
@@ -401,4 +411,14 @@ export const defaultSiteContent: SiteContent = {
     highlight: "1000+ businesses",
     suffix: "build brands people trust.",
   },
+  theme: {
+    primary: "#4B7DFF",
+    accent: "#A15BFF",
+    background: "#030612",
+    foreground: "#ffffff",
+    card: "#060b19",
+    border: "#141d33",
+    fontFamily: "Inter",
+  },
 };
+

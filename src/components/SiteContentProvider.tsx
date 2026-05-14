@@ -51,6 +51,27 @@ export default function SiteContentProvider({
     return () => abortController.abort();
   }, []);
 
+  useEffect(() => {
+    const root = document.documentElement;
+    const theme = content.theme || defaultSiteContent.theme;
+
+    root.style.setProperty("--primary", theme.primary);
+    root.style.setProperty("--accent", theme.accent);
+    root.style.setProperty("--background", theme.background);
+    root.style.setProperty("--foreground", theme.foreground);
+    root.style.setProperty("--card", theme.card);
+    root.style.setProperty("--border", theme.border);
+    
+    // Font handling
+    let fontValue = "var(--font-inter)";
+    if (theme.fontFamily === "Outfit") fontValue = "var(--font-outfit)";
+    if (theme.fontFamily === "Plus Jakarta Sans") fontValue = "var(--font-jakarta)";
+    
+    root.style.setProperty("--font-inter", fontValue);
+  }, [content.theme]);
+
+
+
   const saveContent = useCallback(async (nextContent: SiteContent) => {
     try {
       const response = await fetch("/api/site-content", {
