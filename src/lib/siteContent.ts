@@ -111,36 +111,36 @@ export const defaultSiteContent: SiteContent = {
     email: "hello@yjdevelopers.com",
     phone: "+91 98765 43210",
     footerDescription:
-      "A digital, creative, web development, and branding agency focused on helping businesses launch sharper and grow smarter.",
+      "A digital agency helping businesses build premium websites and iconic brands.",
   },
   hero: {
-    badge: "Digital, creative, web and branding agency",
-    title: "YJ DEVELOPERS builds",
-    highlight: "brands that perform.",
+    badge: "Digital Creative Agency",
+    title: "YJ DEVELOPERS",
+    highlight: "Building Brands that Win.",
     description:
-      "Specializing in Brand Design, Web Development, Digital Marketing, and Cloud Software. Four core pillars to scale your business with premium digital solutions.",
+      "We craft premium websites, branding, and digital solutions to help your business scale faster.",
     primaryCta: "View Our Work",
     secondaryCta: "Book a Call",
   },
   about: {
     eyebrow: "About YJ DEVELOPERS",
-    title: "We mix strategy, design and code for growing brands.",
-    highlightedWord: "strategy, design and code",
+    title: "Strategy, Design & Code for Growth.",
+    highlightedWord: "Strategy, Design & Code",
     paragraphs: [
-      "YJ DEVELOPERS is a specialized digital agency focused on four core pillars: Branding, Development, Marketing, and Software Solutions. We don't just build websites; we create scalable ecosystems that drive business growth.",
-      "Whether you need a striking visual identity, a high-performance web platform, or complex cloud-based software, our team delivers premium results that help your brand stand out and scale effectively.",
+      "YJ DEVELOPERS helps brands scale with focused branding, web development, and digital marketing.",
+      "We don't just build websites; we create digital experiences that drive real results for your business.",
     ],
     stats: [
-      { value: "45+", label: "Projects Planned" },
-      { value: "6", label: "Core Capabilities" },
+      { value: "45+", label: "Projects Done" },
+      { value: "6", label: "Core Skills" },
     ],
   },
   services: {
     eyebrow: "Our Expertise",
-    title: "Digital, creative, web",
-    mutedTitle: "and branding services.",
+    title: "Digital, Creative",
+    mutedTitle: "and Branding.",
     description:
-      "Choose one focused service or bring us in as your complete digital partner from brand strategy to launch.",
+      "Focused digital solutions to help your brand grow from strategy to launch.",
     items: [
       {
         title: "Brand Strategy & Design",
@@ -316,11 +316,11 @@ export const defaultSiteContent: SiteContent = {
     },
   ],
   process: [
-    { num: "01", title: "Discovery", desc: "We understand your business, audience, offers, competitors, goals, and current digital gaps." },
-    { num: "02", title: "Strategy", desc: "We map the brand direction, website structure, campaign plan, content needs, and technical scope." },
-    { num: "03", title: "Design", desc: "We create identity assets, UI screens, creative concepts, and responsive layouts for approval." },
-    { num: "04", title: "Development", desc: "We build the website, integrate forms, CMS, payments, analytics, SEO, and performance essentials." },
-    { num: "05", title: "Launch & Growth", desc: "We test, deploy, monitor, and help improve the site with reporting and iteration after launch." },
+    { num: "01", title: "Discovery", desc: "We learn about your business goals and audience." },
+    { num: "02", title: "Strategy", desc: "We plan the brand direction and technical roadmap." },
+    { num: "03", title: "Design", desc: "We create beautiful UI/UX designs for your approval." },
+    { num: "04", title: "Development", desc: "We build your platform with modern tech and SEO." },
+    { num: "05", title: "Launch", desc: "We test and deploy your project for the world to see." },
   ],
   pricing: [
     {
@@ -384,7 +384,7 @@ export const defaultSiteContent: SiteContent = {
     title: "Start a",
     highlight: "Project.",
     description:
-      "Ready to build your brand, website, campaign, or complete digital presence? Tell YJ DEVELOPERS what you want to launch.",
+      "Ready to scale your digital presence? Tell us about your project.",
   },
   vision: {
     prefix: "Our mission is to help",
