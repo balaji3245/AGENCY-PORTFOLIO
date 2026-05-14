@@ -54,7 +54,7 @@ export default function Portfolio() {
 
         <motion.div 
           layout
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
         >
           <AnimatePresence mode="popLayout">
             {filteredItems.map((project, i) => (
@@ -65,7 +65,7 @@ export default function Portfolio() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="group relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-zinc-900 border border-white/5 shadow-2xl"
+                className="group relative aspect-[4/3] overflow-hidden rounded-[1.5rem] bg-zinc-900 border border-white/5 shadow-2xl"
               >
                 {/* Image */}
                 <div className="absolute inset-0 z-0">
@@ -73,30 +73,30 @@ export default function Portfolio() {
                     src={project.image}
                     alt={project.title}
                     fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
                     className="object-cover transition-transform duration-700 group-hover:scale-110 opacity-60 group-hover:opacity-40"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
                 </div>
 
                 {/* Content */}
-                <div className="absolute inset-0 z-10 p-8 flex flex-col justify-end">
+                <div className="absolute inset-0 z-10 p-6 flex flex-col justify-end">
                   <div className="mb-4">
-                    <span className="text-[10px] uppercase tracking-[0.2em] text-cyan-400 font-bold mb-2 block">
+                    <span className="text-[9px] uppercase tracking-[0.2em] text-cyan-400 font-bold mb-1 block">
                       {project.category}
                     </span>
-                    <h4 className="text-2xl md:text-3xl font-bold text-white mb-3 tracking-tighter">
+                    <h4 className="text-xl md:text-2xl font-bold text-white mb-2 tracking-tighter">
                       {project.title}
                     </h4>
-                    <p className="text-gray-300 text-sm line-clamp-2 mb-6 font-light leading-relaxed">
+                    <p className="text-gray-400 text-xs line-clamp-2 mb-4 font-light leading-relaxed">
                       {project.description}
                     </p>
                   </div>
                   
                   <div className="flex items-center justify-between mt-auto">
-                    <div className="flex gap-2">
+                    <div className="flex gap-1.5">
                       {project.tech.slice(0, 2).map((t, j) => (
-                        <span key={j} className="text-[8px] uppercase tracking-wider px-2 py-1 rounded-md bg-white/5 border border-white/10 text-gray-400">
+                        <span key={j} className="text-[7px] uppercase tracking-wider px-1.5 py-0.5 rounded-md bg-white/5 border border-white/10 text-gray-500">
                           {t}
                         </span>
                       ))}
@@ -106,9 +106,9 @@ export default function Portfolio() {
                       href={project.link} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-black text-[10px] font-bold uppercase tracking-widest hover:bg-cyan-400 transition-colors duration-300"
+                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white text-black text-[9px] font-bold uppercase tracking-widest hover:bg-cyan-400 transition-colors duration-300"
                     >
-                      View Site <ArrowUpRight size={14} />
+                      View <ArrowUpRight size={12} />
                     </a>
                   </div>
                 </div>
