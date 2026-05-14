@@ -45,10 +45,10 @@ const adminNavigation = [
   { href: "#team", label: "Team", hint: "Capability cards" },
   { href: "#testimonials", label: "Reviews", hint: "Client quotes" },
   { href: "#process", label: "Process", hint: "Workflow steps" },
-  { href: "#pricing", label: "Pricing", hint: "Plans and features" },
   { href: "#policies", label: "Policies", hint: "Terms and delivery" },
-  { href: "#contact-vision", label: "Contact", hint: "CTA and contact info" },
+  { href: "#contact", label: "Contact", hint: "CTA and contact info" },
 ];
+
 
 function cloneContent(content: SiteContent) {
   return JSON.parse(JSON.stringify(content)) as SiteContent;
@@ -1526,143 +1526,7 @@ export default function AdminPanel() {
             </SecondaryButton>
           </Section>
 
-          <Section id="pricing" title="Pricing Plans" description="Edit the name, price, and features for each plan." visible={activeSection === "#pricing"}>
-            {draft.pricing.map((plan, index) => (
-              <div key={index} className="rounded-2xl border border-white/10 p-4">
-                <div className="mb-4 flex items-center justify-between">
-                  <p className="text-sm text-gray-300">Plan {index + 1}</p>
-                  <SecondaryButton
-                    onClick={() =>
-                      setDraft({
-                        ...draft,
-                        pricing: draft.pricing.filter((_, i) => i !== index),
-                      })
-                    }
-                  >
-                    <Trash2 size={14} /> Remove
-                  </SecondaryButton>
-                </div>
-                <div className="grid gap-4 md:grid-cols-2">
-                  <Field label="Plan Name">
-                    <Input
-                      value={plan.name}
-                      onChange={(e) =>
-                        setDraft({
-                          ...draft,
-                          pricing: draft.pricing.map((item, i) =>
-                            i === index ? { ...item, name: e.target.value } : item
-                          ),
-                        })
-                      }
-                    />
-                  </Field>
-                  <Field label="Price">
-                    <Input
-                      value={plan.price}
-                      onChange={(e) =>
-                        setDraft({
-                          ...draft,
-                          pricing: draft.pricing.map((item, i) =>
-                            i === index ? { ...item, price: e.target.value } : item
-                          ),
-                        })
-                      }
-                    />
-                  </Field>
-                </div>
-                <Field label="Description">
-                  <Textarea
-                    rows={2}
-                    value={plan.description}
-                    onChange={(e) =>
-                      setDraft({
-                        ...draft,
-                        pricing: draft.pricing.map((item, i) =>
-                          i === index ? { ...item, description: e.target.value } : item
-                        ),
-                      })
-                    }
-                  />
-                </Field>
-                <div className="space-y-3">
-                  <p className="text-xs uppercase tracking-[0.2em] text-gray-500">
-                    Features
-                  </p>
-                  {plan.features.map((feature, fIndex) => (
-                    <div key={fIndex} className="flex gap-3">
-                      <Input
-                        value={feature}
-                        onChange={(e) =>
-                          setDraft({
-                            ...draft,
-                            pricing: draft.pricing.map((item, i) =>
-                              i === index
-                                ? {
-                                    ...item,
-                                    features: item.features.map((f, j) =>
-                                      j === fIndex ? e.target.value : f
-                                    ),
-                                  }
-                                : item
-                            ),
-                          })
-                        }
-                      />
-                      <SecondaryButton
-                        onClick={() =>
-                          setDraft({
-                            ...draft,
-                            pricing: draft.pricing.map((item, i) =>
-                              i === index
-                                ? {
-                                    ...item,
-                                    features: item.features.filter((_, j) => j !== fIndex),
-                                  }
-                                : item
-                            ),
-                          })
-                        }
-                      >
-                        <Trash2 size={14} />
-                      </SecondaryButton>
-                    </div>
-                  ))}
-                  <SecondaryButton
-                    onClick={() =>
-                      setDraft({
-                        ...draft,
-                        pricing: draft.pricing.map((item, i) =>
-                          i === index
-                            ? { ...item, features: [...item.features, "New Feature"] }
-                            : item
-                        ),
-                      })
-                    }
-                  >
-                    <Plus size={14} /> Add Feature
-                  </SecondaryButton>
-                </div>
-              </div>
-            ))}
-            <SecondaryButton
-              onClick={() =>
-                setDraft({
-                  ...draft,
-                  pricing: [
-                    ...draft.pricing,
-                    {
-                      name: "New Plan",
-                      price: "0",
-                      description: "Plan description",
-                      features: ["Feature 1"],
-                    },
-                  ],
-                })
-              }
-            >
-              <Plus size={14} /> Add Pricing Plan
-            </SecondaryButton>
-          </Section>
+
 
 
           <Section id="policies" title="Policies" description="Payment, delivery, revision, refund, and other policy content." visible={activeSection === "#policies"}>
@@ -1750,10 +1614,9 @@ export default function AdminPanel() {
             </SecondaryButton>
           </Section>
 
-          <Section id="contact-vision" title="Contact" description="Final call-to-action copy and contact section details." visible={activeSection === "#contact-vision"}>
+          <Section id="contact" title="Contact" description="Final call-to-action copy and contact section details." visible={activeSection === "#contact"}>
             <div className="grid gap-6">
               <div className="space-y-4 rounded-2xl border border-white/10 p-4">
-                <h3 className="text-lg font-medium">Contact Block</h3>
                 <Field label="Eyebrow">
                   <Input
                     value={draft.contact.eyebrow}

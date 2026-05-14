@@ -103,7 +103,6 @@ export default function Contact() {
                   type="text"
                   required
                   className="w-full bg-transparent border-b border-white/20 py-2 text-lg focus:outline-none focus:border-white transition-colors"
-                  placeholder="John Doe"
                 />
               </div>
               <div className="flex flex-col gap-1.5">
@@ -116,7 +115,7 @@ export default function Contact() {
                   type="email"
                   required
                   className="w-full bg-transparent border-b border-white/20 py-2 text-lg focus:outline-none focus:border-white transition-colors"
-                  placeholder="john@example.com"
+
                 />
               </div>
               <div className="flex flex-col gap-1.5">
@@ -129,7 +128,7 @@ export default function Contact() {
                   type="tel"
                   required
                   className="w-full bg-transparent border-b border-white/20 py-2 text-lg focus:outline-none focus:border-white transition-colors"
-                  placeholder="+91 98765 43210"
+
                 />
               </div>
               <div className="flex flex-col gap-1.5">
@@ -142,7 +141,7 @@ export default function Contact() {
                   rows={2}
                   required
                   className="w-full bg-transparent border-b border-white/20 py-2 text-lg focus:outline-none focus:border-white transition-colors resize-none"
-                  placeholder="Tell us about your project..."
+
                 />
               </div>
               <MagneticButton
