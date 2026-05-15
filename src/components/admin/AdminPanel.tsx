@@ -137,6 +137,41 @@ function Select(props: React.SelectHTMLAttributes<HTMLSelectElement>) {
   );
 }
 
+function FileUploadField({
+  label,
+  hint,
+  onUpload,
+  uploading,
+}: {
+  label: string;
+  hint?: string;
+  onUpload: (file: File) => Promise<void>;
+  uploading: boolean;
+}) {
+  return (
+    <label className="block space-y-2">
+      <span className="text-xs uppercase tracking-[0.2em] text-gray-500">
+        {label}
+      </span>
+      <input
+        type="file"
+        accept="image/*"
+        disabled={uploading}
+        onChange={async (e) => {
+          const file = e.target.files?.[0];
+          if (!file) return;
+          await onUpload(file);
+          e.currentTarget.value = "";
+        }}
+        className="block w-full rounded-2xl border border-dashed border-white/15 bg-white/5 px-4 py-3 text-sm text-gray-300 file:mr-4 file:rounded-full file:border-0 file:bg-white file:px-4 file:py-2 file:text-sm file:font-medium file:text-black"
+      />
+      <p className="text-xs text-gray-500">
+        {uploading ? "Uploading image..." : hint ?? "Upload an image file."}
+      </p>
+    </label>
+  );
+}
+
 function SecondaryButton({
   children,
   ...props
@@ -167,6 +202,29 @@ export default function AdminPanel() {
   );
   const [isLoadingLeads, setIsLoadingLeads] = useState(true);
   const [leadsTab, setLeadsTab] = useState<"contact" | "start-project">("contact");
+  const [uploadingTarget, setUploadingTarget] = useState<string | null>(null);
+
+  const uploadImage = useCallback(
+    async (file: File, folder: "brand" | "portfolio") => {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("folder", folder);
+
+      const response = await fetch("/api/admin/upload-image", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = (await response.json()) as { url?: string; error?: string };
+
+      if (!response.ok || !data.url) {
+        throw new Error(data.error || "Upload failed.");
+      }
+
+      return data.url;
+    },
+    []
+  );
 
   const refreshContactSubmissions = useCallback(async () => {
     try {
@@ -529,6 +587,40 @@ export default function AdminPanel() {
                   }
                 />
               </Field>
+              <div className="space-y-3">
+                <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-4">
+                  <p className="mb-3 text-xs uppercase tracking-[0.2em] text-gray-500">
+                    Full Logo Preview
+                  </p>
+                  <img
+                    src={draft.brand.logo ?? defaultSiteContent.brand.logo}
+                    alt="Full logo preview"
+                    className="h-14 w-auto max-w-full object-contain"
+                  />
+                </div>
+                <FileUploadField
+                  label="Upload Full Logo"
+                  hint="Uploads to Supabase Storage and fills the logo URL automatically."
+                  uploading={uploadingTarget === "brand-logo"}
+                  onUpload={async (file) => {
+                    try {
+                      setUploadingTarget("brand-logo");
+                      const url = await uploadImage(file, "brand");
+                      setDraft((current) => ({
+                        ...current,
+                        brand: { ...current.brand, logo: url },
+                      }));
+                      setStatus("Full logo uploaded. Save Changes to publish it.");
+                    } catch (error) {
+                      setStatus(
+                        error instanceof Error ? error.message : "Logo upload failed."
+                      );
+                    } finally {
+                      setUploadingTarget(null);
+                    }
+                  }}
+                />
+              </div>
               <Field label="Header Mark Path / URL">
                 <Input
                   value={draft.brand.mark ?? defaultSiteContent.brand.mark}
@@ -541,6 +633,40 @@ export default function AdminPanel() {
                   }
                 />
               </Field>
+              <div className="space-y-3">
+                <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-4">
+                  <p className="mb-3 text-xs uppercase tracking-[0.2em] text-gray-500">
+                    Header Mark Preview
+                  </p>
+                  <img
+                    src={draft.brand.mark ?? defaultSiteContent.brand.mark}
+                    alt="Header mark preview"
+                    className="h-14 w-14 object-contain"
+                  />
+                </div>
+                <FileUploadField
+                  label="Upload Header Mark"
+                  hint="Use this for the compact icon shown in the navbar."
+                  uploading={uploadingTarget === "brand-mark"}
+                  onUpload={async (file) => {
+                    try {
+                      setUploadingTarget("brand-mark");
+                      const url = await uploadImage(file, "brand");
+                      setDraft((current) => ({
+                        ...current,
+                        brand: { ...current.brand, mark: url },
+                      }));
+                      setStatus("Header mark uploaded. Save Changes to publish it.");
+                    } catch (error) {
+                      setStatus(
+                        error instanceof Error ? error.message : "Header mark upload failed."
+                      );
+                    } finally {
+                      setUploadingTarget(null);
+                    }
+                  }}
+                />
+              </div>
             </div>
             <Field label="Footer Description">
               <Textarea
@@ -1232,6 +1358,49 @@ export default function AdminPanel() {
                       }
                     />
                   </Field>
+                  <div className="space-y-3">
+                    <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-4">
+                      <p className="mb-3 text-xs uppercase tracking-[0.2em] text-gray-500">
+                        Project Image Preview
+                      </p>
+                      <img
+                        src={project.image}
+                        alt={`${project.title} preview`}
+                        className="h-32 w-full rounded-xl object-cover"
+                      />
+                    </div>
+                    <FileUploadField
+                      label="Upload Project Image"
+                      hint="Upload a new showcase image and the field above will update."
+                      uploading={uploadingTarget === `portfolio-${index}`}
+                      onUpload={async (file) => {
+                        try {
+                          setUploadingTarget(`portfolio-${index}`);
+                          const url = await uploadImage(file, "portfolio");
+                          setDraft((current) => ({
+                            ...current,
+                            portfolio: {
+                              ...current.portfolio,
+                              items: current.portfolio.items.map((item, i) =>
+                                i === index ? { ...item, image: url } : item
+                              ),
+                            },
+                          }));
+                          setStatus(
+                            `Project image uploaded for ${project.title}. Save Changes to publish it.`
+                          );
+                        } catch (error) {
+                          setStatus(
+                            error instanceof Error
+                              ? error.message
+                              : "Project image upload failed."
+                          );
+                        } finally {
+                          setUploadingTarget(null);
+                        }
+                      }}
+                    />
+                  </div>
                   <Field label="Gradient Colors">
                     <Input
                       value={project.color}

@@ -54,3 +54,18 @@ CONTACT_FROM_EMAIL="YJ DEVELOPERS <noreply@your-domain.com>"
 
 The GitHub token needs contents read/write access to this repository. For email,
 verify your sending domain in Resend before using a custom `CONTACT_FROM_EMAIL`.
+
+## Admin image uploads
+
+Admin panel image uploads use Supabase Storage instead of storing raw image data
+inside the `site_content` row. Add these environment variables in production:
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+SUPABASE_STORAGE_BUCKET=site-assets
+```
+
+Create a public storage bucket named `site-assets` or change
+`SUPABASE_STORAGE_BUCKET` to match your bucket name.
