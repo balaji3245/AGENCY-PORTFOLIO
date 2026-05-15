@@ -32,6 +32,7 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans), sans-serif;
   overflow-x: hidden;
+  text-rendering: optimizeLegibility;
 }
 
 html {
@@ -70,6 +71,79 @@ html {
   z-index: 50;
   opacity: 0.03;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+@keyframes orb-float-slow {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  33% {
+    transform: translate3d(6%, -8%, 0) scale(1.04);
+  }
+  66% {
+    transform: translate3d(-5%, 4%, 0) scale(0.98);
+  }
+}
+
+@keyframes orb-float-medium {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  40% {
+    transform: translate3d(-5%, 6%, 0) scale(0.97);
+  }
+  70% {
+    transform: translate3d(4%, -4%, 0) scale(1.03);
+  }
+}
+
+@keyframes orb-float-fast {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(5%, -5%, 0) scale(1.02);
+  }
+}
+
+.orb-float-slow {
+  animation: orb-float-slow 24s ease-in-out infinite;
+  will-change: transform;
+}
+
+.orb-float-medium {
+  animation: orb-float-medium 28s ease-in-out infinite;
+  will-change: transform;
+}
+
+.orb-float-fast {
+  animation: orb-float-fast 20s ease-in-out infinite;
+  will-change: transform;
+}
+
+@media (max-width: 767px) {
+  .noise-bg {
+    opacity: 0.015;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .orb-float-slow,
+  .orb-float-medium,
+  .orb-float-fast {
+    animation: none;
+  }
+
+  .noise-bg {
+    opacity: 0.01;
+  }
 }
 
 /* Hide scrollbar for clean look */

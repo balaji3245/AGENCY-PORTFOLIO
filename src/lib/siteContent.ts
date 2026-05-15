@@ -26,6 +26,8 @@ export type SiteContent = {
     email: string;
     phone: string;
     footerDescription: string;
+    logo: string;
+    mark: string;
   };
   hero: {
     badge: string;
@@ -124,6 +126,8 @@ export const defaultSiteContent: SiteContent = {
     phone: "+91 98765 43210",
     footerDescription:
       "A digital agency helping businesses build premium websites and iconic brands.",
+    logo: "/yj-logo.svg",
+    mark: "/yj-mark.svg",
   },
   hero: {
     badge: "Digital Creative Agency",

@@ -38,7 +38,13 @@ export default function SiteContentProvider({
         if (!response.ok) return;
 
         const data = (await response.json()) as { content: SiteContent };
-        setContent(data.content);
+        setContent({
+          ...data.content,
+          brand: {
+            ...defaultSiteContent.brand,
+            ...data.content.brand,
+          },
+        });
       } catch {
         if (!abortController.signal.aborted) {
           setContent(defaultSiteContent);
