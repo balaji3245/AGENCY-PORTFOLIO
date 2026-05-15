@@ -91,7 +91,7 @@ export default function Testimonials() {
           <div className="max-w-xl">
             <h2 className="text-xs uppercase tracking-widest text-gray-500 mb-4">Client Feedback</h2>
             <h3 className="text-4xl md:text-5xl font-bold tracking-tight mb-8">
-              Do not just take <br className="hidden md:block" /> our word for it.
+              Trusted by <br className="hidden md:block" /> Happy Customers
             </h3>
             
             {/* Play Store Style Rating Summary */}
