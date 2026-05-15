@@ -26,7 +26,7 @@ export default function Portfolio() {
   }, [activeTab, content.portfolio.items]);
 
   return (
-    <section id="work" className="py-32 bg-zinc-950">
+    <section id="work" className="py-32 bg-transparent">
       <div className="container mx-auto px-6 md:px-12">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-20">
           <div>
