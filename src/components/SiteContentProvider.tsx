@@ -12,8 +12,8 @@ import { defaultSiteContent, type SiteContent } from "@/lib/siteContent";
 
 type SiteContentContextValue = {
   content: SiteContent;
-  saveContent: (nextContent: SiteContent) => void;
-  resetContent: () => void;
+  saveContent: (nextContent: SiteContent) => Promise<boolean>;
+  resetContent: () => Promise<boolean>;
 };
 
 const SiteContentContext = createContext<SiteContentContextValue | null>(null);

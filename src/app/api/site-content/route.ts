@@ -65,7 +65,7 @@ export async function DELETE() {
     revalidatePath("/");
 
     return Response.json({ content: defaultSiteContent });
-  } catch (error) {
+  } catch {
     return Response.json({ error: "Failed to delete content" }, { status: 500 });
   }
 }

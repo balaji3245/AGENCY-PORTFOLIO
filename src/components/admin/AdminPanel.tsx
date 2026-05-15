@@ -1958,6 +1958,7 @@ export default function AdminPanel() {
                       client: "New Client",
                       company: "Company",
                       content: "Testimonial content",
+                      rating: 5,
                     },
                   ],
                 })

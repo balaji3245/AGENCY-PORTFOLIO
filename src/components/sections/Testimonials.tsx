@@ -25,7 +25,7 @@ export default function Testimonials() {
   const [filterRating, setFilterRating] = useState<number | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const allTestimonials = content.testimonials;
+  const allTestimonials: Review[] = content.testimonials;
 
   const filteredTestimonials = filterRating 
     ? allTestimonials.filter(t => (t.rating || 5) === filterRating)
