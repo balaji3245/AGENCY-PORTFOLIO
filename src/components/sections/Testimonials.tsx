@@ -231,42 +231,44 @@ export default function Testimonials() {
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
-              className="w-full max-w-lg glass-card p-8 md:p-10 rounded-[2.5rem] relative"
+              className="w-full max-w-md glass-card p-6 md:p-8 rounded-[2rem] relative"
             >
               <button 
                 onClick={() => setShowForm(false)}
-                className="absolute top-6 right-6 p-2 hover:bg-white/10 rounded-full transition-colors"
+                className="absolute top-4 right-4 p-2 hover:bg-white/10 rounded-full transition-colors"
               >
-                <X size={20} />
+                <X size={18} />
               </button>
 
-              <h4 className="text-2xl font-bold mb-2">Write a Review</h4>
-              <p className="text-gray-400 text-sm mb-8">Your feedback helps us improve and grow.</p>
+              <h4 className="text-xl font-bold mb-1">Write a Review</h4>
+              <p className="text-gray-400 text-[11px] mb-6 tracking-wide">Your feedback helps us improve and grow.</p>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="space-y-2">
-                  <label className="text-[10px] uppercase tracking-widest text-gray-500 font-bold ml-1">Full Name</label>
-                  <input 
-                    name="name"
-                    required
-                    placeholder="John Doe"
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:border-white/30 transition-colors"
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <label className="text-[10px] uppercase tracking-widest text-gray-500 font-bold ml-1">Company / Role</label>
-                  <input 
-                    name="company"
-                    required
-                    placeholder="CEO at TechCorp"
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:border-white/30 transition-colors"
-                  />
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <label className="text-[9px] uppercase tracking-widest text-gray-500 font-bold ml-1">Full Name</label>
+                    <input 
+                      name="name"
+                      required
+                      placeholder="John Doe"
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-white/30 transition-colors"
+                    />
+                  </div>
+                  
+                  <div className="space-y-1.5">
+                    <label className="text-[9px] uppercase tracking-widest text-gray-500 font-bold ml-1">Company / Role</label>
+                    <input 
+                      name="company"
+                      required
+                      placeholder="CEO at TechCorp"
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-white/30 transition-colors"
+                    />
+                  </div>
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-[10px] uppercase tracking-widest text-gray-500 font-bold ml-1">Rating</label>
-                  <div className="flex gap-2 p-4 bg-white/5 rounded-2xl border border-white/10">
+                <div className="space-y-1.5">
+                  <label className="text-[9px] uppercase tracking-widest text-gray-500 font-bold ml-1">Rating</label>
+                  <div className="flex gap-2 p-3 bg-white/5 rounded-xl border border-white/10">
                     {[1, 2, 3, 4, 5].map((s) => (
                       <button
                         key={s}
@@ -274,42 +276,42 @@ export default function Testimonials() {
                         onClick={() => setRating(s)}
                         onMouseEnter={() => setHoveredRating(s)}
                         onMouseLeave={() => setHoveredRating(0)}
-                        className="transition-transform hover:scale-125"
+                        className="transition-transform hover:scale-110"
                       >
                         <Star 
-                          size={32} 
+                          size={20} 
                           className={`${(hoveredRating || rating) >= s ? "text-yellow-500 fill-yellow-500" : "text-gray-600"} transition-colors`} 
                         />
                       </button>
                     ))}
-                    <span className="ml-auto text-xs font-bold text-gray-400 self-center uppercase tracking-widest">
+                    <span className="ml-auto text-[9px] font-bold text-gray-500 self-center uppercase tracking-widest">
                       {rating === 5 ? "Excellent" : rating === 4 ? "Very Good" : rating === 3 ? "Good" : rating === 2 ? "Fair" : "Poor"}
                     </span>
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-[10px] uppercase tracking-widest text-gray-500 font-bold ml-1">Your Review</label>
+                <div className="space-y-1.5">
+                  <label className="text-[9px] uppercase tracking-widest text-gray-500 font-bold ml-1">Your Review</label>
                   <textarea 
                     name="review"
                     required
-                    rows={4}
+                    rows={3}
                     placeholder="Tell us about your experience..."
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:border-white/30 transition-colors resize-none"
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-white/30 transition-colors resize-none"
                   />
                 </div>
 
-                <div className="flex flex-col gap-4 pt-2">
+                <div className="flex flex-col gap-3 pt-2">
                   <MagneticButton 
                     type="submit" 
                     disabled={isSubmitting}
-                    className="w-full py-4 rounded-2xl flex items-center justify-center gap-2"
+                    className="w-full py-3.5 rounded-xl flex items-center justify-center gap-2 text-sm"
                   >
-                    {isSubmitting ? "Submitting..." : "Submit Review"} <Send size={16} />
+                    {isSubmitting ? "Submitting..." : "Submit Review"} <Send size={14} />
                   </MagneticButton>
                   
                   {status && (
-                    <p className={`text-center text-sm ${statusTone === 'success' ? 'text-emerald-400' : 'text-red-400'}`}>
+                    <p className={`text-center text-xs ${statusTone === 'success' ? 'text-emerald-400' : 'text-red-400'}`}>
                       {status}
                     </p>
                   )}
