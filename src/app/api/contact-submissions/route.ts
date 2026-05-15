@@ -14,7 +14,7 @@ function cleanSubmission(input: Partial<ContactSubmissionInput>) {
     email: String(input.email ?? "").trim(),
     phone: String(input.phone ?? "").trim(),
     message: String(input.message ?? "").trim(),
-    source: (input.source === "start-project" ? "start-project" : "contact") as "contact" | "start-project",
+    source: (input.source === "start-project" ? "start-project" : input.source === "review" ? "review" : "contact") as "contact" | "start-project" | "review",
   };
 }
 

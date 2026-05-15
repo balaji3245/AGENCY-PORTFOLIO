@@ -5,7 +5,7 @@ export type ContactSubmission = {
   phone: string;
   message: string;
   createdAt: string;
-  source?: "contact" | "start-project";
+  source?: "contact" | "start-project" | "review";
 };
 
 export type ContactSubmissionInput = Omit<ContactSubmission, "id" | "createdAt">;
