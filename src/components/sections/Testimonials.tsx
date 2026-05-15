@@ -23,6 +23,7 @@ export default function Testimonials() {
   const [rating, setRating] = useState(5);
   const [hoveredRating, setHoveredRating] = useState(0);
   const [filterRating, setFilterRating] = useState<number | null>(null);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const allTestimonials = content.testimonials;
 
@@ -134,8 +135,38 @@ export default function Testimonials() {
           </button>
         </div>
 
+        <div className="flex flex-wrap gap-3 mb-12">
+          <button
+            onClick={() => setFilterRating(null)}
+            className={`px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-300 border ${
+              filterRating === null 
+                ? "bg-white text-black border-white" 
+                : "bg-white/5 text-gray-400 border-white/10 hover:border-white/30"
+            }`}
+          >
+            All Reviews ({totalReviews})
+          </button>
+          {[5, 4, 3, 2, 1].map((s) => {
+            const count = allTestimonials.filter(t => (t.rating || 5) === s).length;
+            return (
+              <button
+                key={s}
+                onClick={() => setFilterRating(s)}
+                className={`px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-300 border flex items-center gap-2 ${
+                  filterRating === s 
+                    ? "bg-yellow-500 text-black border-yellow-500" 
+                    : "bg-white/5 text-gray-400 border-white/10 hover:border-white/30"
+                }`}
+              >
+                {s} <Star size={12} className={filterRating === s ? "fill-black" : "fill-yellow-500 text-yellow-500"} />
+                <span className={`ml-1 text-[10px] ${filterRating === s ? "text-black/60" : "text-gray-500"}`}>({count})</span>
+              </button>
+            );
+          })}
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredTestimonials.map((test, i) => (
+          {filteredTestimonials.slice(0, isExpanded ? undefined : 3).map((test, i) => (
             <motion.div
               layout
               initial={{ opacity: 0, y: 20 }}
@@ -167,12 +198,24 @@ export default function Testimonials() {
               </div>
             </motion.div>
           ))}
-          {filteredTestimonials.length === 0 && (
-            <div className="col-span-full py-20 text-center text-gray-500 uppercase tracking-[0.2em] text-xs">
-              No {filterRating} star reviews yet
-            </div>
-          )}
         </div>
+
+        {filteredTestimonials.length > 3 && (
+          <div className="mt-12 text-center">
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="px-8 py-3 rounded-full border border-white/10 hover:bg-white/5 transition-all text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white"
+            >
+              {isExpanded ? "Show Less" : `View All Reviews (${filteredTestimonials.length})`}
+            </button>
+          </div>
+        )}
+
+        {filteredTestimonials.length === 0 && (
+          <div className="col-span-full py-20 text-center text-gray-500 uppercase tracking-[0.2em] text-xs">
+            No {filterRating} star reviews yet
+          </div>
+        )}
       </div>
 
       {/* Review Form Modal */}
