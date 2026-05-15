@@ -20,7 +20,7 @@ export default function Vision() {
   const { content } = useSiteContent();
 
   return (
-    <section className="py-40 bg-transparent relative flex items-center justify-center overflow-hidden">
+    <section className="py-20 bg-transparent relative flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0 opacity-20">
         {lineTimings.map((timing, i) => (
           <motion.div

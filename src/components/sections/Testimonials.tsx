@@ -8,7 +8,7 @@ export default function Testimonials() {
   const { content } = useSiteContent();
 
   return (
-    <section className="py-32 bg-transparent relative">
+    <section className="py-16 bg-transparent relative">
       <div className="container mx-auto px-6 md:px-12">
         <div className="mb-20">
           <h2 className="text-xs uppercase tracking-widest text-gray-500 mb-4">Client Feedback</h2>

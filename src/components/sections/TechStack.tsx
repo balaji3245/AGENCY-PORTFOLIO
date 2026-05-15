@@ -7,7 +7,7 @@ export default function TechStack() {
   const { content } = useSiteContent();
 
   return (
-    <section className="py-20 bg-transparent overflow-hidden border-y border-white/5">
+    <section className="py-10 bg-transparent overflow-hidden border-y border-white/5">
       <div className="container mx-auto px-6 mb-10 text-center">
         <h2 className="text-xs uppercase tracking-widest text-gray-500">
           {content.techStack.eyebrow}

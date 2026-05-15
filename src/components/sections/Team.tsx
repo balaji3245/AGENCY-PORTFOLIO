@@ -8,7 +8,7 @@ export default function Team() {
   const { content } = useSiteContent();
 
   return (
-    <section id="team" className="py-32 bg-transparent">
+    <section id="team" className="py-16 bg-transparent">
       <div className="container mx-auto px-6 md:px-12">
         <div className="text-center mb-20 max-w-2xl mx-auto">
           <h2 className="text-xs uppercase tracking-widest text-gray-500 mb-4">{content.team.eyebrow}</h2>

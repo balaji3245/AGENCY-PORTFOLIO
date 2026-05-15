@@ -7,7 +7,7 @@ export default function Process() {
   const { content } = useSiteContent();
 
   return (
-    <section id="process" className="py-32 bg-transparent relative overflow-hidden">
+    <section id="process" className="py-16 bg-transparent relative overflow-hidden">
       <div className="container mx-auto px-6 md:px-12 relative z-10">
         <div className="text-center mb-24">
           <h2 className="text-xs uppercase tracking-widest text-gray-500 mb-4">

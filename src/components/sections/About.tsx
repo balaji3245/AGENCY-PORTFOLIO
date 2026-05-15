@@ -48,7 +48,7 @@ export default function About() {
   const y = useTransform(scrollYProgress, [0, 1], [60, -60]);
 
   return (
-    <section ref={containerRef} id="about" className="py-32 relative z-10 bg-transparent overflow-hidden">
+    <section ref={containerRef} id="about" className="py-16 relative z-10 bg-transparent overflow-hidden">
       {/* Background accent */}
       <div className="absolute -left-40 top-1/3 w-[500px] h-[500px] bg-cyan-500/5 blur-[120px] rounded-full pointer-events-none" />
 
