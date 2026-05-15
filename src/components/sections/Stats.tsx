@@ -46,7 +46,7 @@ export default function Stats() {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[300px] bg-gradient-to-r from-blue-900/10 via-purple-900/10 to-blue-900/10 blur-[100px] pointer-events-none" />
       
       <div className="container mx-auto px-6 relative z-10">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+        <div className="grid grid-cols-4 gap-2 md:gap-12">
           {content.stats.map((stat, i) => (
             <motion.div 
               key={i}
@@ -56,10 +56,10 @@ export default function Stats() {
               transition={{ delay: i * 0.1, duration: 0.6 }}
               className="text-center group"
             >
-              <div className="text-5xl md:text-7xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-b from-white to-white/40">
+              <div className="text-2xl sm:text-3xl md:text-7xl font-bold mb-2 md:mb-4 bg-clip-text text-transparent bg-gradient-to-b from-white to-white/40">
                 <Counter from={0} to={stat.value} suffix={stat.suffix} />
               </div>
-              <div className="text-sm uppercase tracking-widest text-gray-400 group-hover:text-white transition-colors duration-300">
+              <div className="text-[9px] md:text-sm uppercase tracking-widest text-gray-400 group-hover:text-white transition-colors duration-300">
                 {stat.label}
               </div>
             </motion.div>
