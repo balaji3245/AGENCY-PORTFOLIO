@@ -124,7 +124,7 @@ export default function About() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.3 }}
               >
-                <h4 className="text-4xl font-bold text-white mb-1">2022</h4>
+                <h4 className="text-4xl font-bold text-white mb-1">2026</h4>
                 <p className="text-xs text-gray-500 uppercase tracking-wider">Founded</p>
               </motion.div>
             </div>
