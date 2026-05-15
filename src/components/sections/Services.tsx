@@ -10,7 +10,7 @@ export default function Services() {
   return (
     <section id="services" className="py-16 relative bg-transparent">
       <div className="container mx-auto px-6 md:px-12">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-20">
+        <div className="flex flex-col md:flex-row justify-between items-center md:items-end mb-20 text-center md:text-left">
           <div className="max-w-2xl">
             <h2 className="text-xs uppercase tracking-widest text-gray-500 mb-4">{content.services.eyebrow}</h2>
             <h3 className="text-4xl md:text-5xl font-bold tracking-tight">
