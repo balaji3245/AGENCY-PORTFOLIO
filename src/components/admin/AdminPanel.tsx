@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
-import { Save, RotateCcw, Plus, Trash2, ExternalLink, LogOut, X } from "lucide-react";
+import { Save, RotateCcw, Plus, Trash2, ExternalLink, LogOut, X, Star } from "lucide-react";
 import { logout, verifyPassword } from "@/app/admin/actions";
 import {
   defaultSiteContent,
@@ -501,6 +501,17 @@ export default function AdminPanel() {
                         }`}>
                           {leadsTab === "start-project" ? "🚀 Project Brief" : leadsTab === "review" ? "⭐️ Review" : "📩 Contact"}
                         </span>
+                        {leadsTab === "review" && (
+                          <div className="flex gap-0.5 mr-2">
+                            {[1, 2, 3, 4, 5].map((s) => {
+                              const ratingMatch = submission.message.match(/^(\d) STARS \| /);
+                              const displayRating = ratingMatch ? parseInt(ratingMatch[1]) : 5;
+                              return (
+                                <Star key={s} size={10} className={`${displayRating >= s ? "text-yellow-500 fill-yellow-500" : "text-gray-600"}`} />
+                              );
+                            })}
+                          </div>
+                        )}
                         <span className="text-xs text-gray-500" suppressHydrationWarning>
                           {new Date(submission.createdAt).toLocaleString()}
                         </span>
@@ -537,7 +548,8 @@ export default function AdminPanel() {
                                     {
                                       client: submission.name,
                                       company: submission.phone || "Client",
-                                      content: submission.message,
+                                      content: submission.message.replace(/^(\d) STARS \| /, ""),
+                                      rating: parseInt(submission.message.match(/^(\d) STARS \| /)?.[1] || "5"),
                                     },
                                   ],
                                 });
@@ -557,7 +569,7 @@ export default function AdminPanel() {
                       </div>
                       </div>
                       <p className="whitespace-pre-wrap rounded-2xl border border-white/10 bg-black/20 p-4 text-sm leading-6 text-gray-300">
-                        {submission.message}
+                        {submission.message.replace(/^(\d) STARS \| /, "")}
                       </p>
                     </article>
                   ))}

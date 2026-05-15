@@ -10,17 +10,35 @@ interface Review {
   client: string;
   company: string;
   content: string;
+  rating: number;
   isDynamic?: boolean;
 }
 
 export default function Testimonials() {
-  const { content } = useSiteContent();
-  const [showForm, setShowForm] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [status, setStatus] = useState("");
-  const [statusTone, setStatusTone] = useState<"success" | "error">("success");
+  const [rating, setRating] = useState(5);
+  const [hoveredRating, setHoveredRating] = useState(0);
+  const [filterRating, setFilterRating] = useState<number | null>(null);
 
-  const allTestimonials = content.testimonials;
+  const allTestimonials = (content.testimonials as any[]).map(t => ({
+    ...t,
+    rating: t.rating || 5 // Default to 5 for old testimonials
+  })) as Review[];
+
+  const filteredTestimonials = filterRating 
+    ? allTestimonials.filter(t => t.rating === filterRating)
+    : allTestimonials;
+
+  // Rating Stats (Play Store style)
+  const totalReviews = allTestimonials.length;
+  const ratingCounts = [5, 4, 3, 2, 1].map(star => ({
+    star,
+    count: allTestimonials.filter(t => t.rating === star).length,
+    percentage: totalReviews > 0 ? (allTestimonials.filter(t => t.rating === star).length / totalReviews) * 100 : 0
+  }));
+
+  const averageRating = totalReviews > 0 
+    ? (allTestimonials.reduce((acc, curr) => acc + curr.rating, 0) / totalReviews).toFixed(1)
+    : "0.0";
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -40,9 +58,9 @@ export default function Testimonials() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
           name, 
-          email: `${name.toLowerCase().replace(/\s/g, ".")}@review.temp`, // Dummy email
-          phone: company, // Use phone field for company
-          message: content, 
+          email: `${name.toLowerCase().replace(/\s/g, ".")}@review.temp`, 
+          phone: company, 
+          message: `${rating} STARS | ${content}`, // Prepend rating to message for now since DB is fixed schema
           source: "review" 
         }),
       });
@@ -66,12 +84,44 @@ export default function Testimonials() {
   return (
     <section className="py-16 bg-transparent relative">
       <div className="container mx-auto px-6 md:px-12">
-        <div className="flex flex-col md:flex-row justify-between items-end gap-8 mb-20">
-          <div>
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-12 mb-20">
+          <div className="max-w-xl">
             <h2 className="text-xs uppercase tracking-widest text-gray-500 mb-4">Client Feedback</h2>
-            <h3 className="text-4xl md:text-5xl font-bold tracking-tight">
+            <h3 className="text-4xl md:text-5xl font-bold tracking-tight mb-8">
               Do not just take <br className="hidden md:block" /> our word for it.
             </h3>
+            
+            {/* Play Store Style Rating Summary */}
+            <div className="flex flex-col sm:flex-row items-center gap-8 p-8 rounded-[2rem] bg-white/[0.03] border border-white/10">
+              <div className="text-center">
+                <div className="text-6xl font-bold mb-2">{averageRating}</div>
+                <div className="flex gap-1 justify-center mb-2">
+                  {[1, 2, 3, 4, 5].map((s) => (
+                    <Star key={s} size={16} className={`${Number(averageRating) >= s ? "text-yellow-500 fill-yellow-500" : "text-gray-600"}`} />
+                  ))}
+                </div>
+                <div className="text-xs text-gray-500 uppercase tracking-widest">{totalReviews} Reviews</div>
+              </div>
+              
+              <div className="flex-1 w-full space-y-2">
+                {ratingCounts.map(({ star, percentage }) => (
+                  <button 
+                    key={star}
+                    onClick={() => setFilterRating(filterRating === star ? null : star)}
+                    className={`flex items-center gap-4 w-full group ${filterRating === star ? "opacity-100" : filterRating ? "opacity-40" : "opacity-100"}`}
+                  >
+                    <span className="text-xs font-bold w-3">{star}</span>
+                    <div className="flex-1 h-2 bg-white/5 rounded-full overflow-hidden">
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        animate={{ width: `${percentage}%` }}
+                        className="h-full bg-yellow-500 rounded-full"
+                      />
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
           
           <button 
@@ -82,45 +132,44 @@ export default function Testimonials() {
           </button>
         </div>
 
-        <div className="relative overflow-hidden -mx-6 md:-mx-12 py-10">
-          <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-[#030612] to-transparent z-10" />
-          <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-[#030612] to-transparent z-10" />
-          
-          <motion.div 
-            animate={{ x: ["0%", "-50%"] }}
-            transition={{ 
-              duration: 40, 
-              ease: "linear", 
-              repeat: Infinity 
-            }}
-            className="flex gap-8 w-max px-4"
-          >
-            {[...allTestimonials, ...allTestimonials].map((test, i) => (
-              <div
-                key={i}
-                className="w-[350px] md:w-[450px] flex-shrink-0 glass p-8 md:p-10 rounded-[2.5rem] relative"
-              >
-                <Quote className="text-white/10 w-12 h-12 absolute top-8 right-8" />
-                <div className="flex gap-1 mb-6">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <Star key={star} size={14} className="text-yellow-500 fill-yellow-500" />
-                  ))}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredTestimonials.map((test, i) => (
+            <motion.div
+              layout
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              key={i}
+              className="glass p-8 rounded-[2.5rem] relative group hover:border-white/20 transition-all duration-500"
+            >
+              <Quote className="text-white/5 w-10 h-10 absolute top-8 right-8" />
+              <div className="flex gap-1 mb-6">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <Star 
+                    key={star} 
+                    size={14} 
+                    className={`${test.rating >= star ? "text-yellow-500 fill-yellow-500" : "text-gray-600"}`} 
+                  />
+                ))}
+              </div>
+              <p className="text-base text-gray-300 font-light mb-8 leading-relaxed italic line-clamp-4">
+                &quot;{test.content}&quot;
+              </p>
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-lg font-bold text-gradient">
+                  {test.client[0]}
                 </div>
-                <p className="text-base md:text-lg text-gray-300 font-light mb-8 leading-relaxed italic">
-                  &quot;{test.content}&quot;
-                </p>
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-xl font-bold text-gradient">
-                    {test.client[0]}
-                  </div>
-                  <div>
-                    <h5 className="font-semibold text-white">{test.client}</h5>
-                    <p className="text-xs text-gray-500 uppercase tracking-widest">{test.company}</p>
-                  </div>
+                <div>
+                  <h5 className="font-semibold text-white text-sm">{test.client}</h5>
+                  <p className="text-[10px] text-gray-500 uppercase tracking-widest">{test.company}</p>
                 </div>
               </div>
-            ))}
-          </motion.div>
+            </motion.div>
+          ))}
+          {filteredTestimonials.length === 0 && (
+            <div className="col-span-full py-20 text-center text-gray-500 uppercase tracking-[0.2em] text-xs">
+              No {filterRating} star reviews yet
+            </div>
+          )}
         </div>
       </div>
 
@@ -168,6 +217,30 @@ export default function Testimonials() {
                     placeholder="CEO at TechCorp"
                     className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:border-white/30 transition-colors"
                   />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[10px] uppercase tracking-widest text-gray-500 font-bold ml-1">Rating</label>
+                  <div className="flex gap-2 p-4 bg-white/5 rounded-2xl border border-white/10">
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <button
+                        key={s}
+                        type="button"
+                        onClick={() => setRating(s)}
+                        onMouseEnter={() => setHoveredRating(s)}
+                        onMouseLeave={() => setHoveredRating(0)}
+                        className="transition-transform hover:scale-125"
+                      >
+                        <Star 
+                          size={32} 
+                          className={`${(hoveredRating || rating) >= s ? "text-yellow-500 fill-yellow-500" : "text-gray-600"} transition-colors`} 
+                        />
+                      </button>
+                    ))}
+                    <span className="ml-auto text-xs font-bold text-gray-400 self-center uppercase tracking-widest">
+                      {rating === 5 ? "Excellent" : rating === 4 ? "Very Good" : rating === 3 ? "Good" : rating === 2 ? "Fair" : "Poor"}
+                    </span>
+                  </div>
                 </div>
 
                 <div className="space-y-2">
