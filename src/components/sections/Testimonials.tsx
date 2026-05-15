@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Quote, Send, Star, X } from "lucide-react";
 import { useSiteContent } from "@/components/SiteContentProvider";
@@ -19,32 +19,8 @@ export default function Testimonials() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [status, setStatus] = useState("");
   const [statusTone, setStatusTone] = useState<"success" | "error">("success");
-  const [dynamicReviews, setDynamicReviews] = useState<Review[]>([]);
 
-  useEffect(() => {
-    const fetchReviews = async () => {
-      try {
-        const response = await fetch("/api/contact-submissions");
-        if (response.ok) {
-          const data = await response.json();
-          const reviews = data.submissions
-            .filter((s: any) => s.source === "review")
-            .map((s: any) => ({
-              client: s.name,
-              company: s.phone, // We stored company in phone field
-              content: s.message,
-              isDynamic: true
-            }));
-          setDynamicReviews(reviews);
-        }
-      } catch (error) {
-        console.error("Failed to fetch dynamic reviews:", error);
-      }
-    };
-    fetchReviews();
-  }, []);
-
-  const allTestimonials = [...content.testimonials, ...dynamicReviews];
+  const allTestimonials = content.testimonials;
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -73,16 +49,7 @@ export default function Testimonials() {
 
       if (!response.ok) throw new Error();
 
-      setStatus("Thank you! Your review has been submitted and is now live.");
-      
-      // Add the new review to the list immediately
-      setDynamicReviews(prev => [...prev, {
-        client: name,
-        company: company,
-        content: content,
-        isDynamic: true
-      }]);
-
+      setStatus("Thank you! Your review has been submitted for moderation.");
       form.reset();
       setTimeout(() => {
         setShowForm(false);
@@ -115,36 +82,45 @@ export default function Testimonials() {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {allTestimonials.map((test, i) => (
-            <motion.div
-              key={`${test.client}-${test.company}`}
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="glass p-10 rounded-3xl relative"
-            >
-              <Quote className="text-white/10 w-12 h-12 absolute top-8 right-8" />
-              <div className="flex gap-1 mb-8">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <Star key={star} size={16} className="text-yellow-500 fill-yellow-500" />
-                ))}
-              </div>
-              <p className="text-lg text-gray-300 font-light mb-8 leading-relaxed">
-                &quot;{test.content}&quot;
-              </p>
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-xl font-bold">
-                  {test.client[0]}
+        <div className="relative overflow-hidden -mx-6 md:-mx-12 py-10">
+          <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-[#030612] to-transparent z-10" />
+          <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-[#030612] to-transparent z-10" />
+          
+          <motion.div 
+            animate={{ x: ["0%", "-50%"] }}
+            transition={{ 
+              duration: 40, 
+              ease: "linear", 
+              repeat: Infinity 
+            }}
+            className="flex gap-8 w-max px-4"
+          >
+            {[...allTestimonials, ...allTestimonials].map((test, i) => (
+              <div
+                key={i}
+                className="w-[350px] md:w-[450px] flex-shrink-0 glass p-8 md:p-10 rounded-[2.5rem] relative"
+              >
+                <Quote className="text-white/10 w-12 h-12 absolute top-8 right-8" />
+                <div className="flex gap-1 mb-6">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <Star key={star} size={14} className="text-yellow-500 fill-yellow-500" />
+                  ))}
                 </div>
-                <div>
-                  <h5 className="font-semibold">{test.client}</h5>
-                  <p className="text-sm text-gray-500">{test.company}</p>
+                <p className="text-base md:text-lg text-gray-300 font-light mb-8 leading-relaxed italic">
+                  &quot;{test.content}&quot;
+                </p>
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-xl font-bold text-gradient">
+                    {test.client[0]}
+                  </div>
+                  <div>
+                    <h5 className="font-semibold text-white">{test.client}</h5>
+                    <p className="text-xs text-gray-500 uppercase tracking-widest">{test.company}</p>
+                  </div>
                 </div>
               </div>
-            </motion.div>
-          ))}
+            ))}
+          </motion.div>
         </div>
       </div>
 

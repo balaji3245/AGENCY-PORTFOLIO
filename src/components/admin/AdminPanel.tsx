@@ -201,7 +201,7 @@ export default function AdminPanel() {
     []
   );
   const [isLoadingLeads, setIsLoadingLeads] = useState(true);
-  const [leadsTab, setLeadsTab] = useState<"contact" | "start-project">("contact");
+  const [leadsTab, setLeadsTab] = useState<"contact" | "start-project" | "review">("contact");
   const [uploadingTarget, setUploadingTarget] = useState<string | null>(null);
 
   const uploadImage = useCallback(
@@ -433,10 +433,10 @@ export default function AdminPanel() {
           </aside>
 
           <div className="grid gap-6">
-          <Section id="leads" title="Leads" description="All form submissions from the website, separated by source." visible={activeSection === "#leads"}>
+          <Section id="leads" title="Leads & Reviews" description="All form submissions from the website, separated by source." visible={activeSection === "#leads"}>
             {/* Tab toggle */}
             <div className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.03] p-1.5">
-              {(["contact", "start-project"] as const).map((tab) => {
+              {(["contact", "start-project", "review"] as const).map((tab) => {
                 const count = contactSubmissions.filter((s) => (s.source ?? "contact") === tab).length;
                 return (
                   <button
@@ -447,7 +447,7 @@ export default function AdminPanel() {
                       leadsTab === tab ? "bg-white text-black shadow-sm" : "text-gray-400 hover:text-white"
                     }`}
                   >
-                    {tab === "contact" ? "📩 Contact Form" : "🚀 Start Project"}
+                    {tab === "contact" ? "📩 Contact" : tab === "start-project" ? "🚀 Project" : "⭐️ Reviews"}
                     <span className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${
                       leadsTab === tab ? "bg-black/10 text-black" : "bg-white/10 text-gray-300"
                     }`}>{count}</span>
@@ -461,7 +461,7 @@ export default function AdminPanel() {
               <div>
                 <p className="text-lg font-medium">
                   {contactSubmissions.filter((s) => (s.source ?? "contact") === leadsTab).length}{" "}
-                  {leadsTab === "contact" ? "contact message" : "project brief"}
+                  {leadsTab === "contact" ? "contact message" : leadsTab === "start-project" ? "project brief" : "client review"}
                   {contactSubmissions.filter((s) => (s.source ?? "contact") === leadsTab).length === 1 ? "" : "s"}
                 </p>
                 <p className="mt-1 text-sm text-gray-400">Newest first.</p>
@@ -490,14 +490,16 @@ export default function AdminPanel() {
                       className={`rounded-2xl border p-4 ${
                         leadsTab === "start-project"
                           ? "border-cyan-400/20 bg-cyan-400/5"
+                          : leadsTab === "review"
+                          ? "border-yellow-400/20 bg-yellow-400/5"
                           : "border-white/10 bg-white/[0.03]"
                       }`}
                     >
                       <div className="mb-3 flex items-center gap-2">
                         <span className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-widest ${
-                          leadsTab === "start-project" ? "bg-cyan-400/20 text-cyan-300" : "bg-white/10 text-gray-300"
+                          leadsTab === "start-project" ? "bg-cyan-400/20 text-cyan-300" : leadsTab === "review" ? "bg-yellow-400/20 text-yellow-300" : "bg-white/10 text-gray-300"
                         }`}>
-                          {leadsTab === "start-project" ? "🚀 Project Brief" : "📩 Contact"}
+                          {leadsTab === "start-project" ? "🚀 Project Brief" : leadsTab === "review" ? "⭐️ Review" : "📩 Contact"}
                         </span>
                         <span className="text-xs text-gray-500" suppressHydrationWarning>
                           {new Date(submission.createdAt).toLocaleString()}
@@ -506,6 +508,9 @@ export default function AdminPanel() {
                       <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                         <div>
                           <h3 className="text-lg font-semibold">{submission.name}</h3>
+                          {leadsTab === "review" && (
+                             <p className="text-sm text-gray-400">Company: <span className="text-white">{submission.phone}</span></p>
+                          )}
                           <a
                             href={`mailto:${submission.email}`}
                             className="text-sm text-cyan-300 transition hover:text-cyan-100"
@@ -521,11 +526,35 @@ export default function AdminPanel() {
                             </a>
                           )}
                         </div>
-                        <SecondaryButton
+                        <div className="flex gap-2">
+                          {leadsTab === "review" && (
+                            <button
+                              onClick={() => {
+                                setDraft({
+                                  ...draft,
+                                  testimonials: [
+                                    ...draft.testimonials,
+                                    {
+                                      client: submission.name,
+                                      company: submission.phone || "Client",
+                                      content: submission.message,
+                                    },
+                                  ],
+                                });
+                                removeContactSubmission(submission.id);
+                                setStatus("Review approved and added to draft testimonials. Save Changes to publish!");
+                              }}
+                              className="inline-flex items-center gap-2 rounded-full bg-emerald-500/20 border border-emerald-500/30 px-4 py-2 text-xs font-medium text-emerald-300 transition hover:bg-emerald-500/30"
+                            >
+                              ✅ Approve
+                            </button>
+                          )}
+                          <SecondaryButton
                           onClick={() => removeContactSubmission(submission.id)}
                         >
                           <Trash2 size={14} /> Delete
                         </SecondaryButton>
+                      </div>
                       </div>
                       <p className="whitespace-pre-wrap rounded-2xl border border-white/10 bg-black/20 p-4 text-sm leading-6 text-gray-300">
                         {submission.message}
