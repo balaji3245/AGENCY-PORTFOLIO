@@ -159,28 +159,74 @@ export const defaultSiteContent: SiteContent = {
       "Focused digital solutions to help your brand grow from strategy to launch.",
     items: [
       {
-        title: "Brand Strategy & Design",
-        description:
-          "We create iconic identities, logos, and visual systems that make your brand unforgettable and market-ready.",
-        icon: "penTool",
-      },
-      {
-        title: "Web & App Development",
-        description:
-          "Fast, responsive, and conversion-ready digital platforms built with modern technologies like React and Next.js.",
+        title: "Website Design",
+        description: "Modern, high-converting layouts designed to captivate your audience and reflect your brand identity.",
         icon: "monitor",
       },
       {
-        title: "Digital Marketing & SEO",
-        description:
-          "Data-driven campaigns and technical SEO strategies designed to scale your reach and maximize ROI.",
+        title: "Website Development",
+        description: "Fast, secure, and scalable web solutions built with cutting-edge technologies like React and Next.js.",
+        icon: "server",
+      },
+      {
+        title: "Motion Graphics",
+        description: "Dynamic visual elements and animations that bring your brand to life with fluid movement.",
+        icon: "zap",
+      },
+      {
+        title: "Video Editing",
+        description: "Professional post-production that transforms raw footage into compelling cinematic stories.",
         icon: "megaphone",
       },
       {
-        title: "Cloud & Software Solutions",
-        description:
-          "Scalable backend systems, enterprise dashboards, and custom SaaS platforms built for complex business needs.",
-        icon: "server",
+        title: "Graphic Design",
+        description: "Stunning visual assets, from marketing materials to digital graphics, tailored for your brand.",
+        icon: "penTool",
+      },
+      {
+        title: "Photo Editing",
+        description: "Expert retouching and color grading to ensure your brand imagery looks polished and professional.",
+        icon: "palette",
+      },
+      {
+        title: "Branding & Creative Solutions",
+        description: "Comprehensive brand identities including logos, color palettes, and full visual systems.",
+        icon: "sparkles",
+      },
+      {
+        title: "UI/UX Design",
+        description: "User-centric interface designs focused on providing intuitive and seamless digital experiences.",
+        icon: "smartphone",
+      },
+      {
+        title: "Social Media Creative Design",
+        description: "Eye-catching content designed to boost engagement and consistency across all social platforms.",
+        icon: "megaphone",
+      },
+      {
+        title: "App Development",
+        description: "Custom mobile applications built for performance, scalability, and exceptional user experience.",
+        icon: "smartphone",
+      },
+      {
+        title: "Marketing Design Assets",
+        description: "Strategic design materials including banners, ads, and presentations to fuel your growth.",
+        icon: "megaphone",
+      },
+      {
+        title: "Content Creation",
+        description: "High-quality digital content that tells your brand story and resonates with your target audience.",
+        icon: "penTool",
+      },
+      {
+        title: "Creative Direction",
+        description: "Guided artistic vision to ensure consistency and excellence across all your creative projects.",
+        icon: "sparkles",
+      },
+      {
+        title: "Content Strategy",
+        description: "Data-driven roadmaps to help you plan, create, and manage content that drives real business results.",
+        icon: "search",
       },
     ],
   },
