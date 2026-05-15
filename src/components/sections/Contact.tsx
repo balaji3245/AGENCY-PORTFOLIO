@@ -9,6 +9,7 @@ import MagneticButton from "@/components/ui/MagneticButton";
 export default function Contact() {
   const { content } = useSiteContent();
   const [status, setStatus] = useState("");
+  const [statusTone, setStatusTone] = useState<"success" | "warning" | "error">("success");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -22,6 +23,7 @@ export default function Contact() {
 
     setIsSubmitting(true);
     setStatus("");
+    setStatusTone("success");
 
     try {
       const response = await fetch("/api/contact-submissions", {
@@ -34,9 +36,22 @@ export default function Contact() {
         throw new Error("Unable to send message.");
       }
 
+      const data = (await response.json()) as {
+        email?: { sent?: boolean; reason?: string };
+      };
+
       form.reset();
-      setStatus("Message received. We will get back to you soon.");
+      if (data.email?.sent === false) {
+        setStatusTone("warning");
+        setStatus(
+          "Message save ho gaya, but email delivery failed. Admin panel me lead mil jayegi."
+        );
+      } else {
+        setStatusTone("success");
+        setStatus("Message received. We will get back to you soon.");
+      }
     } catch {
+      setStatusTone("error");
       setStatus("Message could not be sent. Please try again.");
     } finally {
       setIsSubmitting(false);
@@ -152,7 +167,16 @@ export default function Contact() {
                 {isSubmitting ? "Sending..." : "Send Message"} <Send size={16} />
               </MagneticButton>
               {status ? (
-                <p className="text-sm text-emerald-300" role="status">
+                <p
+                  className={`text-sm ${
+                    statusTone === "success"
+                      ? "text-emerald-300"
+                      : statusTone === "warning"
+                        ? "text-amber-300"
+                        : "text-red-300"
+                  }`}
+                  role="status"
+                >
                   {status}
                 </p>
               ) : null}

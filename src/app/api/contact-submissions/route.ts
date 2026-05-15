@@ -76,6 +76,14 @@ export async function POST(request: Request) {
       })
     );
 
+    if (!email.sent) {
+      console.error("Contact email delivery failed:", {
+        reason: email.reason,
+        submissionId: submission.id,
+        recipient: process.env.CONTACT_TO_EMAIL,
+      });
+    }
+
     return Response.json({ submission, email }, { status: 201 });
   } catch (error) {
     return Response.json(
