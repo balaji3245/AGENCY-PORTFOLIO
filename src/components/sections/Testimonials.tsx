@@ -15,29 +15,31 @@ interface Review {
 }
 
 export default function Testimonials() {
+  const { content } = useSiteContent();
+  const [showForm, setShowForm] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [status, setStatus] = useState("");
+  const [statusTone, setStatusTone] = useState<"success" | "error">("success");
   const [rating, setRating] = useState(5);
   const [hoveredRating, setHoveredRating] = useState(0);
   const [filterRating, setFilterRating] = useState<number | null>(null);
 
-  const allTestimonials = (content.testimonials as any[]).map(t => ({
-    ...t,
-    rating: t.rating || 5 // Default to 5 for old testimonials
-  })) as Review[];
+  const allTestimonials = content.testimonials;
 
   const filteredTestimonials = filterRating 
-    ? allTestimonials.filter(t => t.rating === filterRating)
+    ? allTestimonials.filter(t => (t.rating || 5) === filterRating)
     : allTestimonials;
 
   // Rating Stats (Play Store style)
   const totalReviews = allTestimonials.length;
   const ratingCounts = [5, 4, 3, 2, 1].map(star => ({
     star,
-    count: allTestimonials.filter(t => t.rating === star).length,
-    percentage: totalReviews > 0 ? (allTestimonials.filter(t => t.rating === star).length / totalReviews) * 100 : 0
+    count: allTestimonials.filter(t => (t.rating || 5) === star).length,
+    percentage: totalReviews > 0 ? (allTestimonials.filter(t => (t.rating || 5) === star).length / totalReviews) * 100 : 0
   }));
 
   const averageRating = totalReviews > 0 
-    ? (allTestimonials.reduce((acc, curr) => acc + curr.rating, 0) / totalReviews).toFixed(1)
+    ? (allTestimonials.reduce((acc, curr) => acc + (curr.rating || 5), 0) / totalReviews).toFixed(1)
     : "0.0";
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -147,7 +149,7 @@ export default function Testimonials() {
                   <Star 
                     key={star} 
                     size={14} 
-                    className={`${test.rating >= star ? "text-yellow-500 fill-yellow-500" : "text-gray-600"}`} 
+                    className={`${(test.rating || 5) >= star ? "text-yellow-500 fill-yellow-500" : "text-gray-600"}`} 
                   />
                 ))}
               </div>

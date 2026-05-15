@@ -82,7 +82,7 @@ export type SiteContent = {
       email?: string;
     }[];
   };
-  testimonials: { client: string; company: string; content: string }[];
+  testimonials: { client: string; company: string; content: string; rating: number }[];
   process: { num: string; title: string; desc: string }[];
   pricing: {
     name: string;
@@ -325,18 +325,21 @@ export const defaultSiteContent: SiteContent = {
       company: "UrbanEdge Retail",
       content:
         "YJ DEVELOPERS gave our business a clear brand identity and a fast website that finally feels premium on mobile.",
+      rating: 5,
     },
     {
       client: "Sana K.",
       company: "DineFlow Kitchen",
       content:
         "They handled creative, website, SEO and launch assets together. It felt like one team owned the whole digital presence.",
+      rating: 5,
     },
     {
       client: "Amit P.",
       company: "ScaleUp Services",
       content:
         "The landing pages and campaign creatives helped us explain our services better and bring in more qualified leads.",
+      rating: 5,
     },
   ],
   process: [
