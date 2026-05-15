@@ -1,10 +1,17 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, useEffect, type FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Quote, Send, Star, X } from "lucide-react";
 import { useSiteContent } from "@/components/SiteContentProvider";
 import MagneticButton from "@/components/ui/MagneticButton";
+
+interface Review {
+  client: string;
+  company: string;
+  content: string;
+  isDynamic?: boolean;
+}
 
 export default function Testimonials() {
   const { content } = useSiteContent();
@@ -12,6 +19,32 @@ export default function Testimonials() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [status, setStatus] = useState("");
   const [statusTone, setStatusTone] = useState<"success" | "error">("success");
+  const [dynamicReviews, setDynamicReviews] = useState<Review[]>([]);
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const response = await fetch("/api/contact-submissions");
+        if (response.ok) {
+          const data = await response.json();
+          const reviews = data.submissions
+            .filter((s: any) => s.source === "review")
+            .map((s: any) => ({
+              client: s.name,
+              company: s.phone, // We stored company in phone field
+              content: s.message,
+              isDynamic: true
+            }));
+          setDynamicReviews(reviews);
+        }
+      } catch (error) {
+        console.error("Failed to fetch dynamic reviews:", error);
+      }
+    };
+    fetchReviews();
+  }, []);
+
+  const allTestimonials = [...content.testimonials, ...dynamicReviews];
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -40,8 +73,16 @@ export default function Testimonials() {
 
       if (!response.ok) throw new Error();
 
-      setStatusTone("success");
-      setStatus("Thank you! Your review has been submitted for moderation.");
+      setStatus("Thank you! Your review has been submitted and is now live.");
+      
+      // Add the new review to the list immediately
+      setDynamicReviews(prev => [...prev, {
+        client: name,
+        company: company,
+        content: content,
+        isDynamic: true
+      }]);
+
       form.reset();
       setTimeout(() => {
         setShowForm(false);
@@ -75,7 +116,7 @@ export default function Testimonials() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {content.testimonials.map((test, i) => (
+          {allTestimonials.map((test, i) => (
             <motion.div
               key={`${test.client}-${test.company}`}
               initial={{ opacity: 0, scale: 0.95 }}
