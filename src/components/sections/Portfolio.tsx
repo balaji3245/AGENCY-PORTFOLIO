@@ -69,14 +69,22 @@ export default function Portfolio() {
               >
                 {/* Image */}
                 <div className="absolute inset-0 z-0">
-                  <Image
-                    src={project.image}
-                    alt={project.title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
-                    quality={70}
-                    className="object-cover transition-transform duration-700 group-hover:scale-110 opacity-60 group-hover:opacity-40"
-                  />
+                  {/^https?:\/\//i.test(project.image) || project.image.startsWith("data:") ? (
+                    <img
+                      src={project.image}
+                      alt={project.title}
+                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-60 group-hover:opacity-40"
+                    />
+                  ) : (
+                    <Image
+                      src={project.image}
+                      alt={project.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
+                      quality={70}
+                      className="object-cover transition-transform duration-700 group-hover:scale-110 opacity-60 group-hover:opacity-40"
+                    />
+                  )}
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
                 </div>
 

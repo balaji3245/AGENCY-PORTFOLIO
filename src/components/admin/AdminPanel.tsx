@@ -517,6 +517,30 @@ export default function AdminPanel() {
                   }
                 />
               </Field>
+              <Field label="Full Logo Path / URL">
+                <Input
+                  value={draft.brand.logo ?? defaultSiteContent.brand.logo}
+                  placeholder="/yj-logo.svg or https://example.com/logo.png"
+                  onChange={(e) =>
+                    setDraft({
+                      ...draft,
+                      brand: { ...draft.brand, logo: e.target.value },
+                    })
+                  }
+                />
+              </Field>
+              <Field label="Header Mark Path / URL">
+                <Input
+                  value={draft.brand.mark ?? defaultSiteContent.brand.mark}
+                  placeholder="/yj-mark.svg or https://example.com/mark.png"
+                  onChange={(e) =>
+                    setDraft({
+                      ...draft,
+                      brand: { ...draft.brand, mark: e.target.value },
+                    })
+                  }
+                />
+              </Field>
             </div>
             <Field label="Footer Description">
               <Textarea
@@ -1191,6 +1215,23 @@ export default function AdminPanel() {
                       }
                     />
                   </Field>
+                  <Field label="Project Image Path / URL">
+                    <Input
+                      value={project.image}
+                      placeholder="/projects/branding.png or https://example.com/project.jpg"
+                      onChange={(e) =>
+                        setDraft({
+                          ...draft,
+                          portfolio: {
+                            ...draft.portfolio,
+                            items: draft.portfolio.items.map((item, i) =>
+                              i === index ? { ...item, image: e.target.value } : item
+                            ),
+                          },
+                        })
+                      }
+                    />
+                  </Field>
                   <Field label="Gradient Colors">
                     <Input
                       value={project.color}
@@ -1201,6 +1242,22 @@ export default function AdminPanel() {
                             ...draft.portfolio,
                             items: draft.portfolio.items.map((item, i) =>
                               i === index ? { ...item, color: e.target.value } : item
+                            ),
+                          },
+                        })
+                      }
+                    />
+                  </Field>
+                  <Field label="Project Link">
+                    <Input
+                      value={project.link}
+                      onChange={(e) =>
+                        setDraft({
+                          ...draft,
+                          portfolio: {
+                            ...draft.portfolio,
+                            items: draft.portfolio.items.map((item, i) =>
+                              i === index ? { ...item, link: e.target.value } : item
                             ),
                           },
                         })

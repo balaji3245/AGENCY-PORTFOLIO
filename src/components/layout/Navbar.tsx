@@ -4,10 +4,12 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import BrandLogo from "@/components/layout/BrandLogo";
+import { useSiteContent } from "@/components/SiteContentProvider";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { content } = useSiteContent();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -35,9 +37,11 @@ export default function Navbar() {
         }`}
       >
         <div className="container mx-auto px-6 md:px-12 flex items-center justify-between">
-          <Link href="/" aria-label="YJ Developers home" className="flex items-center gap-3">
+          <Link href="/" aria-label={`${content.brand.name} home`} className="flex items-center gap-3">
             <BrandLogo compact imageClassName="h-11 w-11" />
-            <span className="font-bold text-xl tracking-wider text-white hidden sm:block">YJ DEVELOPERS</span>
+            <span className="font-bold text-xl tracking-wider text-white hidden sm:block">
+              {content.brand.name}
+            </span>
           </Link>
 
           {/* Desktop Nav */}
