@@ -134,8 +134,8 @@ export type SiteContent = {
 export const defaultSiteContent: SiteContent = {
   brand: {
     name: "YJ DEVELOPERS",
-    email: "hello@yjdevelopers.com",
-    phone: "+91 98765 43210",
+    email: "yjdevelopers21@gmail.com",
+    phone: "84375 14417",
     footerDescription:
       "A digital agency helping businesses build premium websites and iconic brands.",
     logo: "/yj-logo.svg",
