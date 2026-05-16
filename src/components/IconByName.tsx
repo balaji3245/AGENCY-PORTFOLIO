@@ -11,6 +11,10 @@ import {
   Search,
   Server,
   ShoppingBag,
+  Cloud,
+  Code,
+  Paintbrush,
+  ShoppingCart,
   Smartphone,
   Sparkles,
   Stethoscope,
@@ -40,6 +44,10 @@ const iconMap = {
   graduationCap: GraduationCap,
   briefcase: Briefcase,
   sparkles: Sparkles,
+  code: Code,
+  paintbrush: Paintbrush,
+  shoppingCart: ShoppingCart,
+  cloud: Cloud,
 } satisfies Record<IconName, ComponentType<{ size?: number; className?: string }>>;
 
 export default function IconByName({

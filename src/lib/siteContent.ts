@@ -18,7 +18,11 @@ export type IconName =
   | "shoppingBag"
   | "graduationCap"
   | "briefcase"
-  | "sparkles";
+  | "sparkles"
+  | "code"
+  | "paintbrush"
+  | "shoppingCart"
+  | "cloud";
 
 export type SiteContent = {
   brand: {
@@ -49,7 +53,12 @@ export type SiteContent = {
     title: string;
     mutedTitle: string;
     description: string;
-    items: { title: string; description: string; icon: IconName }[];
+    items: {
+      title: string;
+      description: string;
+      icon: IconName;
+      features: string[];
+    }[];
   };
   techStack: {
     eyebrow: string;
@@ -171,74 +180,40 @@ export const defaultSiteContent: SiteContent = {
       "Focused digital solutions to help your brand grow from strategy to launch.",
     items: [
       {
-        title: "Website Design",
-        description: "Modern, high-converting layouts designed to captivate your audience and reflect your brand identity.",
-        icon: "monitor",
+        title: "Web Development",
+        description: "We build fast, secure and modern websites that deliver exceptional performance.",
+        icon: "code",
+        features: ["Custom Website Development", "CMS Development", "E-Commerce Solutions", "Website Maintenance"]
       },
       {
-        title: "Website Development",
-        description: "Fast, secure, and scalable web solutions built with cutting-edge technologies like React and Next.js.",
-        icon: "server",
-      },
-      {
-        title: "Motion Graphics",
-        description: "Dynamic visual elements and animations that bring your brand to life with fluid movement.",
-        icon: "zap",
-      },
-      {
-        title: "Video Editing",
-        description: "Professional post-production that transforms raw footage into compelling cinematic stories.",
-        icon: "megaphone",
-      },
-      {
-        title: "Graphic Design",
-        description: "Stunning visual assets, from marketing materials to digital graphics, tailored for your brand.",
-        icon: "penTool",
-      },
-      {
-        title: "Photo Editing",
-        description: "Expert retouching and color grading to ensure your brand imagery looks polished and professional.",
-        icon: "palette",
-      },
-      {
-        title: "Branding & Creative Solutions",
-        description: "Comprehensive brand identities including logos, color palettes, and full visual systems.",
-        icon: "sparkles",
+        title: "Mobile App Development",
+        description: "We create powerful mobile apps for iOS and Android that drive engagement and growth.",
+        icon: "smartphone",
+        features: ["iOS App Development", "Android App Development", "Cross-Platform Apps", "App UI/UX Design"]
       },
       {
         title: "UI/UX Design",
-        description: "User-centric interface designs focused on providing intuitive and seamless digital experiences.",
-        icon: "smartphone",
+        description: "We design intuitive and engaging interfaces that enhance user experience and satisfaction.",
+        icon: "paintbrush",
+        features: ["User Research", "Wireframing & Prototyping", "UI/UX Design", "Usability Testing"]
       },
       {
-        title: "Social Media Creative Design",
-        description: "Eye-catching content designed to boost engagement and consistency across all social platforms.",
+        title: "Digital Marketing",
+        description: "We help you reach the right audience and grow your brand online.",
         icon: "megaphone",
+        features: ["SEO (Search Engine Optimization)", "Social Media Marketing", "Google Ads Management", "Content Marketing"]
       },
       {
-        title: "App Development",
-        description: "Custom mobile applications built for performance, scalability, and exceptional user experience.",
-        icon: "smartphone",
+        title: "E-Commerce Solutions",
+        description: "We build secure and scalable online stores that convert visitors into customers.",
+        icon: "shoppingCart",
+        features: ["Shopify Development", "WooCommerce Development", "Payment Gateway Integration", "Store Optimization"]
       },
       {
-        title: "Marketing Design Assets",
-        description: "Strategic design materials including banners, ads, and presentations to fuel your growth.",
-        icon: "megaphone",
-      },
-      {
-        title: "Content Creation",
-        description: "High-quality digital content that tells your brand story and resonates with your target audience.",
-        icon: "penTool",
-      },
-      {
-        title: "Creative Direction",
-        description: "Guided artistic vision to ensure consistency and excellence across all your creative projects.",
-        icon: "sparkles",
-      },
-      {
-        title: "Content Strategy",
-        description: "Data-driven roadmaps to help you plan, create, and manage content that drives real business results.",
-        icon: "search",
+        title: "Cloud & DevOps",
+        description: "We offer reliable cloud solutions and DevOps services to scale your business.",
+        icon: "cloud",
+        features: ["Cloud Deployment", "Server Management", "CI/CD Pipeline", "Performance Monitoring"]
       },
     ],
   },
