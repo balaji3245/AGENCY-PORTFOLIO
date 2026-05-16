@@ -27,6 +27,12 @@ interface Review {
 
 type SortOption = "helpful" | "latest" | "highest";
 
+const SortIcon = ({ sortBy }: { sortBy: string }) => {
+  if (sortBy === "helpful") return <ThumbsUp size={12} className="text-gray-500" />;
+  if (sortBy === "latest") return <Edit3 size={12} className="text-gray-500" />;
+  return <Star size={12} className="text-gray-500" />;
+};
+
 export default function Testimonials() {
   const { content } = useSiteContent();
   const [showForm, setShowForm] = useState(false);
@@ -41,6 +47,7 @@ export default function Testimonials() {
   const [helpfulVotes, setHelpfulVotes] = useState<Record<number, boolean>>({});
   const [selectedRatingInForm, setSelectedRatingInForm] = useState(5);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [showSortMenu, setShowSortMenu] = useState(false);
 
   const allTestimonials = useMemo(() => 
     (content.testimonials || []).filter(r => r.isApproved !== false)
@@ -237,17 +244,52 @@ export default function Testimonials() {
             </button>
           ))}
 
-          <div className="relative ml-0 sm:ml-auto group min-w-[140px] w-full sm:w-auto mt-2 sm:mt-0">
-            <select 
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as SortOption)}
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-2.5 text-xs font-bold text-gray-400 appearance-none pr-10 focus:outline-none cursor-pointer hover:border-white/20 transition-all"
+          <div className="relative ml-0 sm:ml-auto group min-w-[180px] w-full sm:w-auto mt-2 sm:mt-0">
+            <button
+              onClick={() => setShowSortMenu(!showSortMenu)}
+              className="w-full flex items-center justify-between bg-white/5 border border-white/10 rounded-xl px-5 py-2.5 text-xs font-bold text-gray-300 hover:border-white/20 transition-all"
             >
-              <option value="helpful">Most Helpful</option>
-              <option value="latest">Newest First</option>
-              <option value="highest">Highest Rated</option>
-            </select>
-            <ChevronDown size={14} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
+              <span className="flex items-center gap-2">
+                <SortIcon sortBy={sortBy} />
+                {sortBy === "helpful" ? "Most Helpful" : sortBy === "latest" ? "Newest First" : "Highest Rated"}
+              </span>
+              <ChevronDown size={14} className={`text-gray-500 transition-transform duration-300 ${showSortMenu ? "rotate-180" : ""}`} />
+            </button>
+
+            <AnimatePresence>
+              {showSortMenu && (
+                <>
+                  <div className="fixed inset-0 z-[110]" onClick={() => setShowSortMenu(false)} />
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                    className="absolute right-0 top-full mt-2 w-full min-w-[200px] bg-[#0d0f1a] border border-white/10 rounded-2xl overflow-hidden shadow-2xl z-[120] backdrop-blur-xl"
+                  >
+                    {[
+                      { value: "helpful", label: "Most Helpful", icon: ThumbsUp },
+                      { value: "latest", label: "Newest First", icon: Edit3 },
+                      { value: "highest", label: "Highest Rated", icon: Star },
+                    ].map((option) => (
+                      <button
+                        key={option.value}
+                        onClick={() => {
+                          setSortBy(option.value as SortOption);
+                          setShowSortMenu(false);
+                        }}
+                        className={`w-full flex items-center justify-between px-5 py-4 text-xs font-bold transition-all hover:bg-white/5 ${sortBy === option.value ? "text-[#7c66ff] bg-white/[0.02]" : "text-gray-400"}`}
+                      >
+                        <span className="flex items-center gap-3">
+                          <option.icon size={14} className={sortBy === option.value ? "text-[#7c66ff]" : "text-gray-500"} />
+                          {option.label}
+                        </span>
+                        {sortBy === option.value && <ShieldCheck size={14} className="text-[#7c66ff]" />}
+                      </button>
+                    ))}
+                  </motion.div>
+                </>
+              )}
+            </AnimatePresence>
           </div>
         </div>
 
