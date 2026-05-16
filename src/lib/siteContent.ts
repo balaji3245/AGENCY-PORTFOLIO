@@ -210,6 +210,12 @@ export const defaultSiteContent: SiteContent = {
         features: ["Shopify Development", "WooCommerce Development", "Payment Gateway Integration", "Store Optimization"]
       },
       {
+        title: "Graphic Design",
+        description: "We create visually stunning designs that communicate your brand's message effectively and leave a lasting impression.",
+        icon: "paintbrush",
+        features: ["Brand Identity & Logo Design", "Marketing & Ad Creatives", "Social Media Graphics", "Print & Packaging Design"]
+      },
+      {
         title: "Cloud & DevOps",
         description: "We offer reliable cloud solutions and DevOps services to scale your business.",
         icon: "cloud",
@@ -245,6 +251,42 @@ export const defaultSiteContent: SiteContent = {
         image: "/projects/branding.png",
         link: "https://urbanedge.yjdevelopers.com",
         color: "from-blue-900/40 to-black",
+      },
+      {
+        title: "Smashic Unisex Jordan",
+        category: "Graphic Design",
+        description: "A premium sneaker advertisement design focusing on minimalist aesthetics and brand heritage.",
+        tech: ["Ad Design", "Typography", "Visual Arts"],
+        image: "/projects/graphic-1.jpg",
+        link: "#",
+        color: "from-yellow-500/20 to-black",
+      },
+      {
+        title: "Purple Sweet Cupcake",
+        category: "Graphic Design",
+        description: "Vibrant and appetizing social media creative for a bakery brand, featuring custom illustrations.",
+        tech: ["Social Media", "Product Design", "Illustration"],
+        image: "/projects/graphic-2.jpg",
+        link: "#",
+        color: "from-purple-500/20 to-black",
+      },
+      {
+        title: "Rise and Fall of Hungama",
+        category: "Graphic Design",
+        description: "Engaging YouTube thumbnail and editorial graphic exploring the history of iconic cartoon channels.",
+        tech: ["Thumbnail Design", "Storytelling", "Digital Art"],
+        image: "/projects/graphic-3.jpg",
+        link: "#",
+        color: "from-red-500/20 to-black",
+      },
+      {
+        title: "XO - Hurry Up Tomorrow",
+        category: "Graphic Design",
+        description: "A dark, atmospheric custom sneaker design concept inspired by The Weeknd's musical era.",
+        tech: ["Concept Art", "Texturing", "Branding"],
+        image: "/projects/graphic-4.jpg",
+        link: "#",
+        color: "from-zinc-800/40 to-black",
       },
       {
         title: "DineFlow Platform",
