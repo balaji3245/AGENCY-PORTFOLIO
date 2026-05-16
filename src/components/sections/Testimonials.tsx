@@ -1,16 +1,20 @@
 "use client";
 
-import { useMemo, useState, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Star, X, Quote, Send, CheckCircle, MessageSquare } from "lucide-react";
+import { CheckCircle, Quote, Send, Star, X } from "lucide-react";
 import { useSiteContent } from "@/components/SiteContentProvider";
+import MagneticButton from "@/components/ui/MagneticButton";
 
 interface Review {
   client: string;
   company: string;
   content: string;
   rating: number;
+  isDynamic?: boolean;
 }
+
+const reviewFilters = [5, 4, 3, 2, 1];
 
 export default function Testimonials() {
   const { content } = useSiteContent();
@@ -19,32 +23,38 @@ export default function Testimonials() {
   const [status, setStatus] = useState("");
   const [statusTone, setStatusTone] = useState<"success" | "error">("success");
   const [rating, setRating] = useState(5);
+  const [hoveredRating, setHoveredRating] = useState(0);
   const [filterRating, setFilterRating] = useState<number | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const allTestimonials = content.testimonials;
-
-  const filteredTestimonials = useMemo(
-    () =>
-      filterRating
-        ? allTestimonials.filter((t) => (t.rating || 5) === filterRating)
-        : allTestimonials,
-    [allTestimonials, filterRating]
-  );
+  const allTestimonials: Review[] = content.testimonials;
+  const filteredTestimonials = filterRating
+    ? allTestimonials.filter((testimonial) => (testimonial.rating || 5) === filterRating)
+    : allTestimonials;
 
   const totalReviews = allTestimonials.length;
-  const averageRating = useMemo(
-    () =>
-      totalReviews > 0
-        ? (allTestimonials.reduce((acc, curr) => acc + (curr.rating || 5), 0) / totalReviews).toFixed(1)
-        : "0.0",
-    [allTestimonials, totalReviews]
-  );
+  const averageRating =
+    totalReviews > 0
+      ? (allTestimonials.reduce((acc, curr) => acc + (curr.rating || 5), 0) / totalReviews).toFixed(1)
+      : "0.0";
+
+  const ratingCounts = reviewFilters.map((star) => {
+    const count = allTestimonials.filter((testimonial) => (testimonial.rating || 5) === star).length;
+
+    return {
+      star,
+      count,
+      percentage: totalReviews > 0 ? (count / totalReviews) * 100 : 0,
+    };
+  });
+
+  const visibleTestimonials = filteredTestimonials.slice(0, isExpanded ? filteredTestimonials.length : 6);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
     const formData = new FormData(form);
+
     const name = String(formData.get("name") ?? "").trim();
     const company = String(formData.get("company") ?? "").trim();
     const reviewText = String(formData.get("review") ?? "").trim();
@@ -68,9 +78,14 @@ export default function Testimonials() {
       if (!response.ok) throw new Error();
 
       setStatusTone("success");
-      setStatus("Thank you! Your review has been submitted for moderation.");
+      setStatus("Thank you. Your review is now waiting for moderation.");
       form.reset();
-      setTimeout(() => setShowForm(false), 3000);
+      setRating(5);
+      setHoveredRating(0);
+      setTimeout(() => {
+        setShowForm(false);
+        setStatus("");
+      }, 3000);
     } catch {
       setStatusTone("error");
       setStatus("Something went wrong. Please try again.");
@@ -80,205 +95,323 @@ export default function Testimonials() {
   };
 
   return (
-    <section id="testimonials" className="py-24 bg-transparent relative overflow-hidden">
-      {/* Soft grain texture overlay */}
-      <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
-      
-      <div className="container mx-auto px-6 md:px-12 relative z-10">
-        <div className="flex flex-col lg:flex-row justify-between items-start gap-12 mb-20">
-          <div className="max-w-2xl">
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 mb-6"
-            >
-              <MessageSquare size={14} className="text-amber-400" />
-              <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">Success Stories</span>
-            </motion.div>
-            
-            <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-8">
-              Trusted by Brands <br />
-              <span className="text-gray-500">to Build the Future.</span>
-            </h2>
+    <section id="testimonials" className="relative overflow-hidden py-20 md:py-28">
+      <div className="absolute left-1/2 top-12 h-72 w-72 -translate-x-1/2 rounded-full bg-cyan-500/10 blur-[100px]" />
+      <div className="absolute bottom-8 right-0 h-80 w-80 rounded-full bg-amber-400/10 blur-[120px]" />
 
-            <div className="flex items-center gap-8 mt-12">
-              <div className="flex flex-col">
-                <span className="text-5xl font-bold text-white leading-none">{averageRating}</span>
-                <div className="flex gap-0.5 mt-2">
-                  {[1, 2, 3, 4, 5].map((s) => (
-                    <Star key={s} size={14} className={Number(averageRating) >= s ? "fill-amber-400 text-amber-400" : "text-white/10"} />
+      <div className="container relative mx-auto px-6 md:px-12">
+        <div className="mb-14 grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
+          <div>
+            <div className="mb-5 flex items-center gap-3">
+              <span className="h-px w-10 bg-cyan-300/70" />
+              <p className="text-[10px] font-bold uppercase tracking-[0.42em] text-cyan-200/80">
+                Client Proof
+              </p>
+            </div>
+            <h2 className="max-w-3xl text-4xl font-black tracking-[-0.06em] text-white md:text-6xl">
+              Real notes from brands after the launch dust settles.
+            </h2>
+          </div>
+
+          <div className="glass-card relative overflow-hidden rounded-[2rem] p-6 md:p-7">
+            <div className="absolute -right-8 -top-10 h-32 w-32 rounded-full bg-white/10 blur-2xl" />
+            <div className="relative flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-gray-500">
+                  Average sentiment
+                </p>
+                <div className="mt-3 flex items-end gap-3">
+                  <span className="text-6xl font-black leading-none tracking-tighter text-white">
+                    {averageRating}
+                  </span>
+                  <span className="pb-2 text-sm font-medium text-gray-400">out of 5</span>
+                </div>
+                <div className="mt-4 flex gap-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <Star
+                      key={star}
+                      size={16}
+                      className={
+                        Number(averageRating) >= star ? "fill-amber-300 text-amber-300" : "text-white/15"
+                      }
+                    />
                   ))}
                 </div>
               </div>
-              <div className="h-12 w-px bg-white/10" />
-              <div className="flex flex-col">
-                <span className="text-2xl font-bold text-white leading-none">{totalReviews}</span>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mt-2">Verified Reviews</span>
-              </div>
-            </div>
-          </div>
 
-          <div className="flex flex-col gap-4">
-            <button
-              onClick={() => setShowForm(true)}
-              className="px-8 py-4 rounded-2xl bg-white text-black font-bold text-xs uppercase tracking-widest hover:bg-amber-400 transition-colors"
-            >
-              Share Your Story
-            </button>
-            <div className="flex flex-wrap gap-2">
               <button
-                onClick={() => setFilterRating(null)}
-                className={`px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest border transition-all ${
-                  filterRating === null ? "bg-white/10 border-white/20 text-white" : "border-white/5 text-gray-500 hover:border-white/10"
-                }`}
+                onClick={() => setShowForm(true)}
+                className="group inline-flex items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-[10px] font-black uppercase tracking-[0.22em] text-black transition-all duration-300 hover:bg-cyan-200"
               >
-                All
+                Add yours
+                <Send size={13} className="transition-transform duration-300 group-hover:translate-x-0.5" />
               </button>
-              {[5, 4, 3, 2, 1].map((s) => (
+            </div>
+
+            <div className="relative mt-7 space-y-2">
+              {ratingCounts.map(({ star, count, percentage }) => (
                 <button
-                  key={s}
-                  onClick={() => setFilterRating(s)}
-                  className={`px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest border transition-all flex items-center gap-1.5 ${
-                    filterRating === s ? "bg-amber-400/20 border-amber-400/40 text-amber-400" : "border-white/5 text-gray-500 hover:border-white/10"
+                  key={star}
+                  onClick={() => setFilterRating(filterRating === star ? null : star)}
+                  className={`grid w-full grid-cols-[28px_1fr_34px] items-center gap-3 rounded-xl px-2 py-1.5 transition-all ${
+                    filterRating === star
+                      ? "bg-white/10 text-white"
+                      : filterRating
+                        ? "text-white/30"
+                        : "text-gray-400 hover:bg-white/5 hover:text-white"
                   }`}
                 >
-                  {s} <Star size={10} className={filterRating === s ? "fill-amber-400" : "fill-none"} />
+                  <span className="text-left text-[10px] font-bold">{star}x</span>
+                  <span className="h-1.5 overflow-hidden rounded-full bg-white/10">
+                    <motion.span
+                      initial={{ width: 0 }}
+                      whileInView={{ width: `${percentage}%` }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.8, ease: "easeOut" }}
+                      className="block h-full rounded-full bg-gradient-to-r from-amber-300 to-cyan-200"
+                    />
+                  </span>
+                  <span className="text-right text-[10px] font-bold">{count}</span>
                 </button>
               ))}
             </div>
           </div>
         </div>
 
-        <motion.div 
-          layout
-          className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6"
-        >
-          <AnimatePresence mode="popLayout">
-            {filteredTestimonials.slice(0, isExpanded ? undefined : 6).map((test, i) => (
-              <motion.div
-                key={`${test.client}-${i}`}
-                layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.4, delay: i * 0.05 }}
-                className="break-inside-avoid relative group"
+        <div className="mb-8 flex flex-wrap items-center gap-3">
+          <button
+            onClick={() => setFilterRating(null)}
+            className={`rounded-full border px-5 py-2.5 text-[10px] font-black uppercase tracking-[0.22em] transition-all ${
+              filterRating === null
+                ? "border-white bg-white text-black"
+                : "border-white/10 bg-white/[0.03] text-gray-400 hover:border-white/30 hover:text-white"
+            }`}
+          >
+            All voices ({totalReviews})
+          </button>
+
+          {reviewFilters.map((star) => {
+            const count = ratingCounts.find((item) => item.star === star)?.count ?? 0;
+            if (count === 0 && filterRating !== star) return null;
+
+            return (
+              <button
+                key={star}
+                onClick={() => setFilterRating(star)}
+                className={`inline-flex items-center gap-2 rounded-full border px-4 py-2.5 text-[10px] font-black uppercase tracking-[0.18em] transition-all ${
+                  filterRating === star
+                    ? "border-amber-300 bg-amber-300 text-black"
+                    : "border-white/10 bg-white/[0.03] text-gray-400 hover:border-amber-300/50 hover:text-white"
+                }`}
               >
-                <div className="p-8 rounded-[2rem] border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/10 transition-all duration-500 flex flex-col">
-                  <div className="flex justify-between items-start mb-6">
-                    <div className="flex gap-0.5">
-                      {[1, 2, 3, 4, 5].map((s) => (
-                        <Star key={s} size={12} className={(test.rating || 5) >= s ? "fill-amber-400 text-amber-400" : "text-white/5"} />
+                {star}
+                <Star size={12} className={filterRating === star ? "fill-black" : "fill-amber-300 text-amber-300"} />
+                <span className="opacity-60">({count})</span>
+              </button>
+            );
+          })}
+        </div>
+
+        <motion.div layout className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+          <AnimatePresence mode="popLayout">
+            {visibleTestimonials.map((testimonial, index) => (
+              <motion.article
+                key={`${testimonial.client}-${index}`}
+                layout
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.96 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.45, delay: index * 0.04 }}
+                className={`group relative min-h-[280px] overflow-hidden rounded-[1.75rem] border border-white/10 bg-[#050914]/80 p-7 shadow-2xl shadow-black/20 backdrop-blur ${
+                  index % 3 === 0 ? "md:-translate-y-3" : ""
+                }`}
+              >
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-200/70 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                <Quote className="absolute right-6 top-6 text-white/[0.04]" size={74} />
+
+                <div className="relative flex h-full flex-col">
+                  <div className="mb-9 flex items-center justify-between">
+                    <div className="flex gap-1">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Star
+                          key={star}
+                          size={14}
+                          className={
+                            (testimonial.rating || 5) >= star
+                              ? "fill-amber-300 text-amber-300"
+                              : "text-white/15"
+                          }
+                        />
                       ))}
                     </div>
-                    <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-gray-600 border border-white/5 px-2 py-1 rounded-full">Verified</span>
+                    <span className="rounded-full border border-white/10 px-3 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-gray-500">
+                      Verified
+                    </span>
                   </div>
-                  
-                  <Quote className="text-amber-400/10 mb-4 h-8 w-8" />
-                  
-                  <p className="text-gray-300 text-base leading-relaxed mb-8 italic font-light">
-                    &quot;{test.content}&quot;
+
+                  <p className="mb-10 text-lg font-light leading-relaxed tracking-[-0.02em] text-gray-200 line-clamp-5">
+                    {testimonial.content}
                   </p>
 
-                  <div className="flex items-center gap-4 mt-auto">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-white/10 to-white/5 flex items-center justify-center text-sm font-bold text-white border border-white/10 group-hover:scale-110 transition-transform">
-                      {test.client[0]}
-                    </div>
+                  <div className="mt-auto flex items-center justify-between gap-4 border-t border-white/10 pt-5">
                     <div>
-                      <h4 className="text-sm font-bold text-white tracking-tight">{test.client}</h4>
-                      <p className="text-[10px] font-bold uppercase tracking-widest text-gray-600 mt-0.5">{test.company}</p>
+                      <h3 className="text-sm font-bold text-white">{testimonial.client}</h3>
+                      <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-gray-500">
+                        {testimonial.company}
+                      </p>
+                    </div>
+                    <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-white text-sm font-black text-black">
+                      {testimonial.client.charAt(0)}
                     </div>
                   </div>
                 </div>
-              </motion.div>
+              </motion.article>
             ))}
           </AnimatePresence>
         </motion.div>
 
         {filteredTestimonials.length > 6 && (
-          <div className="mt-16 text-center">
+          <div className="mt-12 text-center">
             <button
               onClick={() => setIsExpanded(!isExpanded)}
-              className="px-10 py-4 rounded-full border border-white/10 hover:border-white/30 text-[10px] font-bold uppercase tracking-widest text-gray-500 hover:text-white transition-all"
+              className="rounded-full border border-white/10 px-8 py-3 text-[10px] font-black uppercase tracking-[0.24em] text-gray-400 transition-all duration-300 hover:border-white/30 hover:bg-white/5 hover:text-white"
             >
-              {isExpanded ? "Show Less" : `View All Stories (${filteredTestimonials.length})`}
+              {isExpanded ? "Show fewer notes" : `Open the full proof board (${filteredTestimonials.length})`}
             </button>
           </div>
         )}
 
         {filteredTestimonials.length === 0 && (
-          <div className="py-32 text-center">
-            <p className="text-gray-600 uppercase tracking-widest text-[10px] font-bold">No {filterRating} star reviews yet</p>
+          <div className="rounded-[2rem] border border-white/10 bg-white/[0.03] py-16 text-center text-[10px] font-black uppercase tracking-[0.24em] text-gray-500">
+            No {filterRating} star reviews yet
           </div>
         )}
       </div>
 
-      {/* Simplified Review Form */}
       <AnimatePresence>
         {showForm && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/90 backdrop-blur-sm"
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 p-5 backdrop-blur-xl"
           >
-            <motion.div 
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 20 }}
-              className="w-full max-w-lg bg-[#0c0c0c] p-10 rounded-[2.5rem] relative border border-white/10"
+            <motion.div
+              initial={{ opacity: 0, scale: 0.94, y: 24 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.94, y: 24 }}
+              className="relative w-full max-w-lg overflow-hidden rounded-[2rem] border border-white/10 bg-[#050914] p-6 shadow-2xl md:p-8"
             >
-              <button 
+              <div className="absolute -left-20 -top-24 h-48 w-48 rounded-full bg-cyan-400/20 blur-3xl" />
+              <div className="absolute -bottom-24 right-0 h-48 w-48 rounded-full bg-amber-300/10 blur-3xl" />
+
+              <button
                 onClick={() => setShowForm(false)}
-                className="absolute top-6 right-6 p-2 hover:bg-white/10 rounded-full transition-colors"
+                className="absolute right-5 top-5 z-10 rounded-full border border-white/10 p-2 text-gray-400 transition-colors hover:bg-white/10 hover:text-white"
+                aria-label="Close review form"
               >
-                <X size={20} />
+                <X size={18} />
               </button>
 
-              <h3 className="text-2xl font-bold mb-2">Submit Your Review</h3>
-              <p className="text-gray-500 text-sm mb-8">Share your experience with the world.</p>
+              <div className="relative">
+                <p className="mb-3 text-[10px] font-black uppercase tracking-[0.34em] text-cyan-200/80">
+                  Share feedback
+                </p>
+                <h4 className="text-2xl font-black tracking-[-0.04em] text-white">Leave a field note.</h4>
+                <p className="mt-2 max-w-sm text-sm leading-relaxed text-gray-400">
+                  Tell us what changed after working together. We review submissions before publishing.
+                </p>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-bold uppercase tracking-widest text-gray-600">Full Name</label>
-                    <input name="name" required placeholder="John Doe" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber-400/50" />
+                <form onSubmit={handleSubmit} className="mt-7 space-y-4">
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <label className="space-y-2">
+                      <span className="text-[9px] font-black uppercase tracking-[0.24em] text-gray-500">
+                        Full name
+                      </span>
+                      <input
+                        name="name"
+                        required
+                        placeholder="Your name"
+                        className="w-full rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white outline-none transition-colors placeholder:text-gray-600 focus:border-cyan-200/70"
+                      />
+                    </label>
+
+                    <label className="space-y-2">
+                      <span className="text-[9px] font-black uppercase tracking-[0.24em] text-gray-500">
+                        Company / role
+                      </span>
+                      <input
+                        name="company"
+                        required
+                        placeholder="Brand or role"
+                        className="w-full rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white outline-none transition-colors placeholder:text-gray-600 focus:border-cyan-200/70"
+                      />
+                    </label>
                   </div>
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-bold uppercase tracking-widest text-gray-600">Company</label>
-                    <input name="company" required placeholder="e.g. Acme Inc" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber-400/50" />
+
+                  <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+                    <div className="mb-3 flex items-center justify-between">
+                      <span className="text-[9px] font-black uppercase tracking-[0.24em] text-gray-500">
+                        Rating
+                      </span>
+                      <span className="text-xs font-bold text-amber-200">{rating}/5</span>
+                    </div>
+                    <div className="flex gap-2">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          type="button"
+                          onClick={() => setRating(star)}
+                          onMouseEnter={() => setHoveredRating(star)}
+                          onMouseLeave={() => setHoveredRating(0)}
+                          className="rounded-xl p-1 transition-transform hover:scale-110"
+                          aria-label={`Set rating to ${star}`}
+                        >
+                          <Star
+                            size={24}
+                            className={
+                              (hoveredRating || rating) >= star
+                                ? "fill-amber-300 text-amber-300"
+                                : "text-white/15"
+                            }
+                          />
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
 
-                <div className="space-y-2">
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-gray-600">Rating</label>
-                  <div className="flex gap-2">
-                    {[1, 2, 3, 4, 5].map((s) => (
-                      <button key={s} type="button" onClick={() => setRating(s)} className="transition-transform hover:scale-110">
-                        <Star size={24} className={rating >= s ? "fill-amber-400 text-amber-400" : "text-white/10"} />
-                      </button>
-                    ))}
+                  <label className="block space-y-2">
+                    <span className="text-[9px] font-black uppercase tracking-[0.24em] text-gray-500">
+                      Your review
+                    </span>
+                    <textarea
+                      name="review"
+                      required
+                      rows={4}
+                      placeholder="What did the project help you achieve?"
+                      className="w-full resize-none rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm leading-relaxed text-white outline-none transition-colors placeholder:text-gray-600 focus:border-cyan-200/70"
+                    />
+                  </label>
+
+                  <div className="pt-2">
+                    <MagneticButton type="submit" disabled={isSubmitting} className="w-full rounded-2xl py-4 text-sm">
+                      {isSubmitting ? "Submitting..." : "Submit Review"}
+                    </MagneticButton>
+
+                    {status && (
+                      <p
+                        className={`mt-4 flex items-center justify-center gap-2 text-center text-xs ${
+                          statusTone === "success" ? "text-emerald-300" : "text-red-300"
+                        }`}
+                      >
+                        {statusTone === "success" && <CheckCircle size={14} />}
+                        {status}
+                      </p>
+                    )}
                   </div>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-gray-600">Your Feedback</label>
-                  <textarea name="review" required rows={4} placeholder="Describe the results we achieved together..." className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:border-amber-400/50 resize-none" />
-                </div>
-
-                <div className="pt-4">
-                  <button type="submit" disabled={isSubmitting} className="w-full py-4 rounded-xl bg-amber-400 text-black font-bold text-sm uppercase tracking-widest hover:bg-amber-300 transition-all flex items-center justify-center gap-2">
-                    {isSubmitting ? "Submitting..." : "Send Review"} <Send size={16} />
-                  </button>
-                  
-                  {status && (
-                    <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className={`text-center text-xs mt-4 ${statusTone === 'success' ? 'text-emerald-400' : 'text-red-400'}`}>
-                      {status}
-                    </motion.p>
-                  )}
-                </div>
-              </form>
+                </form>
+              </div>
             </motion.div>
           </motion.div>
         )}
@@ -286,4 +419,3 @@ export default function Testimonials() {
     </section>
   );
 }
-
