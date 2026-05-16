@@ -65,7 +65,7 @@ export default function About() {
           <h2 className="text-xs uppercase tracking-widest text-gray-500 mb-4">
             {content.about.eyebrow}
           </h2>
-          <h3 className="text-4xl md:text-6xl font-bold tracking-tight leading-tight max-w-3xl">
+          <h3 className="text-3xl sm:text-4xl md:text-6xl font-bold tracking-tight leading-tight max-w-3xl">
             {hasHighlight ? (
               <>
                 {titleParts[0]}
@@ -95,7 +95,7 @@ export default function About() {
 
 
             {/* Stats row */}
-            <div className="flex flex-wrap gap-8 pt-6 border-t border-white/5">
+            <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-6 sm:gap-8 pt-6 border-t border-white/5">
               {content.about.stats.map((stat, i) => (
                 <motion.div
                   key={stat.label}
@@ -104,8 +104,8 @@ export default function About() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: i * 0.1 }}
                 >
-                  <h4 className="text-4xl font-bold text-white mb-1">{stat.value}</h4>
-                  <p className="text-xs text-gray-500 uppercase tracking-wider">{stat.label}</p>
+                  <h4 className="text-3xl sm:text-4xl font-bold text-white mb-1">{stat.value}</h4>
+                  <p className="text-[10px] text-gray-500 uppercase tracking-wider">{stat.label}</p>
                 </motion.div>
               ))}
               {/* Extra static stats */}
@@ -115,8 +115,8 @@ export default function About() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.2 }}
               >
-                <h4 className="text-4xl font-bold text-white mb-1">100%</h4>
-                <p className="text-xs text-gray-500 uppercase tracking-wider">On-time Delivery</p>
+                <h4 className="text-3xl sm:text-4xl font-bold text-white mb-1">100%</h4>
+                <p className="text-[10px] text-gray-500 uppercase tracking-wider">On-time Delivery</p>
               </motion.div>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -124,8 +124,8 @@ export default function About() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.3 }}
               >
-                <h4 className="text-4xl font-bold text-white mb-1">2026</h4>
-                <p className="text-xs text-gray-500 uppercase tracking-wider">Founded</p>
+                <h4 className="text-3xl sm:text-4xl font-bold text-white mb-1">2026</h4>
+                <p className="text-[10px] text-gray-500 uppercase tracking-wider">Founded</p>
               </motion.div>
             </div>
           </motion.div>

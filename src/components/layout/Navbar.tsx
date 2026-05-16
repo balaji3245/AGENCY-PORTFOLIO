@@ -90,24 +90,36 @@ export default function Navbar() {
             exit={{ opacity: 0, y: -20 }}
             className="fixed inset-0 z-40 bg-black/95 backdrop-blur-xl flex items-center justify-center"
           >
-            <div className="flex flex-col items-center gap-8 text-2xl font-light">
-              {navLinks.map((link) => (
-                <Link
+            <div className="flex flex-col items-center gap-6 text-2xl font-bold tracking-tighter">
+              {navLinks.map((link, i) => (
+                <motion.div
                   key={link.name}
-                  href={link.href}
-                  className="hover:text-gray-400 transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.1 }}
                 >
-                  {link.name}
-                </Link>
+                  <Link
+                    href={link.href}
+                    className="hover:text-[#7c66ff] transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {link.name}
+                  </Link>
+                </motion.div>
               ))}
-              <Link
-                href="/#contact"
-                onClick={() => setMobileMenuOpen(false)}
-                className="inline-flex items-center gap-2 mt-8 px-6 py-3 rounded-full bg-white text-black font-medium text-sm hover:bg-white/90 transition-colors"
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: navLinks.length * 0.1 }}
               >
-                Start Project
-              </Link>
+                <Link
+                  href="/#contact"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="inline-flex items-center gap-2 mt-8 px-10 py-4 rounded-2xl bg-[#7c66ff] text-white font-bold text-sm uppercase tracking-widest hover:bg-[#6b55e6] transition-colors"
+                >
+                  Start Project
+                </Link>
+              </motion.div>
             </div>
           </motion.div>
         )}

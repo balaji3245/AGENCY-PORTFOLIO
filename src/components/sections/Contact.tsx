@@ -71,7 +71,7 @@ export default function Contact() {
             <h2 className="text-xs uppercase tracking-widest text-gray-500 mb-4">
               {content.contact.eyebrow}
             </h2>
-            <h3 className="text-5xl md:text-7xl font-bold tracking-tight mb-8 leading-tight">
+            <h3 className="text-4xl sm:text-7xl font-bold tracking-tight mb-8 leading-tight">
               {content.contact.title} <br />
               <span className="text-gradient">{content.contact.highlight}</span>
             </h3>

@@ -35,12 +35,12 @@ export default function Portfolio() {
           </div>
           
           {/* Filter Tabs */}
-          <div className="flex flex-wrap gap-3">
+          <div className="flex items-center gap-3 overflow-x-auto pb-4 md:pb-0 scrollbar-hide -mx-6 px-6 md:mx-0 md:px-0">
             {categories.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setActiveTab(cat)}
-                className={`px-8 py-3 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] transition-all duration-500 border ${
+                className={`whitespace-nowrap px-8 py-3 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] transition-all duration-500 border ${
                   activeTab === cat 
                     ? "bg-white text-black border-white shadow-[0_0_20px_rgba(255,255,255,0.2)]" 
                     : "bg-transparent text-gray-500 border-white/10 hover:border-white/30 hover:text-white"

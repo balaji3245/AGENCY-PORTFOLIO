@@ -31,7 +31,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter leading-[1.1] mb-6 max-w-5xl"
+          className="text-4xl sm:text-7xl lg:text-8xl font-bold tracking-tighter leading-[1.1] mb-6 max-w-5xl"
         >
           {content.hero.title} <br className="hidden md:block" />
           <span className="text-gradient">{content.hero.highlight}</span>

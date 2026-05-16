@@ -128,7 +128,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="pt-10 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 text-sm font-light text-gray-500">
+        <div className="pt-10 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-6 text-[10px] sm:text-xs font-light text-gray-500 text-center sm:text-left">
           <p>
             &copy; {new Date().getFullYear()} {content.brand.name}. All rights
             reserved.
