@@ -1297,267 +1297,305 @@ export default function AdminPanel() {
             </SecondaryButton>
           </Section>
 
-          <Section id="portfolio" title="Portfolio Projects" description="Case study cards shown in the work section." visible={activeSection === "#portfolio"}>
-            {draft.portfolio.items.map((project, index) => (
-              <div key={index} className="rounded-2xl border border-white/10 p-4">
-                <div className="mb-4 flex items-center justify-between">
-                  <p className="text-sm text-gray-300">Project {index + 1}</p>
-                  <SecondaryButton
-                    onClick={() =>
-                      setDraft({
-                        ...draft,
-                        portfolio: {
-                          ...draft.portfolio,
-                          items: draft.portfolio.items.filter((_, i) => i !== index),
-                        },
-                      })
-                    }
-                  >
-                    <Trash2 size={14} /> Remove
-                  </SecondaryButton>
+          <Section id="portfolio" title="Portfolio Projects" description="Case study cards shown in the work section grouped by service category." visible={activeSection === "#portfolio"}>
+            {Array.from(new Set(draft.portfolio.items.map(p => p.category))).map((category) => (
+              <div key={category} className="space-y-6 mb-12">
+                <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                  <h3 className="text-xl font-bold text-cyan-400 uppercase tracking-wider">{category}</h3>
+                  <span className="text-xs text-gray-500 bg-white/5 px-3 py-1 rounded-full border border-white/5">
+                    {draft.portfolio.items.filter(p => p.category === category).length} Projects
+                  </span>
                 </div>
-                <div className="grid gap-4 md:grid-cols-2">
-                  <Field label="Title">
-                    <Input
-                      value={project.title}
-                      onChange={(e) =>
-                        setDraft({
-                          ...draft,
-                          portfolio: {
-                            ...draft.portfolio,
-                            items: draft.portfolio.items.map((item, i) =>
-                              i === index ? { ...item, title: e.target.value } : item
-                            ),
-                          },
-                        })
-                      }
-                    />
-                  </Field>
-                  <Field label="Category">
-                    <Input
-                      value={project.category}
-                      onChange={(e) =>
-                        setDraft({
-                          ...draft,
-                          portfolio: {
-                            ...draft.portfolio,
-                            items: draft.portfolio.items.map((item, i) =>
-                              i === index
-                                ? { ...item, category: e.target.value }
-                                : item
-                            ),
-                          },
-                        })
-                      }
-                    />
-                  </Field>
-                  <Field label="Project Image Path / URL">
-                    <Input
-                      value={project.image}
-                      placeholder="/projects/branding.png or https://example.com/project.jpg"
-                      onChange={(e) =>
-                        setDraft({
-                          ...draft,
-                          portfolio: {
-                            ...draft.portfolio,
-                            items: draft.portfolio.items.map((item, i) =>
-                              i === index ? { ...item, image: e.target.value } : item
-                            ),
-                          },
-                        })
-                      }
-                    />
-                  </Field>
-                  <div className="space-y-3">
-                    <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-4">
-                      <p className="mb-3 text-xs uppercase tracking-[0.2em] text-gray-500">
-                        Project Image Preview
-                      </p>
-                      <img
-                        src={project.image}
-                        alt={`${project.title} preview`}
-                        className="h-32 w-full rounded-xl object-cover"
-                      />
-                    </div>
-                    <FileUploadField
-                      label="Upload Project Image"
-                      hint="Upload a new showcase image and the field above will update."
-                      uploading={uploadingTarget === `portfolio-${index}`}
-                      onUpload={async (file) => {
-                        try {
-                          setUploadingTarget(`portfolio-${index}`);
-                          const url = await uploadImage(file, "portfolio");
-                          setDraft((current) => ({
-                            ...current,
-                            portfolio: {
-                              ...current.portfolio,
-                              items: current.portfolio.items.map((item, i) =>
-                                i === index ? { ...item, image: url } : item
-                              ),
-                            },
-                          }));
-                          setStatus(
-                            `Project image uploaded for ${project.title}. Save Changes to publish it.`
-                          );
-                        } catch (error) {
-                          setStatus(
-                            error instanceof Error
-                              ? error.message
-                              : "Project image upload failed."
-                          );
-                        } finally {
-                          setUploadingTarget(null);
-                        }
-                      }}
-                    />
-                  </div>
-                  <Field label="Gradient Colors">
-                    <Input
-                      value={project.color}
-                      onChange={(e) =>
-                        setDraft({
-                          ...draft,
-                          portfolio: {
-                            ...draft.portfolio,
-                            items: draft.portfolio.items.map((item, i) =>
-                              i === index ? { ...item, color: e.target.value } : item
-                            ),
-                          },
-                        })
-                      }
-                    />
-                  </Field>
-                  <Field label="Project Link">
-                    <Input
-                      value={project.link}
-                      onChange={(e) =>
-                        setDraft({
-                          ...draft,
-                          portfolio: {
-                            ...draft.portfolio,
-                            items: draft.portfolio.items.map((item, i) =>
-                              i === index ? { ...item, link: e.target.value } : item
-                            ),
-                          },
-                        })
-                      }
-                    />
-                  </Field>
-                </div>
-                <Field label="Description">
-                  <Textarea
-                    rows={3}
-                    value={project.description}
-                    onChange={(e) =>
-                      setDraft({
-                        ...draft,
-                        portfolio: {
-                          ...draft.portfolio,
-                          items: draft.portfolio.items.map((item, i) =>
-                            i === index
-                              ? { ...item, description: e.target.value }
-                              : item
-                          ),
-                        },
-                      })
-                    }
-                  />
-                </Field>
-                <div className="space-y-3">
-                  <p className="text-xs uppercase tracking-[0.2em] text-gray-500">
-                    Tech Tags
-                  </p>
-                  {project.tech.map((tech, techIndex) => (
-                    <div key={techIndex} className="flex gap-3">
-                      <Input
-                        value={tech}
-                        onChange={(e) =>
-                          setDraft({
-                            ...draft,
-                            portfolio: {
-                              ...draft.portfolio,
-                              items: draft.portfolio.items.map((item, i) =>
-                                i === index
-                                  ? {
-                                      ...item,
-                                      tech: item.tech.map((tag, j) =>
-                                        j === techIndex ? e.target.value : tag
+                
+                <div className="grid gap-6">
+                  {draft.portfolio.items.map((project, originalIndex) => {
+                    if (project.category !== category) return null;
+                    return (
+                      <div key={originalIndex} className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
+                        <div className="mb-4 flex items-center justify-between">
+                          <p className="text-sm font-medium text-gray-400">Project Details</p>
+                          <SecondaryButton
+                            onClick={() =>
+                              setDraft({
+                                ...draft,
+                                portfolio: {
+                                  ...draft.portfolio,
+                                  items: draft.portfolio.items.filter((_, i) => i !== originalIndex),
+                                },
+                              })
+                            }
+                          >
+                            <Trash2 size={14} /> Remove
+                          </SecondaryButton>
+                        </div>
+                        <div className="grid gap-4 md:grid-cols-2">
+                          <Field label="Title">
+                            <Input
+                              value={project.title}
+                              onChange={(e) =>
+                                setDraft({
+                                  ...draft,
+                                  portfolio: {
+                                    ...draft.portfolio,
+                                    items: draft.portfolio.items.map((item, i) =>
+                                      i === originalIndex ? { ...item, title: e.target.value } : item
+                                    ),
+                                  },
+                                })
+                              }
+                            />
+                          </Field>
+                          <Field label="Category">
+                            <Input
+                              value={project.category}
+                              onChange={(e) =>
+                                setDraft({
+                                  ...draft,
+                                  portfolio: {
+                                    ...draft.portfolio,
+                                    items: draft.portfolio.items.map((item, i) =>
+                                      i === originalIndex
+                                        ? { ...item, category: e.target.value }
+                                        : item
+                                    ),
+                                  },
+                                })
+                              }
+                            />
+                          </Field>
+                          <Field label="Project Image Path / URL">
+                            <Input
+                              value={project.image}
+                              placeholder="/projects/branding.png"
+                              onChange={(e) =>
+                                setDraft({
+                                  ...draft,
+                                  portfolio: {
+                                    ...draft.portfolio,
+                                    items: draft.portfolio.items.map((item, i) =>
+                                      i === originalIndex ? { ...item, image: e.target.value } : item
+                                    ),
+                                  },
+                                })
+                              }
+                            />
+                          </Field>
+                          <div className="space-y-3">
+                            <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-4">
+                              <img
+                                src={project.image}
+                                alt="preview"
+                                className="h-32 w-full rounded-xl object-cover"
+                              />
+                            </div>
+                            <FileUploadField
+                              label="Upload Image"
+                              uploading={uploadingTarget === `portfolio-${originalIndex}`}
+                              onUpload={async (file) => {
+                                try {
+                                  setUploadingTarget(`portfolio-${originalIndex}`);
+                                  const url = await uploadImage(file, "portfolio");
+                                  setDraft((current) => ({
+                                    ...current,
+                                    portfolio: {
+                                      ...current.portfolio,
+                                      items: current.portfolio.items.map((item, i) =>
+                                        i === originalIndex ? { ...item, image: url } : item
                                       ),
-                                    }
-                                  : item
-                              ),
-                            },
-                          })
-                        }
-                      />
-                      <SecondaryButton
-                        onClick={() =>
-                          setDraft({
-                            ...draft,
-                            portfolio: {
-                              ...draft.portfolio,
-                              items: draft.portfolio.items.map((item, i) =>
-                                i === index
-                                  ? {
-                                      ...item,
-                                      tech: item.tech.filter((_, j) => j !== techIndex),
-                                    }
-                                  : item
-                              ),
-                            },
-                          })
-                        }
-                      >
-                        <Trash2 size={14} />
-                      </SecondaryButton>
-                    </div>
-                  ))}
+                                    },
+                                  }));
+                                } finally {
+                                  setUploadingTarget(null);
+                                }
+                              }}
+                            />
+                          </div>
+                          <Field label="Gradient Colors">
+                            <Input
+                              value={project.color}
+                              onChange={(e) =>
+                                setDraft({
+                                  ...draft,
+                                  portfolio: {
+                                    ...draft.portfolio,
+                                    items: draft.portfolio.items.map((item, i) =>
+                                      i === originalIndex ? { ...item, color: e.target.value } : item
+                                    ),
+                                  },
+                                })
+                              }
+                            />
+                          </Field>
+                          <Field label="Project Link">
+                            <Input
+                              value={project.link}
+                              onChange={(e) =>
+                                setDraft({
+                                  ...draft,
+                                  portfolio: {
+                                    ...draft.portfolio,
+                                    items: draft.portfolio.items.map((item, i) =>
+                                      i === originalIndex ? { ...item, link: e.target.value } : item
+                                    ),
+                                  },
+                                })
+                              }
+                            />
+                          </Field>
+                        </div>
+                        <div className="mt-4">
+                          <Field label="Description">
+                            <Textarea
+                              rows={3}
+                              value={project.description}
+                              onChange={(e) =>
+                                setDraft({
+                                  ...draft,
+                                  portfolio: {
+                                    ...draft.portfolio,
+                                    items: draft.portfolio.items.map((item, i) =>
+                                      i === originalIndex
+                                        ? { ...item, description: e.target.value }
+                                        : item
+                                    ),
+                                  },
+                                })
+                              }
+                            />
+                          </Field>
+                        </div>
+                        <div className="mt-4">
+                          <p className="text-xs uppercase tracking-[0.2em] text-gray-500 mb-3">Tech Tags</p>
+                          <div className="flex flex-wrap gap-2">
+                            {project.tech.map((tech, techIndex) => (
+                              <div key={techIndex} className="flex items-center gap-2">
+                                <Input
+                                  value={tech}
+                                  className="w-32"
+                                  onChange={(e) =>
+                                    setDraft({
+                                      ...draft,
+                                      portfolio: {
+                                        ...draft.portfolio,
+                                        items: draft.portfolio.items.map((item, i) =>
+                                          i === originalIndex
+                                            ? {
+                                                ...item,
+                                                tech: item.tech.map((t, ti) =>
+                                                  ti === techIndex ? e.target.value : t
+                                                ),
+                                              }
+                                            : item
+                                        ),
+                                      },
+                                    })
+                                  }
+                                />
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    setDraft({
+                                      ...draft,
+                                      portfolio: {
+                                        ...draft.portfolio,
+                                        items: draft.portfolio.items.map((item, i) =>
+                                          i === originalIndex
+                                            ? {
+                                                ...item,
+                                                tech: item.tech.filter((_, ti) => ti !== techIndex),
+                                              }
+                                            : item
+                                        ),
+                                      },
+                                    })
+                                  }
+                                  className="text-gray-500 hover:text-red-400"
+                                >
+                                  <X size={14} />
+                                </button>
+                              </div>
+                            ))}
+                            <SecondaryButton
+                              onClick={() =>
+                                setDraft({
+                                  ...draft,
+                                  portfolio: {
+                                    ...draft.portfolio,
+                                    items: draft.portfolio.items.map((item, i) =>
+                                      i === originalIndex
+                                        ? { ...item, tech: [...item.tech, "New Tech"] }
+                                        : item
+                                    ),
+                                  },
+                                })
+                              }
+                              className="px-3 py-1"
+                            >
+                              <Plus size={12} /> Add Tag
+                            </SecondaryButton>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                  
                   <SecondaryButton
                     onClick={() =>
                       setDraft({
                         ...draft,
                         portfolio: {
                           ...draft.portfolio,
-                          items: draft.portfolio.items.map((item, i) =>
-                            i === index
-                              ? { ...item, tech: [...item.tech, "New Tech"] }
-                              : item
-                          ),
+                          items: [
+                            ...draft.portfolio.items,
+                            {
+                              title: "New " + category + " Project",
+                              category: category,
+                              description: "Project description goes here.",
+                              tech: ["React", "Next.js"],
+                              image: "/projects/branding.png",
+                              link: "#",
+                              color: "from-blue-900/40 to-black",
+                            },
+                          ],
                         },
                       })
                     }
+                    className="border-dashed border-cyan-400/30 bg-cyan-400/5 hover:bg-cyan-400/10 py-6"
                   >
-                    <Plus size={14} /> Add Tech Tag
+                    <Plus size={16} /> Add New {category} Project
                   </SecondaryButton>
                 </div>
               </div>
             ))}
-            <SecondaryButton
-              onClick={() =>
-                setDraft({
-                  ...draft,
-                  portfolio: {
-                    ...draft.portfolio,
-                    items: [
-                      ...draft.portfolio.items,
-                      {
-                        title: "New Project",
-                        category: "Category",
-                        description: "Project summary",
-                        tech: ["Next.js"],
-                        image: "/projects/placeholder.png",
-                        link: "https://example.com",
-                        color: "from-zinc-800/40 to-black",
-                      },
-                    ],
-                  },
-                })
-              }
-            >
-              <Plus size={14} /> Add Project
-            </SecondaryButton>
+            
+            <div className="pt-10 border-t border-white/10">
+              <h3 className="text-sm font-medium text-gray-500 mb-4">Add a project in a new category</h3>
+              <SecondaryButton
+                onClick={() =>
+                  setDraft({
+                    ...draft,
+                    portfolio: {
+                      ...draft.portfolio,
+                      items: [
+                        ...draft.portfolio.items,
+                        {
+                          title: "New Project",
+                          category: "New Category",
+                          description: "Description",
+                          tech: [],
+                          image: "/projects/branding.png",
+                          link: "#",
+                          color: "from-zinc-900/40 to-black",
+                        },
+                      ],
+                    },
+                  })
+                }
+              >
+                <Plus size={14} /> Create New Category
+              </SecondaryButton>
+            </div>
           </Section>
-
 
           <Section id="team" title="Team Capabilities" description="Capability cards. No employee photos are required here." visible={activeSection === "#team"}>
             <div className="grid gap-4 md:grid-cols-2">
