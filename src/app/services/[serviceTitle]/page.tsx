@@ -15,6 +15,7 @@ export default function ServicePage() {
   const router = useRouter();
   const { content } = useSiteContent();
   const [activeCategory, setActiveCategory] = useState("All");
+  const [visibleCount, setVisibleCount] = useState(3);
   
   const serviceTitle = useMemo(() => {
     if (!params.serviceTitle) return "";
@@ -125,75 +126,102 @@ export default function ServicePage() {
       </section>
 
       {/* Grid Section */}
-      <section className="py-24 relative">
+      <section className="py-24 relative" id="projects-grid">
         <div className="container mx-auto px-6 md:px-12">
           {filteredProjects.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              <AnimatePresence mode="popLayout">
-                {filteredProjects.map((project, i) => (
-                  <motion.div
-                    key={project.title}
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: (i % 3) * 0.1 }}
-                    viewport={{ once: true }}
-                    className="group"
-                  >
-                    <div className="bg-[#0a0c12]/40 backdrop-blur-sm border border-white/5 rounded-[2rem] p-5 h-full flex flex-col transition-all duration-500 hover:border-[#7c66ff]/30 hover:bg-[#0a0c12]/60 shadow-xl">
-                      {/* Project Image */}
-                      <div className="relative aspect-[1.4/1] overflow-hidden rounded-2xl mb-8 border border-white/5">
-                        {/^https?:\/\//i.test(project.image) || project.image.startsWith("data:") ? (
-                          <img
-                            src={project.image}
-                            alt={project.title}
-                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                          />
-                        ) : (
-                          <Image
-                            src={project.image}
-                            alt={project.title}
-                            fill
-                            className="object-cover transition-transform duration-700 group-hover:scale-105"
-                          />
-                        )}
-                        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors duration-500" />
-                      </div>
-
-                      {/* Info */}
-                      <div className="flex flex-col flex-grow px-2">
-                        <h3 className="text-2xl font-bold mb-4 tracking-tight group-hover:text-white transition-colors">
-                          {project.title}
-                        </h3>
-                        <p className="text-gray-400 font-light text-sm leading-relaxed mb-8 flex-grow">
-                          {project.description}
-                        </p>
-
-                        {/* Tech Stack Pills */}
-                        <div className="flex flex-wrap gap-2 mb-8">
-                          {project.tech.map((t, index) => (
-                            <span 
-                              key={index} 
-                              className="px-3 py-1.5 rounded-xl bg-white/5 border border-white/5 text-[9px] font-bold text-gray-500 tracking-wider hover:bg-[#7c66ff]/10 hover:text-[#7c66ff] transition-all"
-                            >
-                              {t}
-                            </span>
-                          ))}
+            <div className="flex flex-col gap-20">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <AnimatePresence mode="popLayout">
+                  {filteredProjects.slice(0, visibleCount).map((project, i) => (
+                    <motion.div
+                      key={project.title}
+                      initial={{ opacity: 0, y: 30 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      transition={{ duration: 0.6, delay: (i % 3) * 0.1 }}
+                      viewport={{ once: true }}
+                      className="group"
+                    >
+                      <div className="bg-[#0a0c12]/40 backdrop-blur-sm border border-white/5 rounded-[2rem] p-5 h-full flex flex-col transition-all duration-500 hover:border-[#7c66ff]/30 hover:bg-[#0a0c12]/60 shadow-xl">
+                        {/* Project Image */}
+                        <div className="relative aspect-[1.4/1] overflow-hidden rounded-2xl mb-8 border border-white/5">
+                          {/^https?:\/\//i.test(project.image) || project.image.startsWith("data:") ? (
+                            <img
+                              src={project.image}
+                              alt={project.title}
+                              className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            />
+                          ) : (
+                            <Image
+                              src={project.image}
+                              alt={project.title}
+                              fill
+                              className="object-cover transition-transform duration-700 group-hover:scale-105"
+                            />
+                          )}
+                          <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors duration-500" />
                         </div>
 
-                        {/* Link */}
-                        <Link 
-                          href={project.link}
-                          target="_blank"
-                          className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#7c66ff] group/link"
-                        >
-                          View Project
-                          <ArrowUpRight size={16} className="group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform" />
-                        </Link>
+                        {/* Info */}
+                        <div className="flex flex-col flex-grow px-2">
+                          <h3 className="text-2xl font-bold mb-4 tracking-tight group-hover:text-white transition-colors">
+                            {project.title}
+                          </h3>
+                          <p className="text-gray-400 font-light text-sm leading-relaxed mb-8 flex-grow">
+                            {project.description}
+                          </p>
+
+                          {/* Tech Stack Pills */}
+                          <div className="flex flex-wrap gap-2 mb-8">
+                            {project.tech.map((t, index) => (
+                              <span 
+                                key={index} 
+                                className="px-3 py-1.5 rounded-xl bg-white/5 border border-white/5 text-[9px] font-bold text-gray-500 tracking-wider hover:bg-[#7c66ff]/10 hover:text-[#7c66ff] transition-all"
+                              >
+                                {t}
+                              </span>
+                            ))}
+                          </div>
+
+                          {/* Link */}
+                          <Link 
+                            href={project.link}
+                            target="_blank"
+                            className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#7c66ff] group/link"
+                          >
+                            View Project
+                            <ArrowUpRight size={16} className="group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform" />
+                          </Link>
+                        </div>
                       </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+              </div>
+
+              {/* View More / View Less Buttons */}
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+                {visibleCount < filteredProjects.length && (
+                  <button
+                    onClick={() => setVisibleCount(prev => prev + 3)}
+                    className="px-10 py-5 rounded-2xl bg-[#7c66ff] text-white font-bold text-[10px] uppercase tracking-[0.3em] hover:bg-[#6b55e6] hover:scale-105 transition-all duration-500 shadow-[0_20px_50px_rgba(124,102,255,0.3)] flex items-center gap-3"
+                  >
+                    View More Projects
+                  </button>
+                )}
+                
+                {visibleCount > 3 && (
+                  <button
+                    onClick={() => {
+                      setVisibleCount(3);
+                      document.getElementById('projects-grid')?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                    className="px-10 py-5 rounded-2xl border border-white/10 bg-white/5 text-gray-400 font-bold text-[10px] uppercase tracking-[0.3em] hover:text-white hover:border-white/30 transition-all duration-500"
+                  >
+                    View Less
+                  </button>
+                )}
+              </div>
             </div>
           ) : (
             <div className="py-32 text-center border border-dashed border-white/10 rounded-[3rem] bg-white/5">
