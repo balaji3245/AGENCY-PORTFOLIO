@@ -201,7 +201,7 @@ export default function AdminPanel() {
     []
   );
   const [isLoadingLeads, setIsLoadingLeads] = useState(true);
-  const [leadsTab, setLeadsTab] = useState<"contact" | "start-project" | "review">("contact");
+  const [leadsTab, setLeadsTab] = useState<"contact" | "start-project">("contact");
   const [adminReviewFilter, setAdminReviewFilter] = useState<number | null>(null);
   const [uploadingTarget, setUploadingTarget] = useState<string | null>(null);
 
@@ -437,7 +437,7 @@ export default function AdminPanel() {
           <Section id="leads" title="Leads & Reviews" description="All form submissions from the website, separated by source." visible={activeSection === "#leads"}>
             {/* Tab toggle */}
             <div className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.03] p-1.5">
-              {(["contact", "start-project", "review"] as const).map((tab) => {
+              {(["contact", "start-project"] as const).map((tab) => {
                 const count = contactSubmissions.filter((s) => (s.source ?? "contact") === tab).length;
                 return (
                   <button
@@ -445,13 +445,12 @@ export default function AdminPanel() {
                     type="button"
                     onClick={() => {
                       setLeadsTab(tab);
-                      setAdminReviewFilter(null);
                     }}
                     className={`flex-1 flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-200 ${
                       leadsTab === tab ? "bg-white text-black shadow-sm" : "text-gray-400 hover:text-white"
                     }`}
                   >
-                    {tab === "contact" ? "📩 Contact" : tab === "start-project" ? "🚀 Project" : "⭐️ Reviews"}
+                    {tab === "contact" ? "📩 Contact" : "🚀 Project"}
                     <span className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${
                       leadsTab === tab ? "bg-black/10 text-black" : "bg-white/10 text-gray-300"
                     }`}>{count}</span>
@@ -460,67 +459,17 @@ export default function AdminPanel() {
               })}
             </div>
 
-            {leadsTab === "review" && (
-              <div className="flex flex-wrap gap-2 mt-4">
-                <button
-                  onClick={() => setAdminReviewFilter(null)}
-                  className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition border ${
-                    adminReviewFilter === null 
-                      ? "bg-white text-black border-white" 
-                      : "bg-white/5 text-gray-400 border-white/10 hover:border-white/20"
-                  }`}
-                >
-                  All ({contactSubmissions.filter(s => s.source === "review").length})
-                </button>
-                {[5, 4, 3, 2, 1].map((s) => {
-                  const count = contactSubmissions.filter(sub => 
-                    sub.source === "review" && 
-                    (sub.message.match(/^(\d) STARS \| /)?.[1] === String(s) || (!sub.message.includes("STARS |") && s === 5))
-                  ).length;
-                  return (
-                    <button
-                      key={s}
-                      onClick={() => setAdminReviewFilter(s)}
-                      className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition border flex items-center gap-1.5 ${
-                        adminReviewFilter === s 
-                          ? "bg-yellow-500 text-black border-yellow-500" 
-                          : "bg-white/5 text-gray-400 border-white/10 hover:border-white/20"
-                      }`}
-                    >
-                      {s} <Star size={10} className={adminReviewFilter === s ? "fill-black" : "fill-yellow-500 text-yellow-500"} />
-                      <span className={adminReviewFilter === s ? "text-black/60" : "text-gray-500"}>({count})</span>
-                    </button>
-                  );
-                })}
-              </div>
-            )}
 
             {/* Header row */}
             <div className="flex flex-col gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4 md:flex-row md:items-center md:justify-between mt-6">
               <div>
                 <p className="text-lg font-medium">
-                  {contactSubmissions.filter((s) => {
-                    const isTab = (s.source ?? "contact") === leadsTab;
-                    if (!isTab) return false;
-                    if (leadsTab === "review" && adminReviewFilter !== null) {
-                      const rating = parseInt(s.message.match(/^(\d) STARS \| /)?.[1] || "5");
-                      return rating === adminReviewFilter;
-                    }
-                    return true;
-                  }).length}{" "}
-                  {leadsTab === "contact" ? "contact message" : leadsTab === "start-project" ? "project brief" : "client review"}
-                  {contactSubmissions.filter((s) => {
-                    const isTab = (s.source ?? "contact") === leadsTab;
-                    if (!isTab) return false;
-                    if (leadsTab === "review" && adminReviewFilter !== null) {
-                      const rating = parseInt(s.message.match(/^(\d) STARS \| /)?.[1] || "5");
-                      return rating === adminReviewFilter;
-                    }
-                    return true;
-                  }).length === 1 ? "" : "s"}
+                  {contactSubmissions.filter((s) => (s.source ?? "contact") === leadsTab).length}{" "}
+                  {leadsTab === "contact" ? "contact message" : "project brief"}
+                  {contactSubmissions.filter((s) => (s.source ?? "contact") === leadsTab).length === 1 ? "" : "s"}
                 </p>
                 <p className="mt-1 text-sm text-gray-400">
-                  {adminReviewFilter ? `Showing ${adminReviewFilter} star reviews only.` : "Newest first."}
+                  Newest first.
                 </p>
               </div>
               <SecondaryButton
@@ -537,55 +486,26 @@ export default function AdminPanel() {
                 <div className="h-8 w-8 animate-spin rounded-full border-2 border-cyan-400 border-t-transparent mb-4" />
                 <p className="text-sm text-gray-400">Fetching leads from storage...</p>
               </div>
-            ) : contactSubmissions.filter((s) => {
-                const isTab = (s.source ?? "contact") === leadsTab;
-                if (!isTab) return false;
-                if (leadsTab === "review" && adminReviewFilter !== null) {
-                  const rating = parseInt(s.message.match(/^(\d) STARS \| /)?.[1] || "5");
-                  return rating === adminReviewFilter;
-                }
-                return true;
-              }).length ? (
+            ) : contactSubmissions.filter((s) => (s.source ?? "contact") === leadsTab).length ? (
               <div className="grid gap-4">
                 {contactSubmissions
-                  .filter((s) => {
-                    const isTab = (s.source ?? "contact") === leadsTab;
-                    if (!isTab) return false;
-                    if (leadsTab === "review" && adminReviewFilter !== null) {
-                      const rating = parseInt(s.message.match(/^(\d) STARS \| /)?.[1] || "5");
-                      return rating === adminReviewFilter;
-                    }
-                    return true;
-                  })
+                  .filter((s) => (s.source ?? "contact") === leadsTab)
                   .map((submission) => {
-                    const ratingMatch = submission.message.match(/^(\d) STARS \| /);
-                    const displayRating = ratingMatch ? parseInt(ratingMatch[1]) : 5;
-                    const cleanMessage = ratingMatch ? submission.message.replace(/^(\d) STARS \| /, "") : submission.message;
-
                     return (
                       <article
                         key={submission.id}
                         className={`rounded-2xl border p-4 ${
                           leadsTab === "start-project"
                             ? "border-cyan-400/20 bg-cyan-400/5"
-                            : leadsTab === "review"
-                            ? "border-yellow-400/20 bg-yellow-400/5"
                             : "border-white/10 bg-white/[0.03]"
                         }`}
                       >
                         <div className="mb-3 flex items-center gap-2">
                           <span className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-widest ${
-                            leadsTab === "start-project" ? "bg-cyan-400/20 text-cyan-300" : leadsTab === "review" ? "bg-yellow-400/20 text-yellow-300" : "bg-white/10 text-gray-300"
+                            leadsTab === "start-project" ? "bg-cyan-400/20 text-cyan-300" : "bg-white/10 text-gray-300"
                           }`}>
-                            {leadsTab === "start-project" ? "🚀 Project Brief" : leadsTab === "review" ? "⭐️ Review" : "📩 Contact"}
+                            {leadsTab === "start-project" ? "🚀 Project Brief" : "📩 Contact"}
                           </span>
-                          {leadsTab === "review" && (
-                            <div className="flex gap-0.5 mr-2">
-                              {[1, 2, 3, 4, 5].map((s) => (
-                                <Star key={s} size={10} className={`${displayRating >= s ? "text-yellow-500 fill-yellow-500" : "text-gray-600"}`} />
-                              ))}
-                            </div>
-                          )}
                           <span className="text-xs text-gray-500" suppressHydrationWarning>
                             {new Date(submission.createdAt).toLocaleString()}
                           </span>
@@ -593,52 +513,22 @@ export default function AdminPanel() {
                         <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                           <div>
                             <h3 className="text-lg font-semibold">{submission.name}</h3>
-                            {leadsTab === "review" && (
-                              <p className="text-sm text-gray-400">Company: <span className="text-white">{submission.phone}</span></p>
-                            )}
-                            {leadsTab !== "review" && (
-                              <>
-                                <a
-                                  href={`mailto:${submission.email}`}
-                                  className="text-sm text-cyan-300 transition hover:text-cyan-100"
-                                >
-                                  {submission.email}
-                                </a>
-                                {submission.phone && (
-                                  <a
-                                    href={`tel:${submission.phone.replace(/\s/g, "")}`}
-                                    className="mt-1 block text-sm text-gray-300 transition hover:text-white"
-                                  >
-                                    {submission.phone}
-                                  </a>
-                                )}
-                              </>
+                            <a
+                              href={`mailto:${submission.email}`}
+                              className="text-sm text-cyan-300 transition hover:text-cyan-100"
+                            >
+                              {submission.email}
+                            </a>
+                            {submission.phone && (
+                              <a
+                                href={`tel:${submission.phone.replace(/\s/g, "")}`}
+                                className="mt-1 block text-sm text-gray-300 transition hover:text-white"
+                              >
+                                {submission.phone}
+                              </a>
                             )}
                           </div>
                           <div className="flex gap-2">
-                            {leadsTab === "review" && (
-                              <button
-                                onClick={() => {
-                                  setDraft({
-                                    ...draft,
-                                    testimonials: [
-                                      ...draft.testimonials,
-                                      {
-                                        client: submission.name,
-                                        company: submission.phone || "Client",
-                                        content: cleanMessage,
-                                        rating: displayRating,
-                                      },
-                                    ],
-                                  });
-                                  removeContactSubmission(submission.id);
-                                  setStatus("Review approved and added to draft testimonials. Save Changes to publish!");
-                                }}
-                                className="inline-flex items-center gap-2 rounded-full bg-emerald-500/20 border border-emerald-500/30 px-4 py-2 text-xs font-medium text-emerald-300 transition hover:bg-emerald-500/30"
-                              >
-                                ✅ Approve
-                              </button>
-                            )}
                             <SecondaryButton
                               onClick={() => removeContactSubmission(submission.id)}
                             >
@@ -647,7 +537,7 @@ export default function AdminPanel() {
                           </div>
                         </div>
                         <p className="whitespace-pre-wrap rounded-2xl border border-white/10 bg-black/20 p-4 text-sm leading-6 text-gray-300">
-                          {cleanMessage}
+                          {submission.message}
                         </p>
                       </article>
                     );
@@ -655,7 +545,7 @@ export default function AdminPanel() {
               </div>
             ) : (
               <div className="rounded-2xl border border-dashed border-white/15 p-8 text-center text-sm text-gray-400">
-                No {leadsTab === "contact" ? "contact form" : leadsTab === "start-project" ? "project brief" : "client review"} submissions yet.
+                No {leadsTab === "contact" ? "contact form" : "project brief"} submissions yet.
               </div>
             )}
           </Section>
@@ -1888,84 +1778,49 @@ export default function AdminPanel() {
             </SecondaryButton>
           </Section>
 
-          <Section id="testimonials" title="Testimonials" description="Client quotes and review cards." visible={activeSection === "#testimonials"}>
-            {draft.testimonials.map((testimonial, index) => (
-              <div key={index} className="rounded-2xl border border-white/10 p-4">
-                <div className="mb-4 flex items-center justify-between">
-                  <p className="text-sm text-gray-300">Testimonial {index + 1}</p>
-                  <SecondaryButton
-                    onClick={() =>
-                      setDraft({
-                        ...draft,
-                        testimonials: draft.testimonials.filter((_, i) => i !== index),
-                      })
-                    }
-                  >
-                    <Trash2 size={14} /> Remove
-                  </SecondaryButton>
+          <Section id="testimonials" title="Reviews Management" description="Directly posted reviews from the website. Admin can only delete inappropriate reviews." visible={activeSection === "#testimonials"}>
+            <div className="grid gap-4">
+              {draft.testimonials.length > 0 ? (
+                draft.testimonials.map((testimonial, index) => (
+                  <div key={index} className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 flex flex-col gap-4 relative group">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="flex gap-0.5">
+                          {[1, 2, 3, 4, 5].map((s) => (
+                            <Star key={s} size={14} className={(testimonial.rating || 5) >= s ? "fill-yellow-500 text-yellow-500" : "text-white/5"} />
+                          ))}
+                        </div>
+                        <span className="text-sm font-bold text-white">{testimonial.client}</span>
+                        <span className="text-xs text-gray-500">— {testimonial.company}</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setDraft({
+                            ...draft,
+                            testimonials: draft.testimonials.filter((_, i) => i !== index),
+                          })
+                        }
+                        className="rounded-full p-2 text-gray-500 hover:bg-red-500/10 hover:text-red-400 transition-all"
+                        title="Delete Review"
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </div>
+                    <p className="text-sm text-gray-400 leading-relaxed italic">
+                      "{testimonial.content}"
+                    </p>
+                    <div className="text-[10px] text-gray-600 uppercase tracking-widest font-medium">
+                      {testimonial.date ? new Date(testimonial.date).toLocaleDateString() : "Recently Posted"}
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="py-20 text-center border border-dashed border-white/10 rounded-3xl bg-white/[0.01]">
+                  <p className="text-gray-500 text-sm">No reviews found.</p>
                 </div>
-                <div className="grid gap-4 md:grid-cols-2">
-                  <Field label="Client">
-                    <Input
-                      value={testimonial.client}
-                      onChange={(e) =>
-                        setDraft({
-                          ...draft,
-                          testimonials: draft.testimonials.map((item, i) =>
-                            i === index ? { ...item, client: e.target.value } : item
-                          ),
-                        })
-                      }
-                    />
-                  </Field>
-                  <Field label="Company">
-                    <Input
-                      value={testimonial.company}
-                      onChange={(e) =>
-                        setDraft({
-                          ...draft,
-                          testimonials: draft.testimonials.map((item, i) =>
-                            i === index ? { ...item, company: e.target.value } : item
-                          ),
-                        })
-                      }
-                    />
-                  </Field>
-                </div>
-                <Field label="Quote">
-                  <Textarea
-                    rows={4}
-                    value={testimonial.content}
-                    onChange={(e) =>
-                      setDraft({
-                        ...draft,
-                        testimonials: draft.testimonials.map((item, i) =>
-                          i === index ? { ...item, content: e.target.value } : item
-                        ),
-                      })
-                    }
-                  />
-                </Field>
-              </div>
-            ))}
-            <SecondaryButton
-              onClick={() =>
-                setDraft({
-                  ...draft,
-                  testimonials: [
-                    ...draft.testimonials,
-                    {
-                      client: "New Client",
-                      company: "Company",
-                      content: "Testimonial content",
-                      rating: 5,
-                    },
-                  ],
-                })
-              }
-            >
-              <Plus size={14} /> Add Testimonial
-            </SecondaryButton>
+              )}
+            </div>
           </Section>
 
           <Section id="process" title="Process" description="Step-by-step delivery workflow shown on the homepage." visible={activeSection === "#process"}>
