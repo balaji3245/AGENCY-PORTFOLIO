@@ -333,7 +333,7 @@ export const defaultSiteContent: SiteContent = {
       },
       { 
         name: "Asad Ali", 
-        role: "Software Engineer",
+        role: "CTO",
         intro: "Asad Ali is a software engineer focused on backend systems, scalable architectures, and modern web technologies. He works primarily with Node.js, Next.js, MySQL, Docker, Prisma, and microservice-based systems, with strong interest in building reliable and high-performance applications.",
         image: "from-emerald-600 to-teal-700",
         skills: ["Node.js", "TypeScript", "JavaScript", "MongoDB", "PostgreSQL", "Redis", "Docker", "Prisma", "AWS S3", "GCP"],
