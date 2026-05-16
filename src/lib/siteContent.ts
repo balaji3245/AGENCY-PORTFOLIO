@@ -79,6 +79,8 @@ export type SiteContent = {
       skills?: string[];
       portfolio?: string;
       github?: string;
+      artstation?: string;
+      linkedin?: string;
       email?: string;
     }[];
   };
@@ -367,6 +369,17 @@ export const defaultSiteContent: SiteContent = {
         skills: ["Video Editing", "Content Creation", "Graphic Designing", "Photo Editing", "Content Writing", "Creative Problem Solving"],
         portfolio: "https://youtube.com/@googlymon7593?si=J4iupjCdqfL_4KaU",
         email: "vasu08921@gmail.com"
+      },
+      { 
+        name: "Sanjeev Singh", 
+        role: "Video editing, 3d artist",
+        intro: "Hi, my name is Sanjeev Singh. I am a B.Sc. Animation and VFX student with skills in video editing, graphic design, and VFX animation.",
+        image: "from-red-600 to-orange-700",
+        skills: ["Editing", "ai creation", "3d"],
+        portfolio: "https://www.behance.net/sanjeevsingh69",
+        artstation: "https://www.artstation.com/sanjeevsingh990",
+        linkedin: "https://www.linkedin.com/in/sanjeev-singh-14114a334?utm_source=share_via&utm_content=profile&utm_medium=member_android",
+        email: "sanjeevsinghdl923@gmail.com"
       },
     ],
   },

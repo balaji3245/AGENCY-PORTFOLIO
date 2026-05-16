@@ -1730,6 +1730,38 @@ export default function AdminPanel() {
                       }
                     />
                   </Field>
+                  <Field label="LinkedIn Link">
+                    <Input
+                      value={member.linkedin || ""}
+                      onChange={(e) =>
+                        setDraft({
+                          ...draft,
+                          team: {
+                            ...draft.team,
+                            members: draft.team.members.map((item, i) =>
+                              i === index ? { ...item, linkedin: e.target.value } : item
+                            ),
+                          },
+                        })
+                      }
+                    />
+                  </Field>
+                  <Field label="ArtStation Link">
+                    <Input
+                      value={member.artstation || ""}
+                      onChange={(e) =>
+                        setDraft({
+                          ...draft,
+                          team: {
+                            ...draft.team,
+                            members: draft.team.members.map((item, i) =>
+                              i === index ? { ...item, artstation: e.target.value } : item
+                            ),
+                          },
+                        })
+                      }
+                    />
+                  </Field>
                   <Field label="Skills (comma separated)">
                     <Input
                       value={member.skills ? member.skills.join(", ") : ""}
@@ -1767,6 +1799,8 @@ export default function AdminPanel() {
                         email: "",
                         portfolio: "",
                         github: "",
+                        linkedin: "",
+                        artstation: "",
                         skills: [],
                       },
                     ],
