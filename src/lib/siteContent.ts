@@ -389,6 +389,7 @@ export const defaultSiteContent: SiteContent = {
     { num: "03", title: "Design", desc: "We create beautiful UI/UX designs for your approval." },
     { num: "04", title: "Development", desc: "We build your platform with modern tech and SEO." },
     { num: "05", title: "Launch", desc: "We test and deploy your project for the world to see." },
+    { num: "06", title: "Support & Growth", desc: "We provide ongoing support and strategic updates to keep your brand scaling." },
   ],
   pricing: [
     {
