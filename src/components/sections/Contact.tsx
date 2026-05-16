@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { motion } from "framer-motion";
-import { Mail, Phone, Send } from "lucide-react";
+import { Send } from "lucide-react";
 import { useSiteContent } from "@/components/SiteContentProvider";
 import MagneticButton from "@/components/ui/MagneticButton";
 
@@ -71,34 +71,13 @@ export default function Contact() {
             <h2 className="text-xs uppercase tracking-widest text-gray-500 mb-4">
               {content.contact.eyebrow}
             </h2>
-            <h3 className="text-5xl md:text-7xl font-bold tracking-tight mb-8">
+            <h3 className="text-5xl md:text-7xl font-bold tracking-tight mb-8 leading-tight">
               {content.contact.title} <br />
               <span className="text-gradient">{content.contact.highlight}</span>
             </h3>
             <p className="text-gray-400 font-light text-lg mb-12 max-w-md">
               {content.contact.description}
             </p>
-
-            <div className="space-y-6">
-              <a
-                href={`mailto:${content.brand.email}`}
-                className="flex items-center gap-4 group"
-              >
-                <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-colors">
-                  <Mail size={18} />
-                </div>
-                <span className="text-xl font-light">{content.brand.email}</span>
-              </a>
-              <a
-                href={`tel:${content.brand.phone.replace(/\s/g, "")}`}
-                className="flex items-center gap-4 group"
-              >
-                <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-colors">
-                  <Phone size={18} />
-                </div>
-                <span className="text-xl font-light">{content.brand.phone}</span>
-              </a>
-            </div>
           </div>
 
           <motion.div
@@ -130,7 +109,6 @@ export default function Contact() {
                   type="email"
                   required
                   className="w-full bg-transparent border-b border-white/20 py-2 text-lg focus:outline-none focus:border-white transition-colors"
-
                 />
               </div>
               <div className="flex flex-col gap-1.5">
@@ -143,7 +121,6 @@ export default function Contact() {
                   type="tel"
                   required
                   className="w-full bg-transparent border-b border-white/20 py-2 text-lg focus:outline-none focus:border-white transition-colors"
-
                 />
               </div>
               <div className="flex flex-col gap-1.5">
@@ -156,7 +133,6 @@ export default function Contact() {
                   rows={2}
                   required
                   className="w-full bg-transparent border-b border-white/20 py-2 text-lg focus:outline-none focus:border-white transition-colors resize-none"
-
                 />
               </div>
               <MagneticButton
