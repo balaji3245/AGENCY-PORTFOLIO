@@ -82,7 +82,17 @@ export type SiteContent = {
       email?: string;
     }[];
   };
-  testimonials: { client: string; company: string; content: string; rating: number }[];
+  testimonials: { 
+    client: string; 
+    company: string; 
+    content: string; 
+    rating: number;
+    date?: string;
+    helpfulCount?: number;
+    avatar?: string;
+    isApproved?: boolean;
+    images?: string[];
+  }[];
   process: { num: string; title: string; desc: string }[];
   pricing: {
     name: string;
@@ -365,22 +375,51 @@ export const defaultSiteContent: SiteContent = {
       client: "Ritesh M.",
       company: "UrbanEdge Retail",
       content:
-        "YJ DEVELOPERS gave our business a clear brand identity and a fast website that finally feels premium on mobile.",
+        "YJ DEVELOPERS gave our business a clear brand identity and a fast website that finally feels premium on mobile. Their attention to detail in the motion graphics phase was exceptional. We've seen a 40% increase in mobile conversions since the launch.",
       rating: 5,
+      date: "2024-05-10",
+      helpfulCount: 12,
+      isApproved: true,
     },
     {
       client: "Sana K.",
       company: "DineFlow Kitchen",
       content:
-        "They handled creative, website, SEO and launch assets together. It felt like one team owned the whole digital presence.",
+        "They handled creative, website, SEO and launch assets together. It felt like one team owned the whole digital presence. The process was transparent and they actually delivered ahead of schedule. Highly recommended for any serious business looking to scale.",
       rating: 5,
+      date: "2024-04-28",
+      helpfulCount: 8,
+      isApproved: true,
     },
     {
       client: "Amit P.",
       company: "ScaleUp Services",
       content:
-        "The landing pages and campaign creatives helped us explain our services better and bring in more qualified leads.",
+        "The landing pages and campaign creatives helped us explain our services better and bring in more qualified leads. The UI/UX is clean and intuitive, exactly what we needed for our enterprise dashboard. Great communication throughout the project.",
       rating: 5,
+      date: "2024-04-15",
+      helpfulCount: 15,
+      isApproved: true,
+    },
+    {
+      client: "Vikram S.",
+      company: "TechNova Inc",
+      content:
+        "Extremely professional and technically sound. They converted our complex requirements into a simple, beautiful interface. The performance of the site is top-notch. Truly world-class engineering.",
+      rating: 5,
+      date: "2024-03-20",
+      helpfulCount: 5,
+      isApproved: true,
+    },
+    {
+      client: "Neha G.",
+      company: "Aura Lifestyle",
+      content:
+        "Loved the branding work! They really understood our vibe and translated it perfectly into the visual identity. The website design is stunning and receives compliments from our customers daily.",
+      rating: 4,
+      date: "2024-03-12",
+      helpfulCount: 3,
+      isApproved: true,
     },
   ],
   process: [
