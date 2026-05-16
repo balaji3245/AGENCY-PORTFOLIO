@@ -1,3 +1,5 @@
+"use client";
+
 import { motion } from "framer-motion";
 import { Mail, ArrowUpRight, Users } from "lucide-react";
 import { useSiteContent } from "@/components/SiteContentProvider";
