@@ -268,22 +268,22 @@ export default function Testimonials() {
                   exit={{ opacity: 0, scale: 0.98 }}
                   className="p-5 md:p-8 rounded-[1.5rem] border border-white/5 bg-white/[0.02] flex flex-col group transition-all hover:bg-white/[0.04]"
                 >
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-                    <div className="flex items-center gap-3">
-                      <div className="flex gap-1">
-                        {[1, 2, 3, 4, 5].map((s) => (
-                          <Star key={s} size={14} className={(review.rating || 5) >= s ? "fill-[#7c66ff] text-[#7c66ff]" : "text-white/5"} />
-                        ))}
-                      </div>
-                      <span className="text-sm font-bold text-white ml-1">{(review.rating || 5).toFixed(1)}</span>
-                    </div>
-                    <div className="flex items-center justify-between w-full sm:w-auto gap-4">
-                      <span className="text-[10px] md:text-xs font-medium text-gray-500 bg-white/5 px-3 py-1 rounded-full">
+                  <div className="flex justify-between items-start mb-6">
+                    <div className="flex flex-col gap-1">
+                      <span className="text-sm font-bold text-white">
                         {review.client}
                       </span>
-                      <span className="text-[10px] text-gray-600">
-                        {review.date ? new Date(review.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : "Recently"}
+                      <span className="text-[10px] text-gray-600 font-medium uppercase tracking-wider">
+                        {review.date ? new Date(review.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : "Recently Published"}
                       </span>
+                    </div>
+                    <div className="flex flex-col items-end gap-2">
+                      <div className="flex gap-1">
+                        {[1, 2, 3, 4, 5].map((s) => (
+                          <Star key={s} size={12} className={(review.rating || 5) >= s ? "fill-[#7c66ff] text-[#7c66ff]" : "text-white/5"} />
+                        ))}
+                      </div>
+                      <span className="text-[10px] font-bold text-[#7c66ff]">{(review.rating || 5).toFixed(1)} Rating</span>
                     </div>
                   </div>
 
