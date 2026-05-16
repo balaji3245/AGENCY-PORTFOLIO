@@ -273,6 +273,9 @@ export default function Testimonials() {
                         ))}
                       </div>
                       <span className="text-sm font-bold text-white ml-1">{(review.rating || 5).toFixed(1)}</span>
+                      <span className="text-xs font-medium text-gray-500 ml-2 border-l border-white/10 pl-3">
+                        {review.client}
+                      </span>
                     </div>
                     <div className="flex items-center gap-4">
                       <span className="text-xs text-gray-500">
