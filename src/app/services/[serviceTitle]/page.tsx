@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSiteContent } from "@/components/SiteContentProvider";
-import { ArrowLeft, ArrowRight, CheckCircle2, Sparkles, Filter, ExternalLink, Box, Users, Trophy, Briefcase } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, CheckCircle2, Sparkles, Filter, Code2, LineChart, Laptop } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 
@@ -31,8 +31,6 @@ export default function ServicePage() {
 
   const filteredProjects = useMemo(() => {
     if (activeCategory === "All") return allProjects;
-    // In a real scenario, projects might have sub-categories. 
-    // Here we'll just simulate it or show all if the service is the main category.
     return allProjects; 
   }, [activeCategory, allProjects]);
 
@@ -52,191 +50,159 @@ export default function ServicePage() {
       <Navbar />
       
       {/* Hero Section */}
-      <section className="relative pt-40 pb-20 overflow-hidden">
+      <section className="relative pt-40 pb-32 overflow-hidden">
         <div className="container mx-auto px-6 md:px-12 relative z-10">
-          <div className="max-w-4xl">
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#7c66ff]/10 border border-[#7c66ff]/20 text-[#7c66ff] text-[10px] font-bold uppercase tracking-[0.2em] mb-8"
-            >
-              OUR WORK
-            </motion.div>
-            
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="text-6xl md:text-8xl font-bold tracking-tighter leading-[0.95] mb-8"
-            >
-              Projects That <br />
-              Drive <span className="text-[#7c66ff]">Real Results</span>
-            </motion.h1>
-            
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.1 }}
-              className="text-gray-400 text-lg md:text-xl font-light leading-relaxed max-w-2xl mb-16"
-            >
-              Explore our recent projects where creativity meets technology to deliver impactful digital experiences.
-            </motion.p>
-
-            {/* Stats Row */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 pt-12 border-t border-white/5">
-              {[
-                { label: "Projects Delivered", value: "200+", icon: <Box size={20} /> },
-                { label: "Client Satisfaction", value: "98%", icon: <Users size={20} /> },
-                { label: "Years Experience", value: "5+", icon: <Trophy size={20} /> },
-                { label: "Industries Served", value: "50+", icon: <Briefcase size={20} /> },
-              ].map((stat, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 + (i * 0.1) }}
-                >
-                  <div className="text-[#7c66ff] mb-4">{stat.icon}</div>
-                  <div className="text-3xl md:text-4xl font-bold mb-1 tracking-tight">{stat.value}</div>
-                  <div className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">{stat.label}</div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Decorative Background Elements */}
-        <div className="absolute top-20 right-0 w-[600px] h-[600px] pointer-events-none opacity-20">
-          <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-[#7c66ff] to-transparent rounded-full blur-[120px]" />
-          {/* Mock screens in background like the image */}
-          <div className="absolute top-20 right-20 w-80 h-60 bg-[#0a0c12] border border-[#7c66ff]/30 rounded-2xl rotate-12 shadow-2xl" />
-          <div className="absolute top-40 right-40 w-80 h-60 bg-[#0a0c12] border border-[#7c66ff]/30 rounded-2xl -rotate-6 shadow-2xl" />
-        </div>
-      </section>
-
-      {/* Filter Bar */}
-      <section className="sticky top-20 z-40 py-6 bg-[#030612]/80 backdrop-blur-md border-y border-white/5">
-        <div className="container mx-auto px-6 md:px-12 flex flex-wrap items-center justify-between gap-6">
-          <div className="flex flex-wrap items-center gap-4">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
-                className={`px-5 py-2 rounded-xl text-xs font-bold transition-all duration-300 ${
-                  activeCategory === cat || (activeCategory === "All" && cat === "All Projects")
-                    ? "bg-[#7c66ff] text-white shadow-[0_0_20px_rgba(124,102,255,0.3)]"
-                    : "text-gray-500 hover:text-white"
-                }`}
+          <div className="grid lg:grid-cols-[1.2fr_1fr] gap-16 items-center">
+            <div className="max-w-3xl">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="inline-flex items-center gap-2 mb-8"
               >
-                {cat}
-              </button>
-            ))}
+                <span className="w-2 h-2 rounded-full bg-[#7c66ff] shadow-[0_0_10px_rgba(124,102,255,1)]" />
+                <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-gray-500">MY WORK</span>
+              </motion.div>
+              
+              <motion.h1
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+                className="text-6xl md:text-8xl font-bold tracking-tighter leading-[0.9] mb-8"
+              >
+                Projects That <br />
+                <span className="bg-gradient-to-r from-[#7c66ff] via-[#4b7dff] to-[#7c66ff] bg-clip-text text-transparent">Solve Problems</span>
+              </motion.h1>
+              
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.1 }}
+                className="text-gray-400 text-lg md:text-xl font-light leading-relaxed max-w-xl"
+              >
+                A collection of projects I've built to bring ideas to life, solve real-world problems, and explore new technologies.
+              </motion.p>
+            </div>
+
+            {/* Visual Element (Laptop / Floating Icons) */}
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+              className="relative hidden lg:block"
+            >
+              <div className="relative z-10 transform -rotate-6 hover:rotate-0 transition-transform duration-1000">
+                <div className="w-full aspect-[16/10] bg-[#0a0c12] rounded-3xl border border-white/10 shadow-[0_40px_100px_rgba(0,0,0,0.5)] overflow-hidden p-2">
+                   <div className="w-full h-full bg-[#030612] rounded-2xl border border-white/5 flex items-center justify-center relative overflow-hidden">
+                      <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
+                      <Laptop size={120} className="text-[#7c66ff]/20" />
+                   </div>
+                </div>
+              </div>
+              
+              {/* Floating Icons like design */}
+              <motion.div 
+                animate={{ y: [0, -20, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute -top-10 -left-10 w-24 h-24 rounded-2xl bg-[#0a0c12]/80 backdrop-blur-xl border border-[#7c66ff]/30 flex items-center justify-center shadow-2xl rotate-12"
+              >
+                <Code2 size={32} className="text-[#7c66ff]" />
+              </motion.div>
+              
+              <motion.div 
+                animate={{ y: [0, 20, 0] }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                className="absolute -bottom-10 -right-10 w-20 h-20 rounded-2xl bg-[#0a0c12]/80 backdrop-blur-xl border border-white/10 flex items-center justify-center shadow-2xl -rotate-12"
+              >
+                <LineChart size={28} className="text-gray-400" />
+              </motion.div>
+            </motion.div>
           </div>
-          <button className="flex items-center gap-2 text-xs font-bold text-gray-500 hover:text-white transition-colors">
-            Filter <Filter size={14} />
-          </button>
         </div>
+
+        {/* Background Glows */}
+        <div className="absolute top-0 right-[-10%] w-[60%] h-[80%] bg-[#7c66ff]/10 rounded-full blur-[140px] pointer-events-none" />
+        <div className="absolute bottom-0 left-[-10%] w-[40%] h-[60%] bg-[#4b7dff]/5 rounded-full blur-[140px] pointer-events-none" />
       </section>
 
-      {/* Projects Grid */}
-      <section className="py-24 relative bg-[#060810]/50">
+      {/* Grid Section */}
+      <section className="py-24 relative">
         <div className="container mx-auto px-6 md:px-12">
           {filteredProjects.length > 0 ? (
-            <>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16">
-                <AnimatePresence mode="popLayout">
-                  {filteredProjects.map((project, i) => (
-                    <motion.div
-                      key={project.title}
-                      initial={{ opacity: 0, y: 40 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.8, delay: i % 2 * 0.1 }}
-                      viewport={{ once: true }}
-                      className="group flex flex-col"
-                    >
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <AnimatePresence mode="popLayout">
+                {filteredProjects.map((project, i) => (
+                  <motion.div
+                    key={project.title}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: (i % 3) * 0.1 }}
+                    viewport={{ once: true }}
+                    className="group"
+                  >
+                    <div className="bg-[#0a0c12]/40 backdrop-blur-sm border border-white/5 rounded-[2rem] p-5 h-full flex flex-col transition-all duration-500 hover:border-[#7c66ff]/30 hover:bg-[#0a0c12]/60 shadow-xl">
                       {/* Project Image */}
-                      <div className="relative aspect-[16/10] overflow-hidden rounded-[2rem] bg-[#0a0c12] border border-white/5 mb-8 group-hover:border-[#7c66ff]/30 transition-all duration-500 shadow-xl">
+                      <div className="relative aspect-[1.4/1] overflow-hidden rounded-2xl mb-8 border border-white/5">
                         {/^https?:\/\//i.test(project.image) || project.image.startsWith("data:") ? (
                           <img
                             src={project.image}
                             alt={project.title}
-                            className="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                           />
                         ) : (
                           <Image
                             src={project.image}
                             alt={project.title}
                             fill
-                            className="object-cover transition-transform duration-1000 group-hover:scale-105"
+                            className="object-cover transition-transform duration-700 group-hover:scale-105"
                           />
                         )}
-                        <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-500" />
-                        
-                        {/* Top-right icon like design */}
-                        <div className="absolute top-6 right-6 w-12 h-12 rounded-full bg-black/60 backdrop-blur-md border border-white/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                          <ExternalLink size={20} className="text-white" />
-                        </div>
+                        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors duration-500" />
                       </div>
 
-                      {/* Project Info */}
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <div className="text-[#7c66ff] text-[10px] font-bold uppercase tracking-[0.2em] mb-3">
-                            {project.category}
-                          </div>
-                          <h3 className="text-3xl font-bold mb-4 tracking-tight group-hover:text-[#7c66ff] transition-colors">
-                            {project.title}
-                          </h3>
-                          <p className="text-gray-400 font-light leading-relaxed mb-8 max-w-md">
-                            {project.description}
-                          </p>
-                          <Link 
-                            href={project.link}
-                            target="_blank"
-                            className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-white group/link border-b border-transparent hover:border-[#7c66ff] transition-all pb-1"
-                          >
-                            View Project 
-                            <ArrowRight size={14} className="group-hover/link:translate-x-1 transition-transform" />
-                          </Link>
-                        </div>
-                      </div>
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
-              </div>
+                      {/* Info */}
+                      <div className="flex flex-col flex-grow px-2">
+                        <h3 className="text-2xl font-bold mb-4 tracking-tight group-hover:text-white transition-colors">
+                          {project.title}
+                        </h3>
+                        <p className="text-gray-400 font-light text-sm leading-relaxed mb-8 flex-grow">
+                          {project.description}
+                        </p>
 
-              {/* Pagination UI */}
-              <div className="mt-32 flex items-center justify-center gap-4">
-                <button className="w-10 h-10 rounded-full border border-white/5 flex items-center justify-center text-gray-500 hover:text-white transition-colors">
-                  <ArrowLeft size={16} className="rotate-0" />
-                </button>
-                <div className="flex items-center gap-2">
-                  {[1, 2, 3, 4].map((num) => (
-                    <button
-                      key={num}
-                      className={`w-10 h-10 rounded-xl text-xs font-bold transition-all duration-300 ${
-                        num === 1 
-                          ? "bg-[#7c66ff] text-white shadow-lg" 
-                          : "bg-white/5 text-gray-500 hover:text-white"
-                      }`}
-                    >
-                      {num}
-                    </button>
-                  ))}
-                </div>
-                <button className="w-10 h-10 rounded-full border border-white/5 flex items-center justify-center text-gray-500 hover:text-white transition-colors">
-                  <ArrowRight size={16} />
-                </button>
-              </div>
-            </>
+                        {/* Tech Stack Pills */}
+                        <div className="flex flex-wrap gap-2 mb-8">
+                          {project.tech.map((t, index) => (
+                            <span 
+                              key={index} 
+                              className="px-3 py-1.5 rounded-xl bg-white/5 border border-white/5 text-[9px] font-bold text-gray-500 tracking-wider hover:bg-[#7c66ff]/10 hover:text-[#7c66ff] transition-all"
+                            >
+                              {t}
+                            </span>
+                          ))}
+                        </div>
+
+                        {/* Link */}
+                        <Link 
+                          href={project.link}
+                          target="_blank"
+                          className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#7c66ff] group/link"
+                        >
+                          View Project
+                          <ArrowUpRight size={16} className="group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform" />
+                        </Link>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
           ) : (
-            <div className="py-32 text-center border border-dashed border-[#7c66ff]/20 rounded-[3rem] bg-[#7c66ff]/5">
-              <div className="w-20 h-20 rounded-3xl bg-[#7c66ff]/10 border border-[#7c66ff]/20 flex items-center justify-center mx-auto mb-8 text-[#7c66ff]">
-                <Sparkles size={32} />
+            <div className="py-32 text-center border border-dashed border-white/10 rounded-[3rem] bg-white/5">
+              <div className="w-20 h-20 rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-8 text-gray-700">
+                <Laptop size={32} />
               </div>
               <h4 className="text-2xl font-bold mb-4 tracking-tighter text-white">No Projects Found</h4>
               <p className="text-gray-500 max-w-sm mx-auto font-light">
-                We're currently preparing amazing case studies for this category. Stay tuned!
+                Stay tuned as we add more projects to this category soon.
               </p>
             </div>
           )}
