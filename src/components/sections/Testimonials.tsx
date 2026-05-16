@@ -40,6 +40,7 @@ export default function Testimonials() {
   const [visibleCount, setVisibleCount] = useState(3);
   const [helpfulVotes, setHelpfulVotes] = useState<Record<number, boolean>>({});
   const [selectedRatingInForm, setSelectedRatingInForm] = useState(5);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const allTestimonials = useMemo(() => 
     (content.testimonials || []).filter(r => r.isApproved !== false)
@@ -131,13 +132,12 @@ export default function Testimonials() {
 
       if (!response.ok) throw new Error();
 
-      setStatusTone("success");
-      setStatus("Thank you! Review submitted for moderation.");
+      setIsSuccess(true);
       form.reset();
       setTimeout(() => {
         setShowForm(false);
-        setStatus("");
-      }, 2500);
+        setTimeout(() => setIsSuccess(false), 500); // Reset after modal closes
+      }, 3000);
     } catch {
       setStatusTone("error");
       setStatus("Submission failed. Try again.");
@@ -351,41 +351,74 @@ export default function Testimonials() {
               <h3 className="text-2xl font-bold text-white mb-2">Write a Review</h3>
               <p className="text-gray-500 text-xs mb-8">Share your thoughts with other customers.</p>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="space-y-4">
-                  <div className="flex flex-col gap-2">
-                    <label className="text-[10px] font-bold text-gray-600 uppercase tracking-widest">Rating</label>
-                    <div className="flex gap-2">
-                      {[1, 2, 3, 4, 5].map(s => (
-                        <button key={s} type="button" onClick={() => setSelectedRatingInForm(s)} className="hover:scale-110 transition-transform">
-                          <Star size={28} className={selectedRatingInForm >= s ? "fill-[#7c66ff] text-[#7c66ff]" : "text-white/5"} />
-                        </button>
-                      ))}
+              <AnimatePresence mode="wait">
+                {isSuccess ? (
+                  <motion.div 
+                    key="success-screen"
+                    initial={{ opacity: 0, scale: 0.9, y: 10 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.9, y: -10 }}
+                    className="flex flex-col items-center justify-center py-10 text-center"
+                  >
+                    <div className="w-20 h-20 rounded-full bg-emerald-500/10 flex items-center justify-center mb-6">
+                      <CheckCircle size={40} className="text-emerald-500" />
                     </div>
-                  </div>
-                  
-                  <div className="flex flex-col gap-2">
-                    <label className="text-[10px] font-bold text-gray-600 uppercase tracking-widest">Your Name</label>
-                    <input name="name" required placeholder="Enter your name" className="w-full bg-white/[0.02] border border-white/10 rounded-xl px-5 py-4 text-sm focus:outline-none focus:border-[#7c66ff] text-white transition-all" />
-                  </div>
-                </div>
+                    <h3 className="text-2xl font-bold text-white mb-2">Review Submitted!</h3>
+                    <p className="text-gray-500 text-sm max-w-[220px]">
+                      Thank you for your feedback. Your review is now waiting for moderation.
+                    </p>
+                    <motion.div 
+                      initial={{ width: 0 }}
+                      animate={{ width: "100%" }}
+                      transition={{ duration: 3, ease: "linear" }}
+                      className="h-1 bg-emerald-500/20 absolute bottom-0 left-0"
+                    />
+                  </motion.div>
+                ) : (
+                  <motion.form 
+                    key="review-form"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    onSubmit={handleSubmit} 
+                    className="space-y-6"
+                  >
+                    <div className="space-y-4">
+                      <div className="flex flex-col gap-2">
+                        <label className="text-[10px] font-bold text-gray-600 uppercase tracking-widest">Rating</label>
+                        <div className="flex gap-2">
+                          {[1, 2, 3, 4, 5].map(s => (
+                            <button key={s} type="button" onClick={() => setSelectedRatingInForm(s)} className="hover:scale-110 transition-transform">
+                              <Star size={28} className={selectedRatingInForm >= s ? "fill-[#7c66ff] text-[#7c66ff]" : "text-white/5"} />
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      <div className="flex flex-col gap-2">
+                        <label className="text-[10px] font-bold text-gray-600 uppercase tracking-widest">Your Name</label>
+                        <input name="name" required placeholder="Enter your name" className="w-full bg-white/[0.02] border border-white/10 rounded-xl px-5 py-4 text-sm focus:outline-none focus:border-[#7c66ff] text-white transition-all" />
+                      </div>
+                    </div>
 
-                <div className="flex flex-col gap-2">
-                  <label className="text-[10px] font-bold text-gray-600 uppercase tracking-widest">Your Feedback</label>
-                  <textarea name="review" required rows={4} placeholder="What did you like about the product?" className="w-full bg-white/[0.02] border border-white/10 rounded-2xl px-5 py-4 text-sm focus:outline-none focus:border-[#7c66ff] text-white resize-none transition-all" />
-                </div>
+                    <div className="flex flex-col gap-2">
+                      <label className="text-[10px] font-bold text-gray-600 uppercase tracking-widest">Your Feedback</label>
+                      <textarea name="review" required rows={4} placeholder="What did you like about the product?" className="w-full bg-white/[0.02] border border-white/10 rounded-2xl px-5 py-4 text-sm focus:outline-none focus:border-[#7c66ff] text-white resize-none transition-all" />
+                    </div>
 
-                <button type="submit" disabled={isSubmitting} className="w-full py-4 rounded-xl bg-[#7c66ff] text-white font-bold text-sm uppercase tracking-widest hover:bg-[#6b55e6] transition-all flex items-center justify-center gap-2 shadow-lg group">
-                  {isSubmitting ? "Sending..." : "Submit Review"}
-                  <Send size={16} className="group-hover:translate-x-1 transition-transform" />
-                </button>
-                
-                {status && (
-                  <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className={`text-center text-xs font-bold uppercase tracking-widest ${statusTone === 'success' ? 'text-emerald-500' : 'text-red-500'}`}>
-                    {status}
-                  </motion.p>
+                    <button type="submit" disabled={isSubmitting} className="w-full py-4 rounded-xl bg-[#7c66ff] text-white font-bold text-sm uppercase tracking-widest hover:bg-[#6b55e6] transition-all flex items-center justify-center gap-2 shadow-lg group">
+                      {isSubmitting ? "Sending..." : "Submit Review"}
+                      <Send size={16} className="group-hover:translate-x-1 transition-transform" />
+                    </button>
+                    
+                    {status && (
+                      <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className={`text-center text-xs font-bold uppercase tracking-widest ${statusTone === 'success' ? 'text-emerald-500' : 'text-red-500'}`}>
+                        {status}
+                      </motion.p>
+                    )}
+                  </motion.form>
                 )}
-              </form>
+              </AnimatePresence>
             </motion.div>
           </motion.div>
         )}
