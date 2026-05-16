@@ -2,7 +2,7 @@
 
 import { useMemo, useState, type FormEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { CheckCircle, Quote, Send, Star } from "lucide-react";
+import { CheckCircle, Quote, Send, Star, X } from "lucide-react";
 import { useSiteContent } from "@/components/SiteContentProvider";
 import MagneticButton from "@/components/ui/MagneticButton";
 
@@ -18,6 +18,7 @@ const reviewFilters = [5, 4, 3, 2, 1];
 
 export default function Testimonials() {
   const { content } = useSiteContent();
+  const [showForm, setShowForm] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [status, setStatus] = useState("");
   const [statusTone, setStatusTone] = useState<"success" | "error">("success");
@@ -175,107 +176,157 @@ export default function Testimonials() {
               </div>
             </div>
 
-            <div className="rounded-[2rem] border border-white/10 bg-[#060d19]/80 p-8 shadow-2xl shadow-black/15 backdrop-blur">
-              <div className="mb-6 flex items-center justify-between gap-3">
+            <div className="rounded-[2rem] border border-white/10 bg-[#060d19]/80 p-6 shadow-2xl shadow-black/15 backdrop-blur">
+              <div className="mb-4 flex items-center justify-between gap-3">
                 <div>
                   <p className="text-[10px] font-black uppercase tracking-[0.3em] text-amber-200/80">
                     Share feedback
                   </p>
-                  <h3 className="mt-3 text-2xl font-black tracking-[-0.04em] text-white">Submit a review</h3>
+                  <h3 className="mt-2 text-2xl font-black tracking-[-0.04em] text-white">Submit a review</h3>
                 </div>
                 <div className="rounded-3xl bg-white/5 px-3 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-gray-300">
                   Moderated only
                 </div>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <label className="block space-y-2 text-sm text-gray-300">
-                    <span className="font-semibold uppercase tracking-[0.18em] text-gray-400">Name</span>
-                    <input
-                      name="name"
-                      required
-                      placeholder="Your name"
-                      className="w-full rounded-3xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition focus:border-cyan-300/60 focus:bg-white/10"
-                    />
-                  </label>
+              <p className="text-sm leading-7 text-gray-400">
+                Share your experience with a quick review. We screen submissions before publishing to keep every testimonial genuine.
+              </p>
 
-                  <label className="block space-y-2 text-sm text-gray-300">
-                    <span className="font-semibold uppercase tracking-[0.18em] text-gray-400">Email</span>
-                    <input
-                      type="email"
-                      name="email"
-                      required
-                      placeholder="you@example.com"
-                      className="w-full rounded-3xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition focus:border-cyan-300/60 focus:bg-white/10"
-                    />
-                  </label>
-                </div>
-
-                <label className="block space-y-2 text-sm text-gray-300">
-                  <span className="font-semibold uppercase tracking-[0.18em] text-gray-400">Company / role</span>
-                  <input
-                    name="company"
-                    required
-                    placeholder="Brand name or title"
-                    className="w-full rounded-3xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition focus:border-cyan-300/60 focus:bg-white/10"
-                  />
-                </label>
-
-                <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
-                  <div className="mb-3 flex items-center justify-between text-sm text-gray-400">
-                    <span className="font-semibold uppercase tracking-[0.18em]">Rating</span>
-                    <span className="font-semibold text-amber-200">{rating}/5</span>
-                  </div>
-                  <div className="flex gap-2">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <button
-                        key={star}
-                        type="button"
-                        onClick={() => setRating(star)}
-                        onMouseEnter={() => setHoveredRating(star)}
-                        onMouseLeave={() => setHoveredRating(0)}
-                        className="rounded-2xl p-2 transition-transform hover:scale-110"
-                        aria-label={`Set rating to ${star}`}
-                      >
-                        <Star
-                          size={26}
-                          className={
-                            (hoveredRating || rating) >= star
-                              ? "fill-amber-300 text-amber-300"
-                              : "text-white/20"
-                          }
-                        />
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <label className="block space-y-2 text-sm text-gray-300">
-                  <span className="font-semibold uppercase tracking-[0.18em] text-gray-400">Your review</span>
-                  <textarea
-                    name="review"
-                    required
-                    rows={4}
-                    placeholder="What did the project help you achieve?"
-                    className="w-full resize-none rounded-3xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition focus:border-cyan-300/60 focus:bg-white/10"
-                  />
-                </label>
-
-                <div className="space-y-3">
-                  <MagneticButton type="submit" disabled={isSubmitting} className="w-full rounded-3xl py-4 text-sm font-black uppercase tracking-[0.12em]">
-                    {isSubmitting ? "Submitting..." : "Send review"}
-                  </MagneticButton>
-
-                  {status && (
-                    <p className={`text-center text-sm ${statusTone === "success" ? "text-emerald-300" : "text-red-300"}`}>
-                      {statusTone === "success" && <CheckCircle size={14} className="inline-block mr-2" />}
-                      {status}
-                    </p>
-                  )}
-                </div>
-              </form>
+              <button
+                type="button"
+                onClick={() => setShowForm(true)}
+                className="mt-6 inline-flex items-center justify-center gap-2 rounded-3xl bg-cyan-400 px-5 py-3 text-sm font-semibold text-black transition hover:bg-cyan-300"
+              >
+                Share feedback
+                <Send size={16} />
+              </button>
             </div>
+
+            <AnimatePresence>
+              {showForm && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-5 backdrop-blur-xl"
+                >
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.96, y: 20 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.96, y: 20 }}
+                    className="relative w-full max-w-xl overflow-hidden rounded-[2rem] border border-white/10 bg-[#050914] p-6 shadow-2xl"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => setShowForm(false)}
+                      className="absolute right-5 top-5 rounded-full border border-white/10 p-2 text-gray-400 transition hover:bg-white/10 hover:text-white"
+                      aria-label="Close review form"
+                    >
+                      <X size={18} />
+                    </button>
+
+                    <div className="mb-6">
+                      <p className="text-[10px] font-black uppercase tracking-[0.34em] text-cyan-200/80">
+                        Leave feedback
+                      </p>
+                      <h4 className="mt-3 text-2xl font-black tracking-[-0.04em] text-white">Tell us about the project.</h4>
+                      <p className="mt-2 text-sm leading-7 text-gray-400">
+                        Use the review form to share impact, results, and your role. We’ll approve the best stories for the testimonial board.
+                      </p>
+                    </div>
+
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        <label className="block space-y-2 text-sm text-gray-300">
+                          <span className="font-semibold uppercase tracking-[0.18em] text-gray-400">Name</span>
+                          <input
+                            name="name"
+                            required
+                            placeholder="Your name"
+                            className="w-full rounded-3xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition focus:border-cyan-300/60 focus:bg-white/10"
+                          />
+                        </label>
+
+                        <label className="block space-y-2 text-sm text-gray-300">
+                          <span className="font-semibold uppercase tracking-[0.18em] text-gray-400">Email</span>
+                          <input
+                            type="email"
+                            name="email"
+                            required
+                            placeholder="you@example.com"
+                            className="w-full rounded-3xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition focus:border-cyan-300/60 focus:bg-white/10"
+                          />
+                        </label>
+                      </div>
+
+                      <label className="block space-y-2 text-sm text-gray-300">
+                        <span className="font-semibold uppercase tracking-[0.18em] text-gray-400">Company / role</span>
+                        <input
+                          name="company"
+                          required
+                          placeholder="Brand name or title"
+                          className="w-full rounded-3xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition focus:border-cyan-300/60 focus:bg-white/10"
+                        />
+                      </label>
+
+                      <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
+                        <div className="mb-3 flex items-center justify-between text-sm text-gray-400">
+                          <span className="font-semibold uppercase tracking-[0.18em]">Rating</span>
+                          <span className="font-semibold text-amber-200">{rating}/5</span>
+                        </div>
+                        <div className="flex gap-2">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <button
+                              key={star}
+                              type="button"
+                              onClick={() => setRating(star)}
+                              onMouseEnter={() => setHoveredRating(star)}
+                              onMouseLeave={() => setHoveredRating(0)}
+                              className="rounded-2xl p-2 transition-transform hover:scale-110"
+                              aria-label={`Set rating to ${star}`}
+                            >
+                              <Star
+                                size={26}
+                                className={
+                                  (hoveredRating || rating) >= star
+                                    ? "fill-amber-300 text-amber-300"
+                                    : "text-white/20"
+                                }
+                              />
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <label className="block space-y-2 text-sm text-gray-300">
+                        <span className="font-semibold uppercase tracking-[0.18em] text-gray-400">Your review</span>
+                        <textarea
+                          name="review"
+                          required
+                          rows={4}
+                          placeholder="What did the project help you achieve?"
+                          className="w-full resize-none rounded-3xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition focus:border-cyan-300/60 focus:bg-white/10"
+                        />
+                      </label>
+
+                      <div className="space-y-3">
+                        <MagneticButton type="submit" disabled={isSubmitting} className="w-full rounded-3xl py-4 text-sm font-black uppercase tracking-[0.12em]">
+                          {isSubmitting ? "Submitting..." : "Send review"}
+                        </MagneticButton>
+
+                        {status && (
+                          <p className={`text-center text-sm ${statusTone === "success" ? "text-emerald-300" : "text-red-300"}`}>
+                            {statusTone === "success" && <CheckCircle size={14} className="inline-block mr-2" />}
+                            {status}
+                          </p>
+                        )}
+                      </div>
+                    </form>
+                  </motion.div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
 
