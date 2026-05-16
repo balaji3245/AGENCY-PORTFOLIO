@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowUpRight, Mail } from "lucide-react";
+import { ArrowUpRight, Mail, Phone } from "lucide-react";
 import { useSiteContent } from "@/components/SiteContentProvider";
 import BrandLogo from "@/components/layout/BrandLogo";
 
@@ -106,7 +106,7 @@ export default function Footer() {
                   href={`tel:${content.brand.phone.replace(/\s/g, "")}`}
                   className="hover:text-white transition-colors flex items-center gap-2"
                 >
-                  Call {content.brand.phone} <ArrowUpRight size={14} />
+                  <Phone size={14} className="text-cyan-400" /> {content.brand.phone} <ArrowUpRight size={14} />
                 </a>
               </li>
             </ul>
