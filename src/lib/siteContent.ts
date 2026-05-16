@@ -322,6 +322,16 @@ export const defaultSiteContent: SiteContent = {
         email: "barmanajay4606@gmail.com"
       },
       { 
+        name: "Chaughule Balaji", 
+        role: "Full Stack Developer",
+        intro: "Balaji Chaughule is a dynamic Full Stack Developer and BCS student with a deep-seated passion for backend architecture and immersive web technologies like Three.js. Leveraging a versatile toolkit including React, TypeScript, and PocketBase, he builds high-performance applications and impactful digital experiences.",
+        image: "from-cyan-500 to-blue-600",
+        skills: ["HTML", "CSS", "JavaScript", "React", "TypeScript", "Three.js", "Tailwind CSS", "PocketBase", "Git"],
+        portfolio: "https://portfolio-balaji-chaughule.vercel.app/",
+        github: "https://github.com/balaji3245",
+        email: "chaughulebalaji09@gmail.com"
+      },
+      { 
         name: "Asad Ali", 
         role: "Software Engineer",
         intro: "Asad Ali is a software engineer focused on backend systems, scalable architectures, and modern web technologies. He works primarily with Node.js, Next.js, MySQL, Docker, Prisma, and microservice-based systems, with strong interest in building reliable and high-performance applications.",
