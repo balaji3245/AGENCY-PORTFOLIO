@@ -29,10 +29,26 @@ export async function GET() {
     const existingTitles = new Set(savedContent.portfolio.items.map(i => i.title));
     const newItems = defaultSiteContent.portfolio.items.filter(i => !existingTitles.has(i.title));
     
+    let hasChanges = false;
     if (newItems.length > 0) {
       savedContent.portfolio.items = [...savedContent.portfolio.items, ...newItems];
+      hasChanges = true;
     }
 
+    // Sync new official contact info if it's still the old placeholder
+    if (savedContent.brand.email === "hello@yjdevelopers.com" || savedContent.brand.email === "contact@yjdevelopers.com") {
+      savedContent.brand.email = defaultSiteContent.brand.email;
+      hasChanges = true;
+    }
+    if (savedContent.brand.phone === "+91 98765 43210") {
+      savedContent.brand.phone = defaultSiteContent.brand.phone;
+      hasChanges = true;
+    }
+
+    // If changes were made, we could save them back to DB here, 
+    // but returning them in the response will at least show them in the UI
+    // and they will be persisted if the user saves from the Admin Panel.
+    
     return Response.json({ content: savedContent });
   } catch (error) {
     console.error("Error fetching site content:", error);
