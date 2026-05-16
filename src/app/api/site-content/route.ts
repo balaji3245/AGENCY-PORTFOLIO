@@ -18,13 +18,22 @@ export async function GET() {
 
     if (error) {
       if (error.code === "PGRST116") {
-        // Not found, return default
         return Response.json({ content: defaultSiteContent });
       }
       throw error;
     }
 
-    return Response.json({ content: data.content });
+    const savedContent = data.content as SiteContent;
+    
+    // Auto-merge new default portfolio items if they don't exist in saved content
+    const existingTitles = new Set(savedContent.portfolio.items.map(i => i.title));
+    const newItems = defaultSiteContent.portfolio.items.filter(i => !existingTitles.has(i.title));
+    
+    if (newItems.length > 0) {
+      savedContent.portfolio.items = [...savedContent.portfolio.items, ...newItems];
+    }
+
+    return Response.json({ content: savedContent });
   } catch (error) {
     console.error("Error fetching site content:", error);
     return Response.json({ content: defaultSiteContent });
