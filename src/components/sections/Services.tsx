@@ -66,28 +66,28 @@ export default function Services() {
                 className="group"
               >
                 <Link href={`/services/${encodeURIComponent(service.title)}`} className="block h-full">
-                  <div className="h-full bg-[#0a0c12]/40 backdrop-blur-md border border-white/5 p-10 rounded-[2.5rem] transition-all duration-500 hover:border-[#7c66ff]/30 hover:bg-[#7c66ff]/5 relative overflow-hidden group/card flex flex-col">
+                  <div className="h-full bg-[#0a0c12]/40 backdrop-blur-md border border-white/5 p-6 md:p-10 rounded-[2rem] md:rounded-[2.5rem] transition-all duration-500 hover:border-[#7c66ff]/30 hover:bg-[#7c66ff]/5 relative overflow-hidden group/card flex flex-col">
                     {/* Subtle hover gradient */}
                     <div className="absolute inset-0 bg-gradient-to-br from-[#7c66ff]/5 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-500" />
                     
-                    {/* Desktop Layout: Icon & Title side by side */}
-                    <div className="flex items-start gap-6 mb-8 relative z-10">
-                      <div className="w-16 h-16 rounded-full border border-[#7c66ff]/20 bg-[#7c66ff]/10 flex items-center justify-center text-[#7c66ff] group-hover:scale-110 transition-transform duration-500 shrink-0 shadow-[0_0_20px_rgba(124,102,255,0.1)]">
-                        <IconByName name={service.icon} size={28} />
+                    {/* Icon & Title Row */}
+                    <div className="flex items-center md:items-start gap-4 md:gap-6 mb-4 md:mb-8 relative z-10">
+                      <div className="w-12 h-12 md:w-16 md:h-16 rounded-full border border-[#7c66ff]/20 bg-[#7c66ff]/10 flex items-center justify-center text-[#7c66ff] group-hover:scale-110 transition-transform duration-500 shrink-0 shadow-[0_0_20px_rgba(124,102,255,0.1)]">
+                        <IconByName name={service.icon} size={22} />
                       </div>
-                      <div className="flex-grow pt-2">
-                        <h4 className="text-xl font-bold mb-3 tracking-tight group-hover:text-white transition-colors">{service.title}</h4>
-                        <p className="text-gray-400 font-light leading-relaxed text-sm line-clamp-2 md:line-clamp-3">
+                      <div className="flex-grow pt-0 md:pt-2 overflow-hidden">
+                        <h4 className="text-lg md:text-xl font-bold mb-1 md:mb-3 tracking-tight group-hover:text-white transition-colors truncate md:whitespace-normal">{service.title}</h4>
+                        <p className="hidden md:block text-gray-400 font-light leading-relaxed text-sm line-clamp-2 md:line-clamp-3">
                           {service.description}
                         </p>
                       </div>
                       {/* Arrow for mobile reference design */}
-                      <div className="md:hidden flex items-center justify-center h-full pt-6">
-                        <ChevronRight size={20} className="text-[#7c66ff]" />
+                      <div className="md:hidden flex items-center justify-center">
+                        <ChevronRight size={18} className="text-[#7c66ff]" />
                       </div>
                     </div>
 
-                    {/* Features List - Desktop only (matches design) */}
+                    {/* Features List - Desktop only */}
                     <div className="hidden md:block space-y-3.5 mb-10 pt-6 border-t border-white/5 relative z-10 flex-grow">
                       {(service.features || []).map((feature, i) => (
                         <div key={i} className="flex items-center gap-3 text-[13px] text-gray-400 font-medium group-hover/feature:text-gray-300">
