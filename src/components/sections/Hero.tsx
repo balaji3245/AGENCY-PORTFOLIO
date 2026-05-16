@@ -54,13 +54,13 @@ export default function Hero() {
         >
           <Link
             href="/#contact"
-            className="inline-flex items-center gap-2 px-8 py-4 text-base rounded-full bg-white text-black font-medium hover:bg-white/90 transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 text-sm rounded-full bg-white text-black font-medium hover:bg-white/90 transition-colors"
           >
             {content.hero.primaryCta} <ArrowRight size={18} />
           </Link>
           <MagneticButton
             variant="outline"
-            className="px-8 py-4 text-base"
+            className="px-6 py-3 text-sm"
             onClick={() => {
               if (window.location.pathname === "/") {
                 scrollToSection("#contact");

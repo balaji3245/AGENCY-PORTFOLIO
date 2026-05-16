@@ -214,7 +214,7 @@ export default function ServicePage() {
           </h2>
           <button 
             onClick={() => router.push("/#contact")}
-            className="px-12 py-6 rounded-full bg-white text-black font-bold text-lg uppercase tracking-widest hover:bg-cyan-400 hover:scale-105 transition-all duration-500 shadow-2xl"
+            className="px-8 py-4 rounded-full bg-white text-black font-bold text-sm uppercase tracking-widest hover:bg-cyan-400 hover:scale-105 transition-all duration-500 shadow-2xl"
           >
             Start Your Journey
           </button>
