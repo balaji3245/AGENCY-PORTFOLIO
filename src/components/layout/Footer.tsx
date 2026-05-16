@@ -65,17 +65,17 @@ export default function Footer() {
             <h4 className="font-semibold mb-6">Navigation</h4>
             <ul className="space-y-4 font-light text-gray-400">
               <li>
-                <Link href="#services" className="hover:text-white transition-colors">
+                <Link href="/#services" className="hover:text-white transition-colors">
                   Services
                 </Link>
               </li>
               <li>
-                <Link href="#about" className="hover:text-white transition-colors">
+                <Link href="/#about" className="hover:text-white transition-colors">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link href="#team" className="hover:text-white transition-colors">
+                <Link href="/#team" className="hover:text-white transition-colors">
                   Our Team
                 </Link>
               </li>
@@ -87,7 +87,7 @@ export default function Footer() {
             <ul className="space-y-4 font-light text-gray-400">
               <li>
                 <Link
-                  href="#contact"
+                  href="/#contact"
                   className="hover:text-white transition-colors flex items-center gap-2"
                 >
                   Start a Project <ArrowUpRight size={14} />
@@ -95,7 +95,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="#process"
+                  href="/#process"
                   className="hover:text-white transition-colors flex items-center gap-2"
                 >
                   Our Process <ArrowUpRight size={14} />

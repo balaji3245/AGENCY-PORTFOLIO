@@ -53,7 +53,7 @@ export default function Hero() {
           className="flex flex-col sm:flex-row items-center gap-4"
         >
           <Link
-            href="#contact"
+            href="/#contact"
             className="inline-flex items-center gap-2 px-8 py-4 text-base rounded-full bg-white text-black font-medium hover:bg-white/90 transition-colors"
           >
             {content.hero.primaryCta} <ArrowRight size={18} />
@@ -61,7 +61,13 @@ export default function Hero() {
           <MagneticButton
             variant="outline"
             className="px-8 py-4 text-base"
-            onClick={() => scrollToSection("#contact")}
+            onClick={() => {
+              if (window.location.pathname === "/") {
+                scrollToSection("#contact");
+              } else {
+                window.location.href = "/#contact";
+              }
+            }}
           >
             {content.hero.secondaryCta}
           </MagneticButton>
