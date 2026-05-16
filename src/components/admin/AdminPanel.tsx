@@ -32,6 +32,10 @@ const iconOptions: IconName[] = [
   "graduationCap",
   "briefcase",
   "sparkles",
+  "code",
+  "paintbrush",
+  "shoppingCart",
+  "cloud",
 ];
 
 const adminNavigation = [
@@ -1228,6 +1232,76 @@ export default function AdminPanel() {
                     }
                   />
                 </Field>
+                <div className="mt-4 space-y-3">
+                  <p className="text-xs uppercase tracking-[0.2em] text-gray-500">Service Features</p>
+                  {(service.features || []).map((feature, fIndex) => (
+                    <div key={fIndex} className="flex gap-2">
+                      <Input
+                        value={feature}
+                        placeholder="e.g. Custom Development"
+                        onChange={(e) =>
+                          setDraft({
+                            ...draft,
+                            services: {
+                              ...draft.services,
+                              items: draft.services.items.map((item, i) =>
+                                i === index
+                                  ? {
+                                      ...item,
+                                      features: (item.features || []).map((f, fi) =>
+                                        fi === fIndex ? e.target.value : f
+                                      ),
+                                    }
+                                  : item
+                              ),
+                            },
+                          })
+                        }
+                      />
+                      <SecondaryButton
+                        onClick={() =>
+                          setDraft({
+                            ...draft,
+                            services: {
+                              ...draft.services,
+                              items: draft.services.items.map((item, i) =>
+                                i === index
+                                  ? {
+                                      ...item,
+                                      features: (item.features || []).filter((_, fi) => fi !== fIndex),
+                                    }
+                                  : item
+                              ),
+                            },
+                          })
+                        }
+                      >
+                        <Trash2 size={14} />
+                      </SecondaryButton>
+                    </div>
+                  ))}
+                  <SecondaryButton
+                    onClick={() =>
+                      setDraft({
+                        ...draft,
+                        services: {
+                          ...draft.services,
+                          items: draft.services.items.map((item, i) =>
+                            i === index
+                              ? {
+                                  ...item,
+                                  features: [...(item.features || []), "New Feature"],
+                                }
+                              : item
+                          ),
+                        },
+                      })
+                    }
+                    className="w-full border-dashed"
+                  >
+                    <Plus size={14} /> Add Feature
+                  </SecondaryButton>
+                </div>
               </div>
             ))}
             <SecondaryButton
@@ -1242,6 +1316,7 @@ export default function AdminPanel() {
                         title: "New Service",
                         description: "Service description",
                         icon: "monitor",
+                        features: [],
                       },
                     ],
                   },

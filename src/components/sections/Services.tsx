@@ -81,7 +81,7 @@ export default function Services() {
 
                   {/* Features List - Desktop only (matches design) */}
                   <div className="hidden md:block space-y-3.5 mb-10 pt-6 border-t border-white/5 relative z-10 flex-grow">
-                    {service.features.map((feature, i) => (
+                    {(service.features || []).map((feature, i) => (
                       <div key={i} className="flex items-center gap-3 text-[13px] text-gray-400 font-medium group-hover/feature:text-gray-300">
                         <CheckCircle2 size={16} className="text-[#7c66ff] shrink-0" />
                         {feature}
