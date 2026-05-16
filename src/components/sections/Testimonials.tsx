@@ -118,15 +118,15 @@ export default function Testimonials() {
     setStatus("");
 
     try {
-      const response = await fetch("/api/contact-submissions", {
+      const response = await fetch("/api/testimonials", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: formData.get("name"),
-          email: `${formData.get("name")?.toString().toLowerCase().replace(/\s/g, ".")}@review.user`,
-          phone: "Review Submission",
-          message: `${selectedRatingInForm} STARS | ${formData.get("review")}`,
-          source: "review",
+          client: formData.get("name"),
+          company: formData.get("company"),
+          rating: selectedRatingInForm,
+          content: formData.get("review"),
+          date: new Date().toISOString(),
         }),
       });
 
@@ -136,7 +136,10 @@ export default function Testimonials() {
       form.reset();
       setTimeout(() => {
         setShowForm(false);
-        setTimeout(() => setIsSuccess(false), 500); // Reset after modal closes
+        setTimeout(() => {
+          setIsSuccess(false);
+          window.location.reload(); // Reload to show the new review immediately if static
+        }, 500);
       }, 3000);
     } catch {
       setStatusTone("error");
@@ -363,9 +366,9 @@ export default function Testimonials() {
                     <div className="w-20 h-20 rounded-full bg-emerald-500/10 flex items-center justify-center mb-6">
                       <CheckCircle size={40} className="text-emerald-500" />
                     </div>
-                    <h3 className="text-2xl font-bold text-white mb-2">Review Submitted!</h3>
+                    <h3 className="text-2xl font-bold text-white mb-2">Review Published!</h3>
                     <p className="text-gray-500 text-sm max-w-[220px]">
-                      Thank you for your feedback. Your review is now waiting for moderation.
+                      Thank you for your feedback. Your review is now live on the site.
                     </p>
                     <motion.div 
                       initial={{ width: 0 }}
