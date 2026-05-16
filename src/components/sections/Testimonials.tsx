@@ -156,53 +156,53 @@ export default function Testimonials() {
         <h2 className="text-2xl font-bold mb-10">Customer Reviews</h2>
 
         {/* Top Summary Section */}
-        <div className="grid grid-cols-1 md:grid-cols-[1fr_1.5fr_1.5fr] gap-10 mb-12 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr_1.5fr] gap-8 md:gap-12 mb-16 items-start">
           
           {/* Left: Score */}
-          <div className="flex flex-col">
+          <div className="flex flex-col items-center md:items-start text-center md:text-left">
             <div className="flex items-center gap-3 mb-2">
-              <span className="text-7xl font-bold">{averageRating}</span>
+              <span className="text-6xl md:text-7xl font-bold">{averageRating}</span>
               <Star size={32} className="fill-[#7c66ff] text-[#7c66ff]" />
             </div>
             <p className="text-gray-500 text-sm mb-4">Based on {totalReviews} reviews</p>
             <div className="flex gap-1">
               {[1, 2, 3, 4, 5].map(s => (
-                <Star key={s} size={24} className={averageRatingNum >= s ? "fill-[#7c66ff] text-[#7c66ff]" : "text-white/5"} />
+                <Star key={s} size={20} className={averageRatingNum >= s ? "fill-[#7c66ff] text-[#7c66ff]" : "text-white/5"} />
               ))}
             </div>
           </div>
 
           {/* Middle: Bars */}
-          <div className="space-y-3">
+          <div className="space-y-3 w-full">
             {ratingBars.map(bar => (
               <div key={bar.stars} className="flex items-center gap-4 group cursor-pointer" onClick={() => setRatingFilter(bar.stars)}>
-                <span className={`text-sm w-12 transition-colors ${ratingFilter === bar.stars ? "text-white font-bold" : "text-gray-400 group-hover:text-white"}`}>{bar.stars} Star</span>
-                <div className="flex-grow h-2 bg-white/5 rounded-full overflow-hidden">
+                <span className={`text-xs md:text-sm w-12 transition-colors ${ratingFilter === bar.stars ? "text-white font-bold" : "text-gray-400 group-hover:text-white"}`}>{bar.stars} Star</span>
+                <div className="flex-grow h-1.5 md:h-2 bg-white/5 rounded-full overflow-hidden">
                   <motion.div 
                     initial={{ width: 0 }}
                     animate={{ width: `${bar.percentage}%` }}
                     className="h-full bg-[#7c66ff] rounded-full" 
                   />
                 </div>
-                <span className="text-sm text-gray-400 w-10 text-right">{Math.round(bar.percentage)}%</span>
+                <span className="text-[10px] md:text-sm text-gray-400 w-8 md:w-10 text-right">{Math.round(bar.percentage)}%</span>
               </div>
             ))}
           </div>
 
           {/* Right: Actions */}
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-4 md:gap-6 w-full">
             <button 
               onClick={() => { setSelectedRatingInForm(5); setShowForm(true); }}
-              className="flex items-center justify-center gap-2 border border-[#7c66ff]/40 px-6 py-3 rounded-xl text-[#7c66ff] font-bold text-sm hover:bg-[#7c66ff]/10 transition-all"
+              className="flex items-center justify-center gap-2 border border-[#7c66ff]/40 px-6 py-3.5 rounded-2xl text-[#7c66ff] font-bold text-sm hover:bg-[#7c66ff]/10 transition-all w-full"
             >
               <Edit3 size={18} />
               Write a Review
             </button>
-            <div className="p-6 rounded-2xl bg-white/[0.03] border border-white/5 text-center">
-              <p className="text-xs text-gray-400 mb-4 font-medium">How would you rate your experience?</p>
+            <div className="p-5 md:p-6 rounded-2xl bg-white/[0.03] border border-white/5 text-center">
+              <p className="text-[10px] text-gray-400 mb-4 font-medium uppercase tracking-wider">Quick Rate</p>
               <div className="flex justify-center gap-2">
                 {[1, 2, 3, 4, 5].map(s => (
-                  <button key={s} onClick={() => handleQuickRate(s)} className="hover:scale-110 transition-transform">
+                  <button key={s} onClick={() => handleQuickRate(s)} className="hover:scale-110 transition-transform p-1">
                     <Star size={24} className="text-gray-700 hover:text-[#7c66ff] transition-colors" />
                   </button>
                 ))}
@@ -212,17 +212,17 @@ export default function Testimonials() {
         </div>
 
         {/* Filters Row */}
-        <div className="flex flex-wrap items-center gap-2 mb-10 overflow-x-auto pb-2 scrollbar-hide">
+        <div className="flex flex-wrap items-center gap-2 mb-10 overflow-x-auto pb-4 scrollbar-hide -mx-2 px-2">
           <button 
             onClick={() => { setRatingFilter(null); setSortBy("helpful"); }}
-            className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all border ${ratingFilter === null ? "bg-[#7c66ff]/10 border-[#7c66ff] text-white" : "border-white/5 text-gray-500 hover:text-white"}`}
+            className={`whitespace-nowrap px-4 py-2.5 rounded-xl text-xs font-bold transition-all border ${ratingFilter === null ? "bg-[#7c66ff]/10 border-[#7c66ff] text-white" : "border-white/5 text-gray-500 hover:text-white"}`}
           >
             All Reviews
           </button>
           
           <button 
             onClick={() => { setRatingFilter(null); setSortBy("latest"); }}
-            className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all border ${sortBy === "latest" && ratingFilter === null ? "bg-[#7c66ff]/10 border-[#7c66ff] text-white" : "border-white/5 text-gray-500 hover:text-white"}`}
+            className={`whitespace-nowrap px-4 py-2.5 rounded-xl text-xs font-bold transition-all border ${sortBy === "latest" && ratingFilter === null ? "bg-[#7c66ff]/10 border-[#7c66ff] text-white" : "border-white/5 text-gray-500 hover:text-white"}`}
           >
             Latest
           </button>
@@ -231,13 +231,13 @@ export default function Testimonials() {
             <button 
               key={s}
               onClick={() => setRatingFilter(s)}
-              className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all border ${ratingFilter === s ? "bg-[#7c66ff]/10 border-[#7c66ff] text-white" : "border-white/5 text-gray-500 hover:text-white"}`}
+              className={`whitespace-nowrap px-4 py-2.5 rounded-xl text-xs font-bold transition-all border ${ratingFilter === s ? "bg-[#7c66ff]/10 border-[#7c66ff] text-white" : "border-white/5 text-gray-500 hover:text-white"}`}
             >
-              {s} Star
+              {s} ★
             </button>
           ))}
 
-          <div className="relative ml-auto group min-w-[140px]">
+          <div className="relative ml-0 sm:ml-auto group min-w-[140px] w-full sm:w-auto mt-2 sm:mt-0">
             <select 
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as SortOption)}
@@ -266,41 +266,43 @@ export default function Testimonials() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.98 }}
-                  className="p-8 rounded-[1.5rem] border border-white/5 bg-white/[0.02] flex flex-col group transition-all hover:bg-white/[0.04]"
+                  className="p-5 md:p-8 rounded-[1.5rem] border border-white/5 bg-white/[0.02] flex flex-col group transition-all hover:bg-white/[0.04]"
                 >
-                  <div className="flex justify-between items-center mb-6">
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                     <div className="flex items-center gap-3">
                       <div className="flex gap-1">
                         {[1, 2, 3, 4, 5].map((s) => (
-                          <Star key={s} size={16} className={(review.rating || 5) >= s ? "fill-[#7c66ff] text-[#7c66ff]" : "text-white/5"} />
+                          <Star key={s} size={14} className={(review.rating || 5) >= s ? "fill-[#7c66ff] text-[#7c66ff]" : "text-white/5"} />
                         ))}
                       </div>
                       <span className="text-sm font-bold text-white ml-1">{(review.rating || 5).toFixed(1)}</span>
-                      <span className="text-xs font-medium text-gray-500 ml-2 border-l border-white/10 pl-3">
+                    </div>
+                    <div className="flex items-center justify-between w-full sm:w-auto gap-4">
+                      <span className="text-[10px] md:text-xs font-medium text-gray-500 bg-white/5 px-3 py-1 rounded-full">
                         {review.client}
                       </span>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <span className="text-xs text-gray-500">
+                      <span className="text-[10px] text-gray-600">
                         {review.date ? new Date(review.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : "Recently"}
                       </span>
-                      <MoreVertical size={16} className="text-gray-600 cursor-pointer hover:text-white transition-colors" />
                     </div>
                   </div>
 
-                  <p className="text-gray-300 text-sm leading-relaxed mb-8">
+                  <p className="text-gray-300 text-sm leading-relaxed mb-6">
                     {review.content}
                   </p>
 
-                  <button 
-                    onClick={() => handleHelpful(originalIndex)}
-                    className={`flex items-center gap-2 w-fit px-4 py-2 rounded-xl text-xs font-medium transition-all ${
-                      hasVoted ? "bg-[#7c66ff] text-white" : "text-gray-500 hover:text-[#7c66ff] bg-white/5"
-                    }`}
-                  >
-                    <ThumbsUp size={16} className={hasVoted ? "fill-white" : ""} />
-                    Helpful ({displayHelpfulCount})
-                  </button>
+                  <div className="flex items-center justify-between mt-auto">
+                    <button 
+                      onClick={() => handleHelpful(originalIndex)}
+                      className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] md:text-xs font-medium transition-all ${
+                        hasVoted ? "bg-[#7c66ff] text-white" : "text-gray-500 hover:text-[#7c66ff] bg-white/5"
+                      }`}
+                    >
+                      <ThumbsUp size={14} className={hasVoted ? "fill-white" : ""} />
+                      Helpful ({displayHelpfulCount})
+                    </button>
+                    <MoreVertical size={16} className="text-gray-600 cursor-pointer hover:text-white transition-colors opacity-0 group-hover:opacity-100" />
+                  </div>
                 </motion.div>
               );
             })}
