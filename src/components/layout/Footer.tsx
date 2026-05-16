@@ -110,6 +110,21 @@ export default function Footer() {
                 </a>
               </li>
             </ul>
+            
+            <div className="flex gap-3 mt-8">
+              {socialLinks.map((social) => (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-gray-400 hover:bg-white hover:text-black hover:border-white transition-all duration-300"
+                  aria-label={social.label}
+                >
+                  <social.icon />
+                </a>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -118,28 +133,13 @@ export default function Footer() {
             &copy; {new Date().getFullYear()} {content.brand.name}. All rights
             reserved.
           </p>
-          <div className="flex flex-wrap items-center gap-6">
+          <div className="flex gap-6">
             <Link href="#policies" className="hover:text-white transition-colors">
               Privacy Policy
             </Link>
             <Link href="#policies" className="hover:text-white transition-colors">
               Terms of Service
             </Link>
-            
-            <div className="flex gap-3 ml-0 md:ml-4 border-l border-white/10 pl-0 md:pl-6">
-              {socialLinks.map((social) => (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-gray-500 hover:bg-white hover:text-black hover:border-white transition-all duration-300"
-                  aria-label={social.label}
-                >
-                  <social.icon />
-                </a>
-              ))}
-            </div>
           </div>
         </div>
       </div>
