@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Save, RotateCcw, Plus, Trash2, ExternalLink, LogOut, X, Star } from "lucide-react";
 import { logout, verifyPassword } from "@/app/admin/actions";
 import {
@@ -204,6 +204,19 @@ export default function AdminPanel() {
   const [leadsTab, setLeadsTab] = useState<"contact" | "start-project">("contact");
   const [adminReviewFilter, setAdminReviewFilter] = useState<number | null>(null);
   const [uploadingTarget, setUploadingTarget] = useState<string | null>(null);
+
+  const portfolioCategories = useMemo(() => {
+    return Array.from(new Set(draft.portfolio.items.map((p) => p.category)));
+  }, [draft.portfolio.items]);
+
+  const [activePortfolioCategory, setActivePortfolioCategory] = useState<string | null>(null);
+
+  // Initialize active category if not set
+  useEffect(() => {
+    if (!activePortfolioCategory && portfolioCategories.length > 0) {
+      setActivePortfolioCategory(portfolioCategories[0]);
+    }
+  }, [portfolioCategories, activePortfolioCategory]);
 
   const uploadImage = useCallback(
     async (file: File, folder: "brand" | "portfolio") => {
@@ -1297,39 +1310,82 @@ export default function AdminPanel() {
             </SecondaryButton>
           </Section>
 
-          <Section id="portfolio" title="Portfolio Projects" description="Case study cards shown in the work section grouped by service category." visible={activeSection === "#portfolio"}>
-            {Array.from(new Set(draft.portfolio.items.map(p => p.category))).map((category) => (
-              <div key={category} className="space-y-6 mb-12">
-                <div className="flex items-center justify-between border-b border-white/10 pb-4">
-                  <h3 className="text-xl font-bold text-cyan-400 uppercase tracking-wider">{category}</h3>
-                  <span className="text-xs text-gray-500 bg-white/5 px-3 py-1 rounded-full border border-white/5">
-                    {draft.portfolio.items.filter(p => p.category === category).length} Projects
-                  </span>
-                </div>
-                
-                <div className="grid gap-6">
-                  {draft.portfolio.items.map((project, originalIndex) => {
-                    if (project.category !== category) return null;
-                    return (
-                      <div key={originalIndex} className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
-                        <div className="mb-4 flex items-center justify-between">
-                          <p className="text-sm font-medium text-gray-400">Project Details</p>
-                          <SecondaryButton
-                            onClick={() =>
-                              setDraft({
-                                ...draft,
-                                portfolio: {
-                                  ...draft.portfolio,
-                                  items: draft.portfolio.items.filter((_, i) => i !== originalIndex),
-                                },
-                              })
-                            }
-                          >
-                            <Trash2 size={14} /> Remove
-                          </SecondaryButton>
-                        </div>
-                        <div className="grid gap-4 md:grid-cols-2">
-                          <Field label="Title">
+          <Section id="portfolio" title="Portfolio Projects" description="Select a service category first to view or add projects." visible={activeSection === "#portfolio"}>
+            {/* Category Tabs */}
+            <div className="flex flex-wrap gap-2 mb-10 p-2 rounded-2xl border border-white/10 bg-white/[0.03]">
+              {portfolioCategories.map((category) => (
+                <button
+                  key={category}
+                  type="button"
+                  onClick={() => setActivePortfolioCategory(category)}
+                  className={`px-6 py-3 rounded-xl text-sm font-bold transition-all duration-200 ${
+                    activePortfolioCategory === category
+                      ? "bg-white text-black shadow-lg shadow-white/10"
+                      : "text-gray-400 hover:text-white hover:bg-white/5"
+                  }`}
+                >
+                  {category}
+                </button>
+              ))}
+              <button
+                type="button"
+                onClick={() => {
+                  const newCat = "New Service";
+                  setDraft({
+                    ...draft,
+                    portfolio: {
+                      ...draft.portfolio,
+                      items: [
+                        ...draft.portfolio.items,
+                        {
+                          title: "New Project",
+                          category: newCat,
+                          description: "Description",
+                          tech: [],
+                          image: "/projects/branding.png",
+                          link: "#",
+                          color: "from-zinc-900/40 to-black",
+                        },
+                      ],
+                    },
+                  });
+                  setActivePortfolioCategory(newCat);
+                }}
+                className="px-6 py-3 rounded-xl text-sm font-bold border border-dashed border-white/20 text-gray-500 hover:text-white hover:border-white/40 transition-all"
+              >
+                <Plus size={14} className="inline mr-2" /> New Category
+              </button>
+            </div>
+
+            {/* Project List for Active Category */}
+            <div className="space-y-8">
+              {draft.portfolio.items.map((project, originalIndex) => {
+                if (project.category !== activePortfolioCategory) return null;
+                return (
+                  <div key={originalIndex} className="rounded-[32px] border border-white/10 bg-white/[0.02] p-8 relative group overflow-hidden">
+                    <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setDraft({
+                            ...draft,
+                            portfolio: {
+                              ...draft.portfolio,
+                              items: draft.portfolio.items.filter((_, i) => i !== originalIndex),
+                            },
+                          })
+                        }
+                        className="p-3 rounded-full bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white transition-all shadow-xl"
+                        title="Delete Project"
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </div>
+
+                    <div className="grid gap-8 md:grid-cols-[1fr_300px]">
+                      <div className="space-y-6">
+                        <div className="grid gap-6 md:grid-cols-2">
+                          <Field label="Project Title">
                             <Input
                               value={project.title}
                               onChange={(e) =>
@@ -1345,7 +1401,7 @@ export default function AdminPanel() {
                               }
                             />
                           </Field>
-                          <Field label="Category">
+                          <Field label="Category Label">
                             <Input
                               value={project.category}
                               onChange={(e) =>
@@ -1363,54 +1419,30 @@ export default function AdminPanel() {
                               }
                             />
                           </Field>
-                          <Field label="Project Image Path / URL">
-                            <Input
-                              value={project.image}
-                              placeholder="/projects/branding.png"
-                              onChange={(e) =>
-                                setDraft({
-                                  ...draft,
-                                  portfolio: {
-                                    ...draft.portfolio,
-                                    items: draft.portfolio.items.map((item, i) =>
-                                      i === originalIndex ? { ...item, image: e.target.value } : item
-                                    ),
-                                  },
-                                })
-                              }
-                            />
-                          </Field>
-                          <div className="space-y-3">
-                            <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-4">
-                              <img
-                                src={project.image}
-                                alt="preview"
-                                className="h-32 w-full rounded-xl object-cover"
-                              />
-                            </div>
-                            <FileUploadField
-                              label="Upload Image"
-                              uploading={uploadingTarget === `portfolio-${originalIndex}`}
-                              onUpload={async (file) => {
-                                try {
-                                  setUploadingTarget(`portfolio-${originalIndex}`);
-                                  const url = await uploadImage(file, "portfolio");
-                                  setDraft((current) => ({
-                                    ...current,
-                                    portfolio: {
-                                      ...current.portfolio,
-                                      items: current.portfolio.items.map((item, i) =>
-                                        i === originalIndex ? { ...item, image: url } : item
-                                      ),
-                                    },
-                                  }));
-                                } finally {
-                                  setUploadingTarget(null);
-                                }
-                              }}
-                            />
-                          </div>
-                          <Field label="Gradient Colors">
+                        </div>
+
+                        <Field label="Case Study Description">
+                          <Textarea
+                            rows={4}
+                            value={project.description}
+                            onChange={(e) =>
+                              setDraft({
+                                ...draft,
+                                portfolio: {
+                                  ...draft.portfolio,
+                                  items: draft.portfolio.items.map((item, i) =>
+                                    i === originalIndex
+                                      ? { ...item, description: e.target.value }
+                                      : item
+                                  ),
+                                },
+                              })
+                            }
+                          />
+                        </Field>
+
+                        <div className="grid gap-6 md:grid-cols-2">
+                          <Field label="Gradient Colors (Tailwind)">
                             <Input
                               value={project.color}
                               onChange={(e) =>
@@ -1426,7 +1458,7 @@ export default function AdminPanel() {
                               }
                             />
                           </Field>
-                          <Field label="Project Link">
+                          <Field label="Direct Link">
                             <Input
                               value={project.link}
                               onChange={(e) =>
@@ -1443,35 +1475,15 @@ export default function AdminPanel() {
                             />
                           </Field>
                         </div>
-                        <div className="mt-4">
-                          <Field label="Description">
-                            <Textarea
-                              rows={3}
-                              value={project.description}
-                              onChange={(e) =>
-                                setDraft({
-                                  ...draft,
-                                  portfolio: {
-                                    ...draft.portfolio,
-                                    items: draft.portfolio.items.map((item, i) =>
-                                      i === originalIndex
-                                        ? { ...item, description: e.target.value }
-                                        : item
-                                    ),
-                                  },
-                                })
-                              }
-                            />
-                          </Field>
-                        </div>
-                        <div className="mt-4">
-                          <p className="text-xs uppercase tracking-[0.2em] text-gray-500 mb-3">Tech Tags</p>
-                          <div className="flex flex-wrap gap-2">
+
+                        <div>
+                          <p className="text-[10px] uppercase tracking-[0.3em] text-gray-600 font-bold mb-4">Technology Stack</p>
+                          <div className="flex flex-wrap gap-3">
                             {project.tech.map((tech, techIndex) => (
-                              <div key={techIndex} className="flex items-center gap-2">
-                                <Input
+                              <div key={techIndex} className="flex items-center gap-2 bg-white/5 border border-white/5 pl-4 pr-2 py-1.5 rounded-xl">
+                                <input
                                   value={tech}
-                                  className="w-32"
+                                  className="bg-transparent text-sm focus:outline-none w-24"
                                   onChange={(e) =>
                                     setDraft({
                                       ...draft,
@@ -1509,13 +1521,14 @@ export default function AdminPanel() {
                                       },
                                     })
                                   }
-                                  className="text-gray-500 hover:text-red-400"
+                                  className="p-1 text-gray-500 hover:text-red-400 transition-colors"
                                 >
                                   <X size={14} />
                                 </button>
                               </div>
                             ))}
-                            <SecondaryButton
+                            <button
+                              type="button"
                               onClick={() =>
                                 setDraft({
                                   ...draft,
@@ -1523,77 +1536,105 @@ export default function AdminPanel() {
                                     ...draft.portfolio,
                                     items: draft.portfolio.items.map((item, i) =>
                                       i === originalIndex
-                                        ? { ...item, tech: [...item.tech, "New Tech"] }
+                                        ? { ...item, tech: [...item.tech, "New Tag"] }
                                         : item
                                     ),
                                   },
                                 })
                               }
-                              className="px-3 py-1"
+                              className="px-4 py-1.5 rounded-xl border border-dashed border-white/20 text-xs text-gray-500 hover:text-white hover:border-white/40 transition-all"
                             >
-                              <Plus size={12} /> Add Tag
-                            </SecondaryButton>
+                              <Plus size={12} className="inline mr-1" /> Add Tag
+                            </button>
                           </div>
                         </div>
                       </div>
-                    );
-                  })}
-                  
-                  <SecondaryButton
-                    onClick={() =>
-                      setDraft({
-                        ...draft,
-                        portfolio: {
-                          ...draft.portfolio,
-                          items: [
-                            ...draft.portfolio.items,
-                            {
-                              title: "New " + category + " Project",
-                              category: category,
-                              description: "Project description goes here.",
-                              tech: ["React", "Next.js"],
-                              image: "/projects/branding.png",
-                              link: "#",
-                              color: "from-blue-900/40 to-black",
-                            },
-                          ],
-                        },
-                      })
-                    }
-                    className="border-dashed border-cyan-400/30 bg-cyan-400/5 hover:bg-cyan-400/10 py-6"
-                  >
-                    <Plus size={16} /> Add New {category} Project
-                  </SecondaryButton>
-                </div>
-              </div>
-            ))}
-            
-            <div className="pt-10 border-t border-white/10">
-              <h3 className="text-sm font-medium text-gray-500 mb-4">Add a project in a new category</h3>
-              <SecondaryButton
-                onClick={() =>
-                  setDraft({
-                    ...draft,
-                    portfolio: {
-                      ...draft.portfolio,
-                      items: [
-                        ...draft.portfolio.items,
-                        {
-                          title: "New Project",
-                          category: "New Category",
-                          description: "Description",
-                          tech: [],
-                          image: "/projects/branding.png",
-                          link: "#",
-                          color: "from-zinc-900/40 to-black",
-                        },
-                      ],
-                    },
-                  })
-                }
-              >
-                <Plus size={14} /> Create New Category
-              </SecondaryButton>
+
+                      <div className="space-y-6">
+                        <Field label="Project Thumbnail">
+                          <Input
+                            value={project.image}
+                            placeholder="/projects/image.jpg"
+                            onChange={(e) =>
+                              setDraft({
+                                ...draft,
+                                portfolio: {
+                                  ...draft.portfolio,
+                                  items: draft.portfolio.items.map((item, i) =>
+                                    i === originalIndex ? { ...item, image: e.target.value } : item
+                                  ),
+                                },
+                              })
+                            }
+                          />
+                        </Field>
+                        <div className="aspect-video w-full rounded-2xl border border-white/10 bg-black/40 overflow-hidden relative group/img">
+                          <img
+                            src={project.image}
+                            alt="preview"
+                            className="w-full h-full object-cover"
+                          />
+                          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center p-6">
+                            <FileUploadField
+                              label="Upload New Image"
+                              uploading={uploadingTarget === `portfolio-${originalIndex}`}
+                              onUpload={async (file) => {
+                                try {
+                                  setUploadingTarget(`portfolio-${originalIndex}`);
+                                  const url = await uploadImage(file, "portfolio");
+                                  setDraft((current) => ({
+                                    ...current,
+                                    portfolio: {
+                                      ...current.portfolio,
+                                      items: current.portfolio.items.map((item, i) =>
+                                        i === originalIndex ? { ...item, image: url } : item
+                                      ),
+                                    },
+                                  }));
+                                } finally {
+                                  setUploadingTarget(null);
+                                }
+                              }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+
+              {activePortfolioCategory && (
+                <button
+                  type="button"
+                  onClick={() =>
+                    setDraft({
+                      ...draft,
+                      portfolio: {
+                        ...draft.portfolio,
+                        items: [
+                          ...draft.portfolio.items,
+                          {
+                            title: "New " + activePortfolioCategory + " Project",
+                            category: activePortfolioCategory,
+                            description: "Project description goes here.",
+                            tech: ["React", "Next.js"],
+                            image: "/projects/branding.png",
+                            link: "#",
+                            color: "from-blue-900/40 to-black",
+                          },
+                        ],
+                      },
+                    })
+                  }
+                  className="w-full py-10 rounded-[32px] border-2 border-dashed border-cyan-400/20 bg-cyan-400/5 text-cyan-400 font-bold hover:bg-cyan-400/10 hover:border-cyan-400/40 transition-all flex flex-col items-center justify-center gap-3"
+                >
+                  <div className="p-4 rounded-full bg-cyan-400/20">
+                    <Plus size={24} />
+                  </div>
+                  Add New {activePortfolioCategory} Case Study
+                </button>
+              )}
             </div>
           </Section>
 
