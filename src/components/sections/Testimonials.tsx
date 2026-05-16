@@ -218,42 +218,47 @@ export default function Testimonials() {
           </div>
         </div>
 
-        {/* Filters Row */}
-        <div className="flex flex-wrap items-center gap-2 mb-10 overflow-x-auto pb-4 scrollbar-hide -mx-2 px-2">
-          <button 
-            onClick={() => { setRatingFilter(null); setSortBy("helpful"); }}
-            className={`whitespace-nowrap px-4 py-2.5 rounded-xl text-xs font-bold transition-all border ${ratingFilter === null ? "bg-[#7c66ff]/10 border-[#7c66ff] text-white" : "border-white/5 text-gray-500 hover:text-white"}`}
-          >
-            All Reviews
-          </button>
-          
-          <button 
-            onClick={() => { setRatingFilter(null); setSortBy("latest"); }}
-            className={`whitespace-nowrap px-4 py-2.5 rounded-xl text-xs font-bold transition-all border ${sortBy === "latest" && ratingFilter === null ? "bg-[#7c66ff]/10 border-[#7c66ff] text-white" : "border-white/5 text-gray-500 hover:text-white"}`}
-          >
-            Latest
-          </button>
-
-          {[5, 4, 3, 2, 1].map(s => (
+        {/* Filters & Sorting Row */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+          {/* Left: Star Filters */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-hide -mx-2 px-2 md:mx-0 md:px-0">
             <button 
-              key={s}
-              onClick={() => setRatingFilter(s)}
-              className={`whitespace-nowrap px-4 py-2.5 rounded-xl text-xs font-bold transition-all border ${ratingFilter === s ? "bg-[#7c66ff]/10 border-[#7c66ff] text-white" : "border-white/5 text-gray-500 hover:text-white"}`}
+              onClick={() => { setRatingFilter(null); setSortBy("helpful"); }}
+              className={`whitespace-nowrap px-5 py-3 rounded-2xl text-xs font-bold transition-all border ${ratingFilter === null ? "bg-[#7c66ff]/10 border-[#7c66ff] text-white" : "border-white/5 text-gray-500 hover:text-white"}`}
             >
-              {s} ★
+              All Reviews
             </button>
-          ))}
+            
+            <button 
+              onClick={() => { setRatingFilter(null); setSortBy("latest"); }}
+              className={`whitespace-nowrap px-5 py-3 rounded-2xl text-xs font-bold transition-all border ${sortBy === "latest" && ratingFilter === null ? "bg-[#7c66ff]/10 border-[#7c66ff] text-white" : "border-white/5 text-gray-500 hover:text-white"}`}
+            >
+              Latest
+            </button>
 
-          <div className="relative ml-0 sm:ml-auto group min-w-[180px] w-full sm:w-auto mt-2 sm:mt-0">
+            {[5, 4, 3, 2, 1].map(s => (
+              <button 
+                key={s}
+                onClick={() => setRatingFilter(s)}
+                className={`whitespace-nowrap px-5 py-3 rounded-2xl text-xs font-bold transition-all border ${ratingFilter === s ? "bg-[#7c66ff]/10 border-[#7c66ff] text-white" : "border-white/5 text-gray-500 hover:text-white"}`}
+              >
+                {s} ★
+              </button>
+            ))}
+          </div>
+
+          {/* Right: Custom Sort Dropdown */}
+          <div className="relative min-w-[200px] z-[50]">
             <button
               onClick={() => setShowSortMenu(!showSortMenu)}
-              className="w-full flex items-center justify-between bg-white/5 border border-white/10 rounded-xl px-5 py-2.5 text-xs font-bold text-gray-300 hover:border-white/20 transition-all"
+              className="w-full flex items-center justify-between bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-3.5 text-xs font-bold text-gray-300 hover:border-white/20 hover:bg-white/[0.05] transition-all shadow-sm"
             >
-              <span className="flex items-center gap-2">
+              <span className="flex items-center gap-3">
                 <SortIcon sortBy={sortBy} />
+                <span className="text-gray-500 font-medium">Sort by:</span>
                 {sortBy === "helpful" ? "Most Helpful" : sortBy === "latest" ? "Newest First" : "Highest Rated"}
               </span>
-              <ChevronDown size={14} className={`text-gray-500 transition-transform duration-300 ${showSortMenu ? "rotate-180" : ""}`} />
+              <ChevronDown size={14} className={`text-gray-500 transition-transform duration-500 ${showSortMenu ? "rotate-180" : ""}`} />
             </button>
 
             <AnimatePresence>
@@ -264,28 +269,43 @@ export default function Testimonials() {
                     initial={{ opacity: 0, y: 10, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                    className="absolute right-0 top-full mt-2 w-full min-w-[200px] bg-[#0d0f1a] border border-white/10 rounded-2xl overflow-hidden shadow-2xl z-[120] backdrop-blur-xl"
+                    className="absolute right-0 top-full mt-3 w-full min-w-[220px] bg-[#0d0f1a]/95 border border-white/10 rounded-[2rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-[120] backdrop-blur-2xl"
                   >
-                    {[
-                      { value: "helpful", label: "Most Helpful", icon: ThumbsUp },
-                      { value: "latest", label: "Newest First", icon: Edit3 },
-                      { value: "highest", label: "Highest Rated", icon: Star },
-                    ].map((option) => (
-                      <button
-                        key={option.value}
-                        onClick={() => {
-                          setSortBy(option.value as SortOption);
-                          setShowSortMenu(false);
-                        }}
-                        className={`w-full flex items-center justify-between px-5 py-4 text-xs font-bold transition-all hover:bg-white/5 ${sortBy === option.value ? "text-[#7c66ff] bg-white/[0.02]" : "text-gray-400"}`}
-                      >
-                        <span className="flex items-center gap-3">
-                          <option.icon size={14} className={sortBy === option.value ? "text-[#7c66ff]" : "text-gray-500"} />
-                          {option.label}
-                        </span>
-                        {sortBy === option.value && <ShieldCheck size={14} className="text-[#7c66ff]" />}
-                      </button>
-                    ))}
+                    <div className="p-2">
+                      {[
+                        { value: "helpful", label: "Most Helpful", icon: ThumbsUp, desc: "Show reviews with most votes" },
+                        { value: "latest", label: "Newest First", icon: Edit3, desc: "Recent reviews at the top" },
+                        { value: "highest", label: "Highest Rated", icon: Star, desc: "5-star reviews first" },
+                      ].map((option) => (
+                        <button
+                          key={option.value}
+                          onClick={() => {
+                            setSortBy(option.value as SortOption);
+                            setShowSortMenu(false);
+                          }}
+                          className={`w-full flex items-center justify-between p-4 rounded-xl text-left transition-all hover:bg-white/5 ${sortBy === option.value ? "bg-white/[0.03]" : ""}`}
+                        >
+                          <div className="flex items-center gap-4">
+                            <div className={`p-2.5 rounded-xl ${sortBy === option.value ? "bg-[#7c66ff]/20 text-[#7c66ff]" : "bg-white/5 text-gray-500"}`}>
+                              <option.icon size={16} />
+                            </div>
+                            <div className="flex flex-col gap-0.5">
+                              <span className={`text-xs font-bold ${sortBy === option.value ? "text-white" : "text-gray-400"}`}>
+                                {option.label}
+                              </span>
+                              <span className="text-[10px] text-gray-600 font-medium">
+                                {option.desc}
+                              </span>
+                            </div>
+                          </div>
+                          {sortBy === option.value && (
+                            <div className="w-5 h-5 rounded-full bg-[#7c66ff] flex items-center justify-center">
+                              <ShieldCheck size={12} className="text-white" />
+                            </div>
+                          )}
+                        </button>
+                      ))}
+                    </div>
                   </motion.div>
                 </>
               )}
