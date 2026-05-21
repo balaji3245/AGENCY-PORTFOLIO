@@ -210,8 +210,8 @@ export default function AdminPanel() {
   const [uploadingTarget, setUploadingTarget] = useState<string | null>(null);
 
   const portfolioCategories = useMemo(() => {
-    return Array.from(new Set(draft.portfolio.items.map((p) => p.category)));
-  }, [draft.portfolio.items]);
+    return draft.services.items.map((s) => s.title);
+  }, [draft.services.items]);
 
   const [activePortfolioCategory, setActivePortfolioCategory] = useState<string | null>(null);
 
@@ -1158,15 +1158,29 @@ export default function AdminPanel() {
                 <div className="mb-4 flex items-center justify-between">
                   <p className="text-sm text-gray-300">Service {index + 1}</p>
                   <SecondaryButton
-                    onClick={() =>
+                    onClick={() => {
+                      const deletedTitle = service.title;
+                      const remainingServices = draft.services.items.filter((_, i) => i !== index);
+                      const fallbackCategory = remainingServices[0]?.title || "Graphic Design";
                       setDraft({
                         ...draft,
                         services: {
                           ...draft.services,
-                          items: draft.services.items.filter((_, i) => i !== index),
+                          items: remainingServices,
                         },
-                      })
-                    }
+                        portfolio: {
+                          ...draft.portfolio,
+                          items: draft.portfolio.items.map((item) =>
+                            item.category === deletedTitle
+                              ? { ...item, category: fallbackCategory }
+                              : item
+                          ),
+                        },
+                      });
+                      if (activePortfolioCategory === deletedTitle) {
+                        setActivePortfolioCategory(fallbackCategory);
+                      }
+                    }}
                   >
                     <Trash2 size={14} /> Remove
                   </SecondaryButton>
@@ -1175,17 +1189,28 @@ export default function AdminPanel() {
                   <Field label="Title">
                     <Input
                       value={service.title}
-                      onChange={(e) =>
+                      onChange={(e) => {
+                        const oldTitle = service.title;
+                        const newTitle = e.target.value;
                         setDraft({
                           ...draft,
                           services: {
                             ...draft.services,
                             items: draft.services.items.map((item, i) =>
-                              i === index ? { ...item, title: e.target.value } : item
+                              i === index ? { ...item, title: newTitle } : item
                             ),
                           },
-                        })
-                      }
+                          portfolio: {
+                            ...draft.portfolio,
+                            items: draft.portfolio.items.map((item) =>
+                              item.category === oldTitle ? { ...item, category: newTitle } : item
+                            ),
+                          },
+                        });
+                        if (activePortfolioCategory === oldTitle) {
+                          setActivePortfolioCategory(newTitle);
+                        }
+                      }}
                     />
                   </Field>
                   <Field label="Icon">
@@ -1402,34 +1427,6 @@ export default function AdminPanel() {
                   {category}
                 </button>
               ))}
-              <button
-                type="button"
-                onClick={() => {
-                  const newCat = "New Service";
-                  setDraft({
-                    ...draft,
-                    portfolio: {
-                      ...draft.portfolio,
-                      items: [
-                        ...draft.portfolio.items,
-                        {
-                          title: "New Project",
-                          category: newCat,
-                          description: "Description",
-                          tech: [],
-                          image: "/projects/branding.png",
-                          link: "#",
-                          color: "from-zinc-900/40 to-black",
-                        },
-                      ],
-                    },
-                  });
-                  setActivePortfolioCategory(newCat);
-                }}
-                className="px-6 py-3 rounded-xl text-sm font-bold border border-dashed border-white/20 text-gray-500 hover:text-white hover:border-white/40 transition-all"
-              >
-                <Plus size={14} className="inline mr-2" /> New Category
-              </button>
             </div>
 
             {/* Project List for Active Category */}
@@ -1477,7 +1474,7 @@ export default function AdminPanel() {
                             />
                           </Field>
                           <Field label="Category Label">
-                            <Input
+                            <Select
                               value={project.category}
                               onChange={(e) =>
                                 setDraft({
@@ -1492,7 +1489,13 @@ export default function AdminPanel() {
                                   },
                                 })
                               }
-                            />
+                            >
+                              {draft.services.items.map((s) => (
+                                <option key={s.title} value={s.title}>
+                                  {s.title}
+                                </option>
+                              ))}
+                            </Select>
                           </Field>
                         </div>
 

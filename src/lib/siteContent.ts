@@ -221,6 +221,24 @@ export const defaultSiteContent: SiteContent = {
         icon: "cloud",
         features: ["Cloud Deployment", "Server Management", "CI/CD Pipeline", "Performance Monitoring"]
       },
+      {
+        title: "Motion Graphics",
+        description: "We bring your brand ideas to life with stunning 2D/3D motion design and dynamic animations.",
+        icon: "zap",
+        features: ["Logo Animation", "Explainer Videos", "UI Transitions", "3D Product Renders"]
+      },
+      {
+        title: "Video Editing",
+        description: "Professional video editing and post-production to create engaging and cinematic visual stories.",
+        icon: "monitor",
+        features: ["Cinematic Editing", "Color Grading", "Sound Design & Mixing", "Social Media Ads"]
+      },
+      {
+        title: "Photo Editing",
+        description: "High-end photo manipulation, retouching, and color correction to showcase your products beautifully.",
+        icon: "paintbrush",
+        features: ["Product Retouching", "Background Removal", "Color Correction", "Image Manipulation"]
+      }
     ],
   },
   techStack: {
@@ -244,7 +262,7 @@ export const defaultSiteContent: SiteContent = {
     items: [
       {
         title: "UrbanEdge Brand Launch",
-        category: "Brand Strategy & Design",
+        category: "Graphic Design",
         description:
           "A complete identity system with logo direction and visual language for a modern local brand.",
         tech: ["Brand Strategy", "Identity", "Logo Design"],
@@ -290,7 +308,7 @@ export const defaultSiteContent: SiteContent = {
       },
       {
         title: "DineFlow Platform",
-        category: "Web & App Development",
+        category: "Web Development",
         description:
           "A comprehensive restaurant management platform with real-time reservation flows.",
         tech: ["Next.js", "CMS", "Payments"],
@@ -300,7 +318,7 @@ export const defaultSiteContent: SiteContent = {
       },
       {
         title: "GrowthLab Campaign",
-        category: "Digital Marketing & SEO",
+        category: "Digital Marketing",
         description:
           "Full-funnel marketing strategy and technical SEO overhaul that increased conversion rates.",
         tech: ["SEO", "Performance Marketing", "Analytics"],
@@ -310,7 +328,7 @@ export const defaultSiteContent: SiteContent = {
       },
       {
         title: "Insight Enterprise Dashboard",
-        category: "Cloud & Software Solutions",
+        category: "Cloud & DevOps",
         description:
           "A custom enterprise dashboard for data visualization and real-time backend sync.",
         tech: ["Software Architecture", "GraphQL", "SaaS"],
@@ -365,7 +383,7 @@ export const defaultSiteContent: SiteContent = {
       },
       {
         title: "Modern Portfolio Concept",
-        category: "Website Design",
+        category: "UI/UX Design",
         description: "High-fidelity website layouts focused on minimalist aesthetics and user conversion.",
         tech: ["Figma", "Web Design", "UI Design"],
         image: "/projects/web-design.png",
@@ -374,7 +392,7 @@ export const defaultSiteContent: SiteContent = {
       },
       {
         title: "E-commerce Engine",
-        category: "Website Development",
+        category: "Web Development",
         description: "High-performance web store built with Next.js and optimized for rapid scaling.",
         tech: ["Next.js", "React", "Node.js"],
         image: "/projects/web-dev.png",
@@ -410,7 +428,7 @@ export const defaultSiteContent: SiteContent = {
       },
       {
         title: "Corporate Identity System",
-        category: "Branding & Creative Solutions",
+        category: "Graphic Design",
         description: "Complete visual branding systems including logo, typography, and color guides.",
         tech: ["Branding", "Logo Design", "Strategy"],
         image: "/projects/branding-creative.png",
@@ -428,7 +446,7 @@ export const defaultSiteContent: SiteContent = {
       },
       {
         title: "Engagement Booster Pack",
-        category: "Social Media Creative Design",
+        category: "Graphic Design",
         description: "Set of eye-catching social media assets designed to increase brand interaction.",
         tech: ["Social Media", "Graphic Design", "Ad Design"],
         image: "/projects/social.png",
@@ -437,7 +455,7 @@ export const defaultSiteContent: SiteContent = {
       },
       {
         title: "Native Mobile App",
-        category: "App Development",
+        category: "Mobile App Development",
         description: "Custom iOS and Android applications focused on performance and seamless UX.",
         tech: ["React Native", "iOS", "Android"],
         image: "/projects/app-dev.png",
@@ -446,7 +464,7 @@ export const defaultSiteContent: SiteContent = {
       },
       {
         title: "Marketing Ad Suite",
-        category: "Marketing Design Assets",
+        category: "Graphic Design",
         description: "Strategic marketing materials for digital and print advertising campaigns.",
         tech: ["Ad Design", "Marketing", "Print"],
         image: "/projects/marketing-assets.png",
@@ -455,7 +473,7 @@ export const defaultSiteContent: SiteContent = {
       },
       {
         title: "Brand Storytelling Series",
-        category: "Content Creation",
+        category: "Graphic Design",
         description: "High-quality creative content tailored for multi-channel brand storytelling.",
         tech: ["Content", "Copywriting", "Visuals"],
         image: "/projects/content.png",
@@ -464,7 +482,7 @@ export const defaultSiteContent: SiteContent = {
       },
       {
         title: "Artistic Vision Roadmap",
-        category: "Creative Direction",
+        category: "Graphic Design",
         description: "Comprehensive creative direction and artistic vision for large-scale projects.",
         tech: ["Direction", "Vision", "Art"],
         image: "/projects/direction.png",
@@ -473,7 +491,7 @@ export const defaultSiteContent: SiteContent = {
       },
       {
         title: "Digital Growth Blueprint",
-        category: "Content Strategy",
+        category: "Digital Marketing",
         description: "Strategic content planning and data-driven roadmaps for digital growth.",
         tech: ["Strategy", "SEO", "Planning"],
         image: "/projects/strategy.png",
