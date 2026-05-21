@@ -238,6 +238,12 @@ export const defaultSiteContent: SiteContent = {
         description: "High-end photo manipulation, retouching, and color correction to showcase your products beautifully.",
         icon: "paintbrush",
         features: ["Product Retouching", "Background Removal", "Color Correction", "Image Manipulation"]
+      },
+      {
+        title: "VFX",
+        description: "We craft stunning visual effects and compositing that elevate your videos and productions to a cinematic level.",
+        icon: "sparkles",
+        features: ["Visual Effects Compositing", "Green Screen & Chroma Key", "Particle & Simulation FX", "3D VFX Integration"]
       }
     ],
   },
