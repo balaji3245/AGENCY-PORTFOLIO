@@ -186,16 +186,28 @@ export const defaultSiteContent: SiteContent = {
         features: ["Custom Website Development", "CMS Development", "E-Commerce Solutions", "Website Maintenance"]
       },
       {
-        title: "Mobile App Development",
-        description: "We create powerful mobile apps for iOS and Android that drive engagement and growth.",
-        icon: "smartphone",
-        features: ["iOS App Development", "Android App Development", "Cross-Platform Apps", "App UI/UX Design"]
-      },
-      {
         title: "UI/UX Design",
         description: "We design intuitive and engaging interfaces that enhance user experience and satisfaction.",
         icon: "paintbrush",
         features: ["User Research", "Wireframing & Prototyping", "UI/UX Design", "Usability Testing"]
+      },
+      {
+        title: "Graphic Design",
+        description: "We create visually stunning designs that communicate your brand's message effectively and leave a lasting impression.",
+        icon: "paintbrush",
+        features: ["Brand Identity & Logo Design", "Marketing & Ad Creatives", "Social Media Graphics", "Print & Packaging Design"]
+      },
+      {
+        title: "Video Editing",
+        description: "Professional video editing and post-production to create engaging and cinematic visual stories.",
+        icon: "monitor",
+        features: ["Cinematic Editing", "Color Grading", "Sound Design & Mixing", "Social Media Ads"]
+      },
+      {
+        title: "Mobile App Development",
+        description: "We create powerful mobile apps for iOS and Android that drive engagement and growth.",
+        icon: "smartphone",
+        features: ["iOS App Development", "Android App Development", "Cross-Platform Apps", "App UI/UX Design"]
       },
       {
         title: "Digital Marketing",
@@ -210,12 +222,6 @@ export const defaultSiteContent: SiteContent = {
         features: ["Shopify Development", "WooCommerce Development", "Payment Gateway Integration", "Store Optimization"]
       },
       {
-        title: "Graphic Design",
-        description: "We create visually stunning designs that communicate your brand's message effectively and leave a lasting impression.",
-        icon: "paintbrush",
-        features: ["Brand Identity & Logo Design", "Marketing & Ad Creatives", "Social Media Graphics", "Print & Packaging Design"]
-      },
-      {
         title: "Cloud & DevOps",
         description: "We offer reliable cloud solutions and DevOps services to scale your business.",
         icon: "cloud",
@@ -226,12 +232,6 @@ export const defaultSiteContent: SiteContent = {
         description: "We bring your brand ideas to life with stunning 2D/3D motion design and dynamic animations.",
         icon: "zap",
         features: ["Logo Animation", "Explainer Videos", "UI Transitions", "3D Product Renders"]
-      },
-      {
-        title: "Video Editing",
-        description: "Professional video editing and post-production to create engaging and cinematic visual stories.",
-        icon: "monitor",
-        features: ["Cinematic Editing", "Color Grading", "Sound Design & Mixing", "Social Media Ads"]
       },
       {
         title: "Photo Editing",
