@@ -13,7 +13,7 @@ export default function Services() {
 
   const displayedServices = showAll 
     ? content.services.items 
-    : content.services.items.slice(0, 6);
+    : content.services.items.slice(0, 4);
 
   return (
     <section id="services" className="py-32 relative bg-transparent overflow-hidden">
@@ -110,7 +110,7 @@ export default function Services() {
         </motion.div>
 
         {/* View All Button */}
-        {content.services.items.length > 6 && (
+        {content.services.items.length > 4 && (
           <div className="text-center">
             <button
               onClick={() => setShowAll(!showAll)}
