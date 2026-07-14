@@ -43,3 +43,7 @@ dev-server*.log
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local content fallback data
+src/lib/site-content-local.json
+
