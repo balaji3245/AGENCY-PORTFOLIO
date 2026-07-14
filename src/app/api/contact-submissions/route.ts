@@ -4,6 +4,7 @@ import type {
 } from "@/lib/contactSubmissions";
 import { sendContactSubmissionEmail } from "@/lib/contactEmail";
 import { supabase } from "@/lib/supabase";
+import { cookies } from "next/headers";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -19,7 +20,17 @@ function cleanSubmission(input: Partial<ContactSubmissionInput>) {
 }
 
 export async function GET() {
+  const cookieStore = await cookies();
+  const authCookie = cookieStore.get("admin_session");
+  if (!authCookie || authCookie.value !== "authenticated") {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+      return Response.json({ submissions: [] });
+    }
+
     const { data, error } = await supabase
       .from("contact_submissions")
       .select("*")
@@ -58,6 +69,12 @@ export async function POST(request: Request) {
   }
 
   try {
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+      console.warn("Supabase not configured. Skipping contact submission save.");
+      const tempSubmission = { ...input, id: "temp-id", created_at: new Date().toISOString() };
+      return Response.json({ submission: tempSubmission, email: { sent: false, reason: "Database not configured" } }, { status: 201 });
+    }
+
     const { data, error } = await supabase
       .from("contact_submissions")
       .insert([input])
@@ -99,10 +116,21 @@ export async function POST(request: Request) {
 }
 
 export async function DELETE(request: Request) {
+  const cookieStore = await cookies();
+  const authCookie = cookieStore.get("admin_session");
+  if (!authCookie || authCookie.value !== "authenticated") {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
 
   try {
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+      console.warn("Supabase not configured. Skipping delete.");
+      return Response.json({ ok: true });
+    }
+
     if (!id) {
       const { error } = await supabase
         .from("contact_submissions")

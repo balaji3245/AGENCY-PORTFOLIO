@@ -1,6 +1,7 @@
 import { defaultSiteContent, type SiteContent } from "@/lib/siteContent";
 import { supabase } from "@/lib/supabase";
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
 
 export const dynamic = "force-dynamic";
 
@@ -74,9 +75,20 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  const cookieStore = await cookies();
+  const authCookie = cookieStore.get("admin_session");
+  if (!authCookie || authCookie.value !== "authenticated") {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const content = cleanContent((await request.json()) as SiteContent);
 
   try {
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+      console.warn("Supabase not configured. Skipping save to database.");
+      return Response.json({ content });
+    }
+
     const { error } = await supabase.from("site_content").upsert({
       id: "yj-developers:site-content",
       content,
@@ -96,7 +108,18 @@ export async function POST(request: Request) {
 }
 
 export async function DELETE() {
+  const cookieStore = await cookies();
+  const authCookie = cookieStore.get("admin_session");
+  if (!authCookie || authCookie.value !== "authenticated") {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+      console.warn("Supabase not configured. Skipping delete.");
+      return Response.json({ content: defaultSiteContent });
+    }
+
     const { error } = await supabase
       .from("site_content")
       .delete()

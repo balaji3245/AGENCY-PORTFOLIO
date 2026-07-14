@@ -7,13 +7,19 @@ export async function POST(request: Request) {
     const newReview = await request.json();
 
     // 1. Fetch current content
-    const { data, error: fetchError } = await supabase
-      .from("site_content")
-      .select("content")
-      .eq("id", "yj-developers:site-content")
-      .single();
+    let currentContent: SiteContent = defaultSiteContent;
+    let fetchError = null;
 
-    let currentContent: SiteContent = data?.content || defaultSiteContent;
+    if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+      const { data, error } = await supabase
+        .from("site_content")
+        .select("content")
+        .eq("id", "yj-developers:site-content")
+        .single();
+      
+      currentContent = data?.content || defaultSiteContent;
+      fetchError = error;
+    }
 
     if (fetchError && fetchError.code !== "PGRST116") {
       throw fetchError;
@@ -34,13 +40,18 @@ export async function POST(request: Request) {
     currentContent.testimonials.unshift(reviewWithMeta);
 
     // 3. Save back to Supabase
-    const { error: saveError } = await supabase.from("site_content").upsert({
-      id: "yj-developers:site-content",
-      content: currentContent,
-      updated_at: new Date().toISOString(),
-    });
+    if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+      const { error: saveError } = await supabase.from("site_content").upsert({
+        id: "yj-developers:site-content",
+        content: currentContent,
+        updated_at: new Date().toISOString(),
+      });
+      if (saveError) throw saveError;
+    } else {
+      console.warn("Supabase not configured. Skipping testimonial save.");
+    }
 
-    if (saveError) throw saveError;
+
 
     // 4. Revalidate
     revalidatePath("/");

@@ -44,7 +44,7 @@ export default function Contact() {
       if (data.email?.sent === false) {
         setStatusTone("warning");
         setStatus(
-          "Message save ho gaya, but email delivery failed. Admin panel me lead mil jayegi."
+          "Message received, but email delivery failed. We will contact you soon."
         );
       } else {
         setStatusTone("success");

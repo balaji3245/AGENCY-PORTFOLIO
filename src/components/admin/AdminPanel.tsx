@@ -1,2279 +1,1014 @@
 "use client";
 
-import Link from "next/link";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { Save, RotateCcw, Plus, Trash2, ExternalLink, LogOut, X, Star } from "lucide-react";
-import { logout, verifyPassword } from "@/app/admin/actions";
-import {
-  defaultSiteContent,
-  type IconName,
-  type SiteContent,
-} from "@/lib/siteContent";
+import { useEffect, useState } from "react";
+import { logout } from "@/app/admin/actions";
 import { useSiteContent } from "@/components/SiteContentProvider";
+import type { SiteContent } from "@/lib/siteContent";
 import type { ContactSubmission } from "@/lib/contactSubmissions";
-import BrandLogo from "@/components/layout/BrandLogo";
-
-const iconOptions: IconName[] = [
-  "megaphone",
-  "palette",
-  "monitor",
-  "penTool",
-  "globe",
-  "smartphone",
-  "search",
-  "server",
-  "zap",
-  "utensils",
-  "dumbbell",
-  "stethoscope",
-  "store",
-  "building",
-  "shoppingBag",
-  "graduationCap",
-  "briefcase",
-  "sparkles",
-  "code",
-  "paintbrush",
-  "shoppingCart",
-  "cloud",
-];
-
-const adminNavigation = [
-  { href: "#leads", label: "Leads", hint: "Form submissions" },
-  { href: "#brand", label: "Brand", hint: "Name, email, phone" },
-  { href: "#theme", label: "Theme", hint: "Colors and fonts" },
-  { href: "#hero", label: "Hero", hint: "First screen copy" },
-
-  { href: "#about", label: "About", hint: "Intro and proof points" },
-  { href: "#services", label: "Services", hint: "Service cards" },
-  { href: "#tech-stack", label: "Tech", hint: "Tools and platforms" },
-  { href: "#portfolio", label: "Projects", hint: "Case study cards" },
-  { href: "#team", label: "Team", hint: "Capability cards" },
-  { href: "#testimonials", label: "Reviews", hint: "Client quotes" },
-  { href: "#process", label: "Process", hint: "Workflow steps" },
-  { href: "#policies", label: "Policies", hint: "Terms and delivery" },
-  { href: "#contact", label: "Contact", hint: "CTA and contact info" },
-];
-
-
-function cloneContent(content: SiteContent) {
-  return JSON.parse(JSON.stringify(content)) as SiteContent;
-}
-
-function Section({
-  id,
-  title,
-  description,
-  visible,
-  children,
-}: {
-  id: string;
-  title: string;
-  description?: string;
-  visible: boolean;
-  children: React.ReactNode;
-}) {
-  if (!visible) return null;
-
-  return (
-    <section
-      id={id}
-      className="scroll-mt-28 rounded-[24px] border border-white/10 bg-black/30 p-6 md:p-8"
-    >
-      <div className="mb-6">
-        <h2 className="text-2xl font-semibold">{title}</h2>
-        {description ? (
-          <p className="mt-2 text-sm text-gray-400">{description}</p>
-        ) : null}
-      </div>
-      <div className="space-y-4">{children}</div>
-    </section>
-  );
-}
-
-function Field({
-  label,
-  children,
-}: {
-  label: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <label className="block space-y-2">
-      <span className="text-xs uppercase tracking-[0.2em] text-gray-500">
-        {label}
-      </span>
-      {children}
-    </label>
-  );
-}
-
-function Input(props: React.InputHTMLAttributes<HTMLInputElement>) {
-  return (
-    <input
-      {...props}
-      className={`w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition focus:border-white/30 focus:bg-white/8 ${
-        props.className ?? ""
-      }`}
-    />
-  );
-}
-
-function Textarea(props: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
-  return (
-    <textarea
-      {...props}
-      className={`w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition focus:border-white/30 focus:bg-white/8 ${
-        props.className ?? ""
-      }`}
-    />
-  );
-}
-
-function Select(props: React.SelectHTMLAttributes<HTMLSelectElement>) {
-  return (
-    <select
-      {...props}
-      className={`w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition focus:border-white/30 focus:bg-white/8 ${
-        props.className ?? ""
-      }`}
-    />
-  );
-}
-
-function FileUploadField({
-  label,
-  hint,
-  onUpload,
-  uploading,
-}: {
-  label: string;
-  hint?: string;
-  onUpload: (file: File) => Promise<void>;
-  uploading: boolean;
-}) {
-  return (
-    <label className="block space-y-2">
-      <span className="text-xs uppercase tracking-[0.2em] text-gray-500">
-        {label}
-      </span>
-      <input
-        type="file"
-        accept="image/*"
-        disabled={uploading}
-        onChange={async (e) => {
-          const file = e.target.files?.[0];
-          if (!file) return;
-          await onUpload(file);
-          e.currentTarget.value = "";
-        }}
-        className="block w-full rounded-2xl border border-dashed border-white/15 bg-white/5 px-4 py-3 text-sm text-gray-300 file:mr-4 file:rounded-full file:border-0 file:bg-white file:px-4 file:py-2 file:text-sm file:font-medium file:text-black"
-      />
-      <p className="text-xs text-gray-500">
-        {uploading ? "Uploading image..." : hint ?? "Upload an image file."}
-      </p>
-    </label>
-  );
-}
-
-function SecondaryButton({
-  children,
-  ...props
-}: React.ButtonHTMLAttributes<HTMLButtonElement>) {
-  return (
-    <button
-      type="button"
-      {...props}
-      className={`inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm text-white transition hover:bg-white/10 ${
-        props.className ?? ""
-      }`}
-    >
-      {children}
-    </button>
-  );
-}
+import {
+  LayoutDashboard,
+  Globe,
+  Briefcase,
+  Users,
+  MessageSquare,
+  Settings,
+  LogOut,
+  Plus,
+  Trash2,
+  Check,
+  X,
+  Upload,
+  Search,
+  Filter,
+  AlertCircle,
+  Save,
+  ChevronRight,
+  Eye
+} from "lucide-react";
 
 export default function AdminPanel() {
-  const { content, saveContent, resetContent } = useSiteContent();
-  const [draft, setDraft] = useState<SiteContent>(() => cloneContent(content));
-  const [status, setStatus] = useState("Unsaved changes can be edited here.");
-  const [activeSection, setActiveSection] = useState<string>("#brand");
-  const [showSavePrompt, setShowSavePrompt] = useState<boolean>(false);
-  const [savePassword, setSavePassword] = useState<string>("");
-  const [isVerifying, setIsVerifying] = useState<boolean>(false);
-  const [contactSubmissions, setContactSubmissions] = useState<ContactSubmission[]>(
-    []
-  );
-  const [isLoadingLeads, setIsLoadingLeads] = useState(true);
-  const [leadsTab, setLeadsTab] = useState<"contact" | "start-project">("contact");
-  const [adminReviewFilter, setAdminReviewFilter] = useState<number | null>(null);
-  const [uploadingTarget, setUploadingTarget] = useState<string | null>(null);
+  const { content: liveContent } = useSiteContent();
+  const [content, setContent] = useState<SiteContent | null>(null);
+  const [draft, setDraft] = useState<SiteContent | null>(null);
+  const [submissions, setSubmissions] = useState<ContactSubmission[]>([]);
+  const [activeTab, setActiveTab] = useState<
+    "dashboard" | "general" | "services" | "portfolio" | "leads" | "reviews"
+  >("dashboard");
 
-  const portfolioCategories = useMemo(() => {
-    return draft.services.items.map((s) => s.title);
-  }, [draft.services.items]);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<{ type: "success" | "error" | null; message: string }>({
+    type: null,
+    message: "",
+  });
 
-  const [activePortfolioCategory, setActivePortfolioCategory] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [leadSourceFilter, setLeadSourceFilter] = useState<string>("All");
 
-  // Initialize active category if not set
+  // State for image uploads
+  const [uploading, setUploading] = useState<string | null>(null);
+
+  // Fetch initial data
   useEffect(() => {
-    if (!activePortfolioCategory && portfolioCategories.length > 0) {
-      setActivePortfolioCategory(portfolioCategories[0]);
+    async function init() {
+      try {
+        const [contentRes, submissionsRes] = await Promise.all([
+          fetch("/api/site-content"),
+          fetch("/api/contact-submissions")
+        ]);
+
+        if (contentRes.ok) {
+          const cData = await contentRes.json();
+          setContent(cData.content);
+          setDraft(JSON.parse(JSON.stringify(cData.content)));
+        }
+
+        if (submissionsRes.ok) {
+          const sData = await submissionsRes.json();
+          setSubmissions(sData.submissions || []);
+        }
+      } catch (err) {
+        console.error("Failed to load admin data:", err);
+      } finally {
+        setLoading(false);
+      }
     }
-  }, [portfolioCategories, activePortfolioCategory]);
+    init();
+  }, []);
 
-  const uploadImage = useCallback(
-    async (file: File, folder: "brand" | "portfolio") => {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("folder", folder);
+  if (loading || !draft) {
+    return (
+      <div className="min-h-screen bg-[#030612] flex items-center justify-center text-white">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-[#7c66ff] border-t-transparent rounded-full animate-spin" />
+          <p className="text-gray-400 text-sm font-light">Loading Admin Panel...</p>
+        </div>
+      </div>
+    );
+  }
 
-      const response = await fetch("/api/admin/upload-image", {
+  const isDirty = JSON.stringify(content) !== JSON.stringify(draft);
+
+  const handleSave = async () => {
+    setSaving(true);
+    setSaveStatus({ type: null, message: "" });
+
+    try {
+      const res = await fetch("/api/site-content", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(draft),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setContent(data.content);
+        setDraft(JSON.parse(JSON.stringify(data.content)));
+        setSaveStatus({ type: "success", message: "Changes saved to the live site!" });
+        // Force path revalidation
+        window.location.reload();
+      } else {
+        const errorData = await res.json();
+        setSaveStatus({
+          type: "error",
+          message: errorData.error || "Failed to save changes. Session might have expired.",
+        });
+      }
+    } catch {
+      setSaveStatus({ type: "error", message: "A network error occurred while saving." });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDiscard = () => {
+    if (confirm("Are you sure you want to discard all unsaved changes?")) {
+      setDraft(JSON.parse(JSON.stringify(content)));
+      setSaveStatus({ type: null, message: "" });
+    }
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, pathPointer: string) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(pathPointer);
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("bucket", "portfolio");
+
+    try {
+      const res = await fetch("/api/admin/upload-image", {
         method: "POST",
         body: formData,
       });
 
-      const data = (await response.json()) as { url?: string; error?: string };
-
-      if (!response.ok || !data.url) {
-        throw new Error(data.error || "Upload failed.");
-      }
-
-      return data.url;
-    },
-    []
-  );
-
-  const refreshContactSubmissions = useCallback(async () => {
-    try {
-      const response = await fetch("/api/contact-submissions", {
-        cache: "no-store",
-      });
-
-      if (!response.ok) {
-        setIsLoadingLeads(false);
-        return;
-      }
-
-      const data = (await response.json()) as {
-        submissions: ContactSubmission[];
-      };
-      setContactSubmissions(data.submissions || []);
-    } catch {
-      setContactSubmissions([]);
-    } finally {
-      setIsLoadingLeads(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    const syncDraft = window.setTimeout(() => {
-      setDraft(cloneContent(content));
-    }, 0);
-
-    return () => window.clearTimeout(syncDraft);
-  }, [content]);
-
-  useEffect(() => {
-    const timeoutId = window.setTimeout(refreshContactSubmissions, 0);
-    const intervalId = window.setInterval(refreshContactSubmissions, 5000);
-
-    return () => {
-      window.clearTimeout(timeoutId);
-      window.clearInterval(intervalId);
-    };
-  }, [refreshContactSubmissions]);
-
-  const save = () => {
-    if (!draft.brand.name.trim() || !draft.brand.email.trim()) {
-      setStatus("Agency name and email are required before saving.");
-      return;
-    }
-
-    if (!draft.services.items.length || !draft.portfolio.items.length) {
-      setStatus("Keep at least one service and one portfolio item before saving.");
-      return;
-    }
-
-    setShowSavePrompt(true);
-    setSavePassword("");
-  };
-
-  const confirmSave = async () => {
-    if (!savePassword) return;
-    setIsVerifying(true);
-    const isCorrect = await verifyPassword(savePassword);
-    setIsVerifying(false);
-
-    if (isCorrect) {
-      const next = cloneContent(draft);
-      const success = await saveContent(next);
-      
-      if (success) {
-        setDraft(next);
-        setStatus("Changes saved. Homepage preview is now updated.");
+      if (res.ok) {
+        const data = await res.json();
+        updateDraftField(pathPointer, data.url);
       } else {
-        setStatus("Error: Database update failed. Please check your connection.");
+        alert("Failed to upload image. Make sure credentials are configured.");
       }
-      setShowSavePrompt(false);
-    } else {
-
-      setStatus("Incorrect password. Cannot save changes.");
-      setShowSavePrompt(false);
+    } catch (err) {
+      console.error(err);
+      alert("Error uploading image");
+    } finally {
+      setUploading(null);
     }
   };
 
-  const reset = () => {
-    const next = cloneContent(defaultSiteContent);
-    resetContent();
-    setDraft(next);
-    setStatus("Content reset to default YJ DEVELOPERS data.");
-  };
+  // Helper function to update nested fields dynamically
+  const updateDraftField = (path: string, value: any) => {
+    setDraft((prev) => {
+      if (!prev) return prev;
+      const copy = JSON.parse(JSON.stringify(prev));
+      const parts = path.split(".");
+      let current = copy;
 
-  const goToSection = (sectionId: string) => {
-    setActiveSection(sectionId);
+      for (let i = 0; i < parts.length - 1; i++) {
+        // Handle array index pointers, e.g. "portfolio.items[0]"
+        const part = parts[i];
+        if (part.includes("[") && part.includes("]")) {
+          const name = part.split("[")[0];
+          const idx = parseInt(part.split("[")[1].split("]")[0], 10);
+          current = current[name][idx];
+        } else {
+          current = current[part];
+        }
+      }
 
-    window.requestAnimationFrame(() => {
-      document
-        .querySelector(sectionId)
-        ?.scrollIntoView({ behavior: "smooth", block: "start" });
+      const lastPart = parts[parts.length - 1];
+      if (lastPart.includes("[") && lastPart.includes("]")) {
+        const name = lastPart.split("[")[0];
+        const idx = parseInt(lastPart.split("[")[1].split("]")[0], 10);
+        current[name][idx] = value;
+      } else {
+        current[lastPart] = value;
+      }
+
+      return copy;
     });
   };
 
-  const removeContactSubmission = async (id: string) => {
-    await fetch(`/api/contact-submissions?id=${encodeURIComponent(id)}`, {
-      method: "DELETE",
-    });
-    await refreshContactSubmissions();
-    setStatus("Lead deleted from admin panel.");
+  const deleteLead = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this lead?")) return;
+
+    try {
+      const res = await fetch(`/api/contact-submissions?id=${id}`, { method: "DELETE" });
+      if (res.ok) {
+        setSubmissions((prev) => prev.filter((s) => s.id !== id));
+      } else {
+        alert("Failed to delete lead");
+      }
+    } catch {
+      alert("Network error deleting lead");
+    }
   };
 
-  const removeAllContactSubmissions = async () => {
-    await fetch("/api/contact-submissions", { method: "DELETE" });
-    await refreshContactSubmissions();
-    setStatus("All leads cleared from admin panel.");
+  const clearAllLeads = async () => {
+    if (!confirm("CRITICAL WARNING: This will permanently delete ALL submissions from your database. Proceed?")) return;
+
+    try {
+      const res = await fetch("/api/contact-submissions", { method: "DELETE" });
+      if (res.ok) {
+        setSubmissions([]);
+      } else {
+        alert("Failed to clear submissions");
+      }
+    } catch {
+      alert("Network error clearing submissions");
+    }
   };
+
+  // Filters leads list
+  const filteredSubmissions = submissions.filter((sub) => {
+    const query = searchQuery.toLowerCase();
+    const matchesSearch =
+      sub.name.toLowerCase().includes(query) ||
+      sub.email.toLowerCase().includes(query) ||
+      sub.message.toLowerCase().includes(query) ||
+      (sub.phone && sub.phone.includes(query));
+
+    const matchesSource = leadSourceFilter === "All" || sub.source === leadSourceFilter.toLowerCase();
+    return matchesSearch && matchesSource;
+  });
 
   return (
-    <div className="admin-panel min-h-dvh bg-[radial-gradient(circle_at_top,_rgba(78,91,135,0.25),_transparent_35%),linear-gradient(180deg,_#060606_0%,_#0b0b0d_100%)] px-4 py-8 text-white md:px-8">
-      <div className="mx-auto max-w-7xl">
-        <div className="mb-8 flex flex-col gap-6 rounded-[28px] border border-white/10 bg-black/30 p-6 shadow-2xl shadow-black/20 md:flex-row md:items-end md:justify-between">
-          <div className="max-w-2xl">
-            <BrandLogo imageClassName="mb-5 h-16" />
-            <p className="text-xs uppercase tracking-[0.25em] text-cyan-300/80">
-              YJ DEVELOPERS Admin
-            </p>
-            <h1 className="mt-3 text-4xl font-semibold tracking-tight md:text-5xl">
-              Portfolio control panel
-            </h1>
-            <p className="mt-3 text-sm text-gray-400 md:text-base">
-              Website ke public content ko section-wise edit karo. Left menu se
-              area choose karo, changes karne ke baad Save Changes dabao, aur
-              homepage turant updated content use karega.
-            </p>
+    <div className="min-h-screen bg-[#030612] text-white flex flex-col md:flex-row relative">
+      {/* Background glow */}
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#7c66ff]/5 blur-[150px] rounded-full pointer-events-none" />
+
+      {/* Sidebar Navigation */}
+      <aside className="w-full md:w-64 bg-[#0a0c12]/80 backdrop-blur-md border-b md:border-b-0 md:border-r border-white/5 p-6 flex flex-col justify-between shrink-0 relative z-20">
+        <div>
+          <div className="flex items-center gap-3 mb-10">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#7c66ff] to-[#a855f7] flex items-center justify-center font-bold text-lg shadow-[0_0_15px_rgba(124,102,255,0.4)]">
+              YJ
+            </div>
+            <div>
+              <h1 className="font-bold text-sm tracking-tight">YJ DEVELOPERS</h1>
+              <p className="text-[10px] text-gray-500 font-medium uppercase tracking-widest">Admin Control</p>
+            </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
-            <Link
-              href="/"
-              className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-5 py-3 text-sm transition hover:bg-white/10"
-            >
-              Open Website <ExternalLink size={16} />
-            </Link>
-            <button
-              type="button"
-              onClick={() => logout()}
-              className="inline-flex items-center gap-2 rounded-full border border-red-500/30 bg-red-500/10 px-5 py-3 text-sm text-red-200 transition hover:bg-red-500/20"
-            >
-              Logout <LogOut size={16} />
-            </button>
-            <button
-              type="button"
-              onClick={reset}
-              className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-5 py-3 text-sm transition hover:bg-white/10"
-            >
-              Reset <RotateCcw size={16} />
-            </button>
-            <button
-              type="button"
-              onClick={save}
-              className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-medium text-black transition hover:bg-white/90"
-            >
-              Save Changes <Save size={16} />
-            </button>
-          </div>
-        </div>
-
-        <div className="mb-8 rounded-2xl border border-cyan-400/20 bg-cyan-400/10 px-4 py-3 text-sm text-cyan-50">
-          {status}
-        </div>
-
-        <div className="grid gap-6 lg:grid-cols-[260px_1fr] lg:items-start">
-          <aside className="rounded-[24px] border border-white/10 bg-black/30 p-4 lg:sticky lg:top-8 lg:max-h-[calc(100dvh-4rem)] lg:overflow-y-auto">
-            <p className="px-3 pb-3 text-xs font-medium uppercase tracking-[0.22em] text-gray-500">
-              Edit Sections
-            </p>
-            <nav className="grid gap-1 pr-1">
-              {adminNavigation.map((item) => (
-                <button
-                  type="button"
-                  key={item.href}
-                  onClick={() => goToSection(item.href)}
-                  className={`group rounded-2xl px-3 py-3 text-left transition ${
-                    activeSection === item.href
-                      ? "bg-white text-black"
-                      : "hover:bg-white/8"
-                  }`}
-                >
-                  <span
-                    className={`block text-sm font-medium ${
-                      activeSection === item.href ? "text-black" : "text-white"
-                    }`}
-                  >
-                    {item.label}
-                  </span>
-                  <span
-                    className={`mt-0.5 block text-xs ${
-                      activeSection === item.href
-                        ? "text-black/60"
-                        : "text-gray-500 group-hover:text-gray-400"
-                    }`}
-                  >
-                    {item.hint}
-                  </span>
-                </button>
-              ))}
-            </nav>
-            <div className="mt-4 rounded-2xl border border-cyan-400/20 bg-cyan-400/10 p-3 text-xs leading-5 text-cyan-50">
-              Tip: pehle ek section edit karo, phir Save Changes. Reset poora
-              content default par le aayega.
-            </div>
-          </aside>
-
-          <div className="grid gap-6">
-          <Section id="leads" title="Leads & Reviews" description="All form submissions from the website, separated by source." visible={activeSection === "#leads"}>
-            {/* Tab toggle */}
-            <div className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.03] p-1.5">
-              {(["contact", "start-project"] as const).map((tab) => {
-                const count = contactSubmissions.filter((s) => (s.source ?? "contact") === tab).length;
-                return (
-                  <button
-                    key={tab}
-                    type="button"
-                    onClick={() => {
-                      setLeadsTab(tab);
-                    }}
-                    className={`flex-1 flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-200 ${
-                      leadsTab === tab ? "bg-white text-black shadow-sm" : "text-gray-400 hover:text-white"
-                    }`}
-                  >
-                    {tab === "contact" ? "📩 Contact" : "🚀 Project"}
-                    <span className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${
-                      leadsTab === tab ? "bg-black/10 text-black" : "bg-white/10 text-gray-300"
-                    }`}>{count}</span>
-                  </button>
-                );
-              })}
-            </div>
-
-
-            {/* Header row */}
-            <div className="flex flex-col gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4 md:flex-row md:items-center md:justify-between mt-6">
-              <div>
-                <p className="text-lg font-medium">
-                  {contactSubmissions.filter((s) => (s.source ?? "contact") === leadsTab).length}{" "}
-                  {leadsTab === "contact" ? "contact message" : "project brief"}
-                  {contactSubmissions.filter((s) => (s.source ?? "contact") === leadsTab).length === 1 ? "" : "s"}
-                </p>
-                <p className="mt-1 text-sm text-gray-400">
-                  Newest first.
-                </p>
-              </div>
-              <SecondaryButton
-                onClick={removeAllContactSubmissions}
-                disabled={!contactSubmissions.length}
-                className={!contactSubmissions.length ? "cursor-not-allowed opacity-50" : ""}
+          <nav className="space-y-1.5">
+            {[
+              { id: "dashboard", label: "Dashboard", icon: <LayoutDashboard size={18} /> },
+              { id: "general", label: "General Content", icon: <Globe size={18} /> },
+              { id: "services", label: "Our Services", icon: <Settings size={18} /> },
+              { id: "portfolio", label: "Recent Works", icon: <Briefcase size={18} /> },
+              { id: "leads", label: "Leads Submissions", icon: <Users size={18} /> },
+              { id: "reviews", label: "Testimonials", icon: <MessageSquare size={18} /> },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id as any)}
+                className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-semibold transition-all duration-300 ${
+                  activeTab === tab.id
+                    ? "bg-[#7c66ff]/10 border border-[#7c66ff]/20 text-[#7c66ff] shadow-[0_4px_20px_rgba(124,102,255,0.05)]"
+                    : "border border-transparent text-gray-400 hover:text-white hover:bg-white/[0.02]"
+                }`}
               >
-                <Trash2 size={14} /> Clear All
-              </SecondaryButton>
+                {tab.icon}
+                {tab.label}
+              </button>
+            ))}
+          </nav>
+        </div>
+
+        <div className="pt-6 border-t border-white/5 mt-8 md:mt-0">
+          <button
+            onClick={() => logout()}
+            className="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-semibold text-red-400 border border-transparent hover:bg-red-500/5 hover:border-red-500/10 transition-all duration-300"
+          >
+            <LogOut size={18} />
+            Logout Session
+          </button>
+        </div>
+      </aside>
+
+      {/* Main Content Area */}
+      <main className="flex-grow p-6 md:p-10 lg:p-12 overflow-y-auto max-h-screen relative z-10">
+        {/* Header Alert Notification */}
+        {saveStatus.type && (
+          <div
+            className={`mb-8 flex items-center gap-3 p-4 rounded-2xl border text-sm ${
+              saveStatus.type === "success"
+                ? "bg-green-500/10 border-green-500/20 text-green-400"
+                : "bg-red-500/10 border-red-500/20 text-red-400"
+            }`}
+          >
+            <AlertCircle size={18} className="shrink-0" />
+            <span>{saveStatus.message}</span>
+            <button
+              onClick={() => setSaveStatus({ type: null, message: "" })}
+              className="ml-auto hover:text-white"
+            >
+              <X size={16} />
+            </button>
+          </div>
+        )}
+
+        {/* Dashboard Tab */}
+        {activeTab === "dashboard" && (
+          <div className="space-y-8">
+            <div>
+              <h2 className="text-3xl font-bold tracking-tight mb-2">Welcome Back, Admin</h2>
+              <p className="text-gray-400 text-sm font-light">Here is a quick overview of your agency portal metrics.</p>
             </div>
 
-            {isLoadingLeads ? (
-              <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-white/15 p-12 text-center">
-                <div className="h-8 w-8 animate-spin rounded-full border-2 border-cyan-400 border-t-transparent mb-4" />
-                <p className="text-sm text-gray-400">Fetching leads from storage...</p>
-              </div>
-            ) : contactSubmissions.filter((s) => (s.source ?? "contact") === leadsTab).length ? (
-              <div className="grid gap-4">
-                {contactSubmissions
-                  .filter((s) => (s.source ?? "contact") === leadsTab)
-                  .map((submission) => {
-                    return (
-                      <article
-                        key={submission.id}
-                        className={`rounded-2xl border p-4 ${
-                          leadsTab === "start-project"
-                            ? "border-cyan-400/20 bg-cyan-400/5"
-                            : "border-white/10 bg-white/[0.03]"
-                        }`}
-                      >
-                        <div className="mb-3 flex items-center gap-2">
-                          <span className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-widest ${
-                            leadsTab === "start-project" ? "bg-cyan-400/20 text-cyan-300" : "bg-white/10 text-gray-300"
-                          }`}>
-                            {leadsTab === "start-project" ? "🚀 Project Brief" : "📩 Contact"}
-                          </span>
-                          <span className="text-xs text-gray-500" suppressHydrationWarning>
-                            {new Date(submission.createdAt).toLocaleString()}
-                          </span>
-                        </div>
-                        <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-                          <div>
-                            <h3 className="text-lg font-semibold">{submission.name}</h3>
-                            <a
-                              href={`mailto:${submission.email}`}
-                              className="text-sm text-cyan-300 transition hover:text-cyan-100"
-                            >
-                              {submission.email}
-                            </a>
-                            {submission.phone && (
-                              <a
-                                href={`tel:${submission.phone.replace(/\s/g, "")}`}
-                                className="mt-1 block text-sm text-gray-300 transition hover:text-white"
-                              >
-                                {submission.phone}
-                              </a>
-                            )}
-                          </div>
-                          <div className="flex gap-2">
-                            <SecondaryButton
-                              onClick={() => removeContactSubmission(submission.id)}
-                            >
-                              <Trash2 size={14} /> Delete
-                            </SecondaryButton>
-                          </div>
-                        </div>
-                        <p className="whitespace-pre-wrap rounded-2xl border border-white/10 bg-black/20 p-4 text-sm leading-6 text-gray-300">
-                          {submission.message}
-                        </p>
-                      </article>
-                    );
-                  })}
-              </div>
-            ) : (
-              <div className="rounded-2xl border border-dashed border-white/15 p-8 text-center text-sm text-gray-400">
-                No {leadsTab === "contact" ? "contact form" : "project brief"} submissions yet.
-              </div>
-            )}
-          </Section>
-
-          <Section id="brand" title="Brand" description="Navbar, footer, email, phone, and global business details." visible={activeSection === "#brand"}>
-            <div className="grid gap-4 md:grid-cols-2">
-              <Field label="Agency Name">
-                <Input
-                  value={draft.brand.name}
-                  onChange={(e) =>
-                    setDraft({
-                      ...draft,
-                      brand: { ...draft.brand, name: e.target.value },
-                    })
-                  }
-                />
-              </Field>
-              <Field label="Email">
-                <Input
-                  value={draft.brand.email}
-                  onChange={(e) =>
-                    setDraft({
-                      ...draft,
-                      brand: { ...draft.brand, email: e.target.value },
-                    })
-                  }
-                />
-              </Field>
-              <Field label="Phone">
-                <Input
-                  value={draft.brand.phone}
-                  onChange={(e) =>
-                    setDraft({
-                      ...draft,
-                      brand: { ...draft.brand, phone: e.target.value },
-                    })
-                  }
-                />
-              </Field>
-              <Field label="Full Logo Path / URL">
-                <Input
-                  value={draft.brand.logo ?? defaultSiteContent.brand.logo}
-                  placeholder="/yj-logo.svg or https://example.com/logo.png"
-                  onChange={(e) =>
-                    setDraft({
-                      ...draft,
-                      brand: { ...draft.brand, logo: e.target.value },
-                    })
-                  }
-                />
-              </Field>
-              <div className="space-y-3">
-                <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-4">
-                  <p className="mb-3 text-xs uppercase tracking-[0.2em] text-gray-500">
-                    Full Logo Preview
-                  </p>
-                  <img
-                    src={draft.brand.logo ?? defaultSiteContent.brand.logo}
-                    alt="Full logo preview"
-                    className="h-14 w-auto max-w-full object-contain"
-                  />
-                </div>
-                <FileUploadField
-                  label="Upload Full Logo"
-                  hint="Uploads to Supabase Storage and fills the logo URL automatically."
-                  uploading={uploadingTarget === "brand-logo"}
-                  onUpload={async (file) => {
-                    try {
-                      setUploadingTarget("brand-logo");
-                      const url = await uploadImage(file, "brand");
-                      setDraft((current) => ({
-                        ...current,
-                        brand: { ...current.brand, logo: url },
-                      }));
-                      setStatus("Full logo uploaded. Save Changes to publish it.");
-                    } catch (error) {
-                      setStatus(
-                        error instanceof Error ? error.message : "Logo upload failed."
-                      );
-                    } finally {
-                      setUploadingTarget(null);
-                    }
-                  }}
-                />
-              </div>
-              <Field label="Header Mark Path / URL">
-                <Input
-                  value={draft.brand.mark ?? defaultSiteContent.brand.mark}
-                  placeholder="/yj-mark.svg or https://example.com/mark.png"
-                  onChange={(e) =>
-                    setDraft({
-                      ...draft,
-                      brand: { ...draft.brand, mark: e.target.value },
-                    })
-                  }
-                />
-              </Field>
-              <div className="space-y-3">
-                <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-4">
-                  <p className="mb-3 text-xs uppercase tracking-[0.2em] text-gray-500">
-                    Header Mark Preview
-                  </p>
-                  <img
-                    src={draft.brand.mark ?? defaultSiteContent.brand.mark}
-                    alt="Header mark preview"
-                    className="h-14 w-14 object-contain"
-                  />
-                </div>
-                <FileUploadField
-                  label="Upload Header Mark"
-                  hint="Use this for the compact icon shown in the navbar."
-                  uploading={uploadingTarget === "brand-mark"}
-                  onUpload={async (file) => {
-                    try {
-                      setUploadingTarget("brand-mark");
-                      const url = await uploadImage(file, "brand");
-                      setDraft((current) => ({
-                        ...current,
-                        brand: { ...current.brand, mark: url },
-                      }));
-                      setStatus("Header mark uploaded. Save Changes to publish it.");
-                    } catch (error) {
-                      setStatus(
-                        error instanceof Error ? error.message : "Header mark upload failed."
-                      );
-                    } finally {
-                      setUploadingTarget(null);
-                    }
-                  }}
-                />
-              </div>
-            </div>
-            <Field label="Footer Description">
-              <Textarea
-                rows={3}
-                value={draft.brand.footerDescription}
-                onChange={(e) =>
-                  setDraft({
-                    ...draft,
-                    brand: {
-                      ...draft.brand,
-                      footerDescription: e.target.value,
-                    },
-                  })
-                }
-              />
-            </Field>
-          </Section>
-
-          <Section id="theme" title="Theme" description="Customize website colors and typography." visible={activeSection === "#theme"}>
-            <div className="grid gap-4 md:grid-cols-2">
-              <Field label="Primary Color">
-                <div className="flex gap-2">
-                  <Input
-                    type="color"
-                    className="h-11 w-20 p-1"
-                    value={draft.theme?.primary || "#4B7DFF"}
-                    onChange={(e) =>
-                      setDraft({
-                        ...draft,
-                        theme: { ...draft.theme, primary: e.target.value },
-                      })
-                    }
-                  />
-                  <Input
-                    value={draft.theme?.primary || "#4B7DFF"}
-                    onChange={(e) =>
-                      setDraft({
-                        ...draft,
-                        theme: { ...draft.theme, primary: e.target.value },
-                      })
-                    }
-                  />
-                </div>
-              </Field>
-              <Field label="Accent Color">
-                <div className="flex gap-2">
-                  <Input
-                    type="color"
-                    className="h-11 w-20 p-1"
-                    value={draft.theme?.accent || "#A15BFF"}
-                    onChange={(e) =>
-                      setDraft({
-                        ...draft,
-                        theme: { ...draft.theme, accent: e.target.value },
-                      })
-                    }
-                  />
-                  <Input
-                    value={draft.theme?.accent || "#A15BFF"}
-                    onChange={(e) =>
-                      setDraft({
-                        ...draft,
-                        theme: { ...draft.theme, accent: e.target.value },
-                      })
-                    }
-                  />
-                </div>
-              </Field>
-              <Field label="Background Color">
-                <div className="flex gap-2">
-                  <Input
-                    type="color"
-                    className="h-11 w-20 p-1"
-                    value={draft.theme?.background || "#030612"}
-                    onChange={(e) =>
-                      setDraft({
-                        ...draft,
-                        theme: { ...draft.theme, background: e.target.value },
-                      })
-                    }
-                  />
-                  <Input
-                    value={draft.theme?.background || "#030612"}
-                    onChange={(e) =>
-                      setDraft({
-                        ...draft,
-                        theme: { ...draft.theme, background: e.target.value },
-                      })
-                    }
-                  />
-                </div>
-              </Field>
-              <Field label="Text Color">
-                <div className="flex gap-2">
-                  <Input
-                    type="color"
-                    className="h-11 w-20 p-1"
-                    value={draft.theme?.foreground || "#ffffff"}
-                    onChange={(e) =>
-                      setDraft({
-                        ...draft,
-                        theme: { ...draft.theme, foreground: e.target.value },
-                      })
-                    }
-                  />
-                  <Input
-                    value={draft.theme?.foreground || "#ffffff"}
-                    onChange={(e) =>
-                      setDraft({
-                        ...draft,
-                        theme: { ...draft.theme, foreground: e.target.value },
-                      })
-                    }
-                  />
-                </div>
-              </Field>
-              <Field label="Card Background">
-                <div className="flex gap-2">
-                  <Input
-                    type="color"
-                    className="h-11 w-20 p-1"
-                    value={draft.theme?.card || "#060b19"}
-                    onChange={(e) =>
-                      setDraft({
-                        ...draft,
-                        theme: { ...draft.theme, card: e.target.value },
-                      })
-                    }
-                  />
-                  <Input
-                    value={draft.theme?.card || "#060b19"}
-                    onChange={(e) =>
-                      setDraft({
-                        ...draft,
-                        theme: { ...draft.theme, card: e.target.value },
-                      })
-                    }
-                  />
-                </div>
-              </Field>
-              <Field label="Border Color">
-                <div className="flex gap-2">
-                  <Input
-                    type="color"
-                    className="h-11 w-20 p-1"
-                    value={draft.theme?.border || "#141d33"}
-                    onChange={(e) =>
-                      setDraft({
-                        ...draft,
-                        theme: { ...draft.theme, border: e.target.value },
-                      })
-                    }
-                  />
-                  <Input
-                    value={draft.theme?.border || "#141d33"}
-                    onChange={(e) =>
-                      setDraft({
-                        ...draft,
-                        theme: { ...draft.theme, border: e.target.value },
-                      })
-                    }
-                  />
-                </div>
-              </Field>
-              <Field label="Font Family">
-                <Select
-                  value={draft.theme?.fontFamily || "Inter"}
-                  onChange={(e) =>
-                    setDraft({
-                      ...draft,
-                      theme: { ...draft.theme, fontFamily: e.target.value },
-                    })
-                  }
-                >
-                  <option value="Inter">Inter (Sans)</option>
-                  <option value="Roboto">Roboto</option>
-                  <option value="Outfit">Outfit</option>
-                  <option value="Plus Jakarta Sans">Plus Jakarta Sans</option>
-                  <option value="Poppins">Poppins</option>
-                  <option value="Geist">Geist</option>
-                </Select>
-              </Field>
-            </div>
-          </Section>
-
-
-          <Section id="hero" title="Hero" description="Homepage ka first screen: badge, headline, description, and buttons." visible={activeSection === "#hero"}>
-            <div className="grid gap-4 md:grid-cols-2">
-              <Field label="Badge">
-                <Input
-                  value={draft.hero.badge}
-                  onChange={(e) =>
-                    setDraft({ ...draft, hero: { ...draft.hero, badge: e.target.value } })
-                  }
-                />
-              </Field>
-              <Field label="Title">
-                <Input
-                  value={draft.hero.title}
-                  onChange={(e) =>
-                    setDraft({ ...draft, hero: { ...draft.hero, title: e.target.value } })
-                  }
-                />
-              </Field>
-              <Field label="Highlight">
-                <Input
-                  value={draft.hero.highlight}
-                  onChange={(e) =>
-                    setDraft({
-                      ...draft,
-                      hero: { ...draft.hero, highlight: e.target.value },
-                    })
-                  }
-                />
-              </Field>
-              <Field label="Primary CTA">
-                <Input
-                  value={draft.hero.primaryCta}
-                  onChange={(e) =>
-                    setDraft({
-                      ...draft,
-                      hero: { ...draft.hero, primaryCta: e.target.value },
-                    })
-                  }
-                />
-              </Field>
-              <Field label="Secondary CTA">
-                <Input
-                  value={draft.hero.secondaryCta}
-                  onChange={(e) =>
-                    setDraft({
-                      ...draft,
-                      hero: { ...draft.hero, secondaryCta: e.target.value },
-                    })
-                  }
-                />
-              </Field>
-            </div>
-            <Field label="Description">
-              <Textarea
-                rows={4}
-                value={draft.hero.description}
-                onChange={(e) =>
-                  setDraft({
-                    ...draft,
-                    hero: { ...draft.hero, description: e.target.value },
-                  })
-                }
-              />
-            </Field>
-          </Section>
-
-          <Section id="about" title="About" description="Business intro, highlighted words, proof points, and about paragraphs." visible={activeSection === "#about"}>
-            <div className="grid gap-4 md:grid-cols-2">
-              <Field label="Eyebrow">
-                <Input
-                  value={draft.about.eyebrow}
-                  onChange={(e) =>
-                    setDraft({
-                      ...draft,
-                      about: { ...draft.about, eyebrow: e.target.value },
-                    })
-                  }
-                />
-              </Field>
-              <Field label="Highlighted Words">
-                <Input
-                  value={draft.about.highlightedWord}
-                  onChange={(e) =>
-                    setDraft({
-                      ...draft,
-                      about: {
-                        ...draft.about,
-                        highlightedWord: e.target.value,
-                      },
-                    })
-                  }
-                />
-              </Field>
-            </div>
-            <Field label="Title">
-              <Input
-                value={draft.about.title}
-                onChange={(e) =>
-                  setDraft({
-                    ...draft,
-                    about: { ...draft.about, title: e.target.value },
-                  })
-                }
-              />
-            </Field>
-            <div className="grid gap-4 md:grid-cols-2">
-              {draft.about.stats.map((stat, index) => (
-                <div key={index} className="rounded-2xl border border-white/10 p-4">
-                  <div className="mb-3 flex items-center justify-between">
-                    <p className="text-sm text-gray-300">About Stat {index + 1}</p>
-                    <SecondaryButton
-                      onClick={() =>
-                        setDraft({
-                          ...draft,
-                          about: {
-                            ...draft.about,
-                            stats: draft.about.stats.filter((_, i) => i !== index),
-                          },
-                        })
-                      }
-                    >
-                      <Trash2 size={14} />
-                    </SecondaryButton>
+            {/* Quick Metrics Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[
+                { label: "Client Submissions", count: submissions.length, desc: "Total inquiries received", color: "from-blue-500/20 to-indigo-500/5" },
+                { label: "Active Services", count: draft.services.items.length, desc: "Website capabilities listed", color: "from-purple-500/20 to-fuchsia-500/5" },
+                { label: "Portfolio Works", count: draft.portfolio.items.length, desc: "Successfully completed projects", color: "from-emerald-500/20 to-teal-500/5" },
+                { label: "Client Reviews", count: draft.testimonials?.length || 0, desc: "Approved/Pending reviews", color: "from-amber-500/20 to-orange-500/5" },
+              ].map((metric, i) => (
+                <div key={i} className={`p-6 rounded-3xl border border-white/5 bg-gradient-to-br ${metric.color} shadow-lg flex flex-col justify-between h-40`}>
+                  <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">{metric.label}</p>
+                  <div>
+                    <h3 className="text-5xl font-black tracking-tight mb-1">{metric.count}</h3>
+                    <p className="text-[10px] text-gray-500 leading-none">{metric.desc}</p>
                   </div>
-                  <Field label="Value">
-                    <Input
-                      value={stat.value}
-                      onChange={(e) =>
-                        setDraft({
-                          ...draft,
-                          about: {
-                            ...draft.about,
-                            stats: draft.about.stats.map((item, i) =>
-                              i === index ? { ...item, value: e.target.value } : item
-                            ),
-                          },
-                        })
-                      }
-                    />
-                  </Field>
-                  <Field label="Label">
-                    <Input
-                      value={stat.label}
-                      onChange={(e) =>
-                        setDraft({
-                          ...draft,
-                          about: {
-                            ...draft.about,
-                            stats: draft.about.stats.map((item, i) =>
-                              i === index ? { ...item, label: e.target.value } : item
-                            ),
-                          },
-                        })
-                      }
-                    />
-                  </Field>
                 </div>
               ))}
             </div>
-            <SecondaryButton
-              onClick={() =>
-                setDraft({
-                  ...draft,
-                  about: {
-                    ...draft.about,
-                    stats: [...draft.about.stats, { value: "0", label: "New Stat" }],
-                  },
-                })
-              }
-            >
-              <Plus size={14} /> Add About Stat
-            </SecondaryButton>
-            {draft.about.paragraphs.map((paragraph, index) => (
-              <div key={index} className="rounded-2xl border border-white/10 p-4">
-                <div className="mb-3 flex items-center justify-between">
-                  <p className="text-sm text-gray-300">Paragraph {index + 1}</p>
-                  <SecondaryButton
-                    onClick={() =>
-                      setDraft({
-                        ...draft,
-                        about: {
-                          ...draft.about,
-                          paragraphs: draft.about.paragraphs.filter((_, i) => i !== index),
-                        },
-                      })
-                    }
-                  >
-                    <Trash2 size={14} /> Remove
-                  </SecondaryButton>
-                </div>
-                <Textarea
-                  rows={4}
-                  value={paragraph}
-                  onChange={(e) =>
-                    setDraft({
-                      ...draft,
-                      about: {
-                        ...draft.about,
-                        paragraphs: draft.about.paragraphs.map((item, i) =>
-                          i === index ? e.target.value : item
-                        ),
-                      },
-                    })
-                  }
-                />
-              </div>
-            ))}
-            <SecondaryButton
-              onClick={() =>
-                setDraft({
-                  ...draft,
-                  about: {
-                    ...draft.about,
-                    paragraphs: [...draft.about.paragraphs, "New about paragraph"],
-                  },
-                })
-              }
-            >
-              <Plus size={14} /> Add Paragraph
-            </SecondaryButton>
-          </Section>
 
-          <Section id="services" title="Services" description="Public service cards with icon, title, and short description." visible={activeSection === "#services"}>
-            <div className="grid gap-4 md:grid-cols-2">
-              <Field label="Eyebrow">
-                <Input
-                  value={draft.services.eyebrow}
-                  onChange={(e) =>
-                    setDraft({
-                      ...draft,
-                      services: { ...draft.services, eyebrow: e.target.value },
-                    })
-                  }
-                />
-              </Field>
-              <Field label="Main Title">
-                <Input
-                  value={draft.services.title}
-                  onChange={(e) =>
-                    setDraft({
-                      ...draft,
-                      services: { ...draft.services, title: e.target.value },
-                    })
-                  }
-                />
-              </Field>
-              <Field label="Muted Title">
-                <Input
-                  value={draft.services.mutedTitle}
-                  onChange={(e) =>
-                    setDraft({
-                      ...draft,
-                      services: { ...draft.services, mutedTitle: e.target.value },
-                    })
-                  }
-                />
-              </Field>
+            {/* Quick actions & recent activity */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Recent Leads */}
+              <div className="p-6 rounded-3xl border border-white/5 bg-[#0a0c12]/40 backdrop-blur-md">
+                <div className="flex justify-between items-center mb-6">
+                  <h4 className="font-bold text-lg">Recent Lead Messages</h4>
+                  <button onClick={() => setActiveTab("leads")} className="text-xs text-[#7c66ff] hover:underline flex items-center gap-1 font-semibold">
+                    View all <ChevronRight size={14} />
+                  </button>
+                </div>
+
+                <div className="space-y-4">
+                  {submissions.slice(0, 3).length === 0 ? (
+                    <p className="text-xs text-gray-500 italic py-4">No submissions received yet.</p>
+                  ) : (
+                    submissions.slice(0, 3).map((sub) => (
+                      <div key={sub.id} className="p-4 rounded-2xl border border-white/[0.03] bg-white/[0.01] hover:bg-white/[0.03] transition-all flex flex-col justify-between gap-2">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <h5 className="font-bold text-sm">{sub.name}</h5>
+                            <p className="text-[10px] text-gray-500">{sub.email}</p>
+                          </div>
+                          <span className="text-[9px] uppercase px-2 py-0.5 rounded-full border border-white/10 bg-white/5 text-gray-400">
+                            {sub.source || "contact"}
+                          </span>
+                        </div>
+                        <p className="text-xs text-gray-400 line-clamp-2 italic font-light">"{sub.message}"</p>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+
+              {/* Quick links & tips */}
+              <div className="p-6 rounded-3xl border border-white/5 bg-[#0a0c12]/40 backdrop-blur-md flex flex-col justify-between">
+                <div>
+                  <h4 className="font-bold text-lg mb-4">Admin Dashboard Guides</h4>
+                  <ul className="space-y-3.5 text-xs text-gray-400 font-light leading-relaxed">
+                    <li>💡 <strong>New Projects Visibility:</strong> When you add a new project in the <strong>Recent Works</strong> tab, it will automatically show up at the top of the home page.</li>
+                    <li>🎨 <strong>Services Management:</strong> Limiting your services to 4 ensures a perfectly centered grid layout on desktops. Try to stick with these key core services.</li>
+                    <li>🔒 <strong>Security:</strong> All operations to modify website contents or upload images are fully protected via secure HTTP cookies. Ensure your environment variables are configured.</li>
+                  </ul>
+                </div>
+                <div className="pt-6 border-t border-white/5 flex gap-4 mt-6">
+                  <button onClick={() => setActiveTab("general")} className="flex-1 py-3.5 rounded-2xl bg-white/5 border border-white/10 text-xs font-bold text-center hover:bg-white/10 transition-all">
+                    Edit General Content
+                  </button>
+                  <button onClick={() => setActiveTab("portfolio")} className="flex-1 py-3.5 rounded-2xl bg-[#7c66ff] text-xs font-bold text-center hover:bg-[#6c54ff] transition-all">
+                    Add New Project
+                  </button>
+                </div>
+              </div>
             </div>
-            <Field label="Section Description">
-              <Textarea
-                rows={3}
-                value={draft.services.description}
-                onChange={(e) =>
-                  setDraft({
-                    ...draft,
-                    services: {
-                      ...draft.services,
-                      description: e.target.value,
-                    },
-                  })
-                }
-              />
-            </Field>
-            {draft.services.items.map((service, index) => (
-              <div key={index} className="rounded-2xl border border-white/10 p-4">
-                <div className="mb-4 flex items-center justify-between">
-                  <p className="text-sm text-gray-300">Service {index + 1}</p>
-                  <SecondaryButton
-                    onClick={() => {
-                      const deletedTitle = service.title;
-                      const remainingServices = draft.services.items.filter((_, i) => i !== index);
-                      const fallbackCategory = remainingServices[0]?.title || "Graphic Design";
-                      setDraft({
-                        ...draft,
-                        services: {
-                          ...draft.services,
-                          items: remainingServices,
-                        },
-                        portfolio: {
-                          ...draft.portfolio,
-                          items: draft.portfolio.items.map((item) =>
-                            item.category === deletedTitle
-                              ? { ...item, category: fallbackCategory }
-                              : item
-                          ),
-                        },
-                      });
-                      if (activePortfolioCategory === deletedTitle) {
-                        setActivePortfolioCategory(fallbackCategory);
-                      }
-                    }}
-                  >
-                    <Trash2 size={14} /> Remove
-                  </SecondaryButton>
-                </div>
-                <div className="grid gap-4 md:grid-cols-2">
-                  <Field label="Title">
-                    <Input
-                      value={service.title}
-                      onChange={(e) => {
-                        const oldTitle = service.title;
-                        const newTitle = e.target.value;
-                        setDraft({
-                          ...draft,
-                          services: {
-                            ...draft.services,
-                            items: draft.services.items.map((item, i) =>
-                              i === index ? { ...item, title: newTitle } : item
-                            ),
-                          },
-                          portfolio: {
-                            ...draft.portfolio,
-                            items: draft.portfolio.items.map((item) =>
-                              item.category === oldTitle ? { ...item, category: newTitle } : item
-                            ),
-                          },
-                        });
-                        if (activePortfolioCategory === oldTitle) {
-                          setActivePortfolioCategory(newTitle);
-                        }
-                      }}
-                    />
-                  </Field>
-                  <Field label="Icon">
-                    <Select
-                      value={service.icon}
-                      onChange={(e) =>
-                        setDraft({
-                          ...draft,
-                          services: {
-                            ...draft.services,
-                            items: draft.services.items.map((item, i) =>
-                              i === index
-                                ? { ...item, icon: e.target.value as IconName }
-                                : item
-                            ),
-                          },
-                        })
-                      }
-                    >
-                      {iconOptions.map((icon) => (
-                        <option key={icon} value={icon}>
-                          {icon}
-                        </option>
-                      ))}
-                    </Select>
-                  </Field>
-                </div>
-                <Field label="Description">
-                  <Textarea
-                    rows={3}
-                    value={service.description}
-                    onChange={(e) =>
-                      setDraft({
-                        ...draft,
-                        services: {
-                          ...draft.services,
-                          items: draft.services.items.map((item, i) =>
-                            i === index
-                              ? { ...item, description: e.target.value }
-                              : item
-                          ),
-                        },
-                      })
-                    }
+          </div>
+        )}
+
+        {/* General Content Tab */}
+        {activeTab === "general" && (
+          <div className="space-y-10">
+            <div>
+              <h2 className="text-3xl font-bold tracking-tight mb-2">Edit General Website Copy</h2>
+              <p className="text-gray-400 text-sm font-light">Customize core headers, titles, and section text fields.</p>
+            </div>
+
+            {/* Hero Configuration */}
+            <div className="p-6 md:p-8 rounded-3xl border border-white/5 bg-[#0a0c12]/40 backdrop-blur-md space-y-6">
+              <h4 className="font-bold text-lg border-b border-white/5 pb-3">Hero Section Configuration</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Eyebrow</label>
+                  <input
+                    type="text"
+                    value={draft.hero.eyebrow}
+                    onChange={(e) => updateDraftField("hero.eyebrow", e.target.value)}
+                    className="w-full bg-white/[0.02] border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#7c66ff]/40"
                   />
-                </Field>
-                <div className="mt-4 space-y-3">
-                  <p className="text-xs uppercase tracking-[0.2em] text-gray-500">Service Features</p>
-                  {(service.features || []).map((feature, fIndex) => (
-                    <div key={fIndex} className="flex gap-2">
-                      <Input
-                        value={feature}
-                        placeholder="e.g. Custom Development"
-                        onChange={(e) =>
-                          setDraft({
-                            ...draft,
-                            services: {
-                              ...draft.services,
-                              items: draft.services.items.map((item, i) =>
-                                i === index
-                                  ? {
-                                      ...item,
-                                      features: (item.features || []).map((f, fi) =>
-                                        fi === fIndex ? e.target.value : f
-                                      ),
-                                    }
-                                  : item
-                              ),
-                            },
-                          })
-                        }
-                      />
-                      <SecondaryButton
-                        onClick={() =>
-                          setDraft({
-                            ...draft,
-                            services: {
-                              ...draft.services,
-                              items: draft.services.items.map((item, i) =>
-                                i === index
-                                  ? {
-                                      ...item,
-                                      features: (item.features || []).filter((_, fi) => fi !== fIndex),
-                                    }
-                                  : item
-                              ),
-                            },
-                          })
-                        }
-                      >
-                        <Trash2 size={14} />
-                      </SecondaryButton>
-                    </div>
-                  ))}
-                  <SecondaryButton
-                    onClick={() =>
-                      setDraft({
-                        ...draft,
-                        services: {
-                          ...draft.services,
-                          items: draft.services.items.map((item, i) =>
-                            i === index
-                              ? {
-                                  ...item,
-                                  features: [...(item.features || []), "New Feature"],
-                                }
-                              : item
-                          ),
-                        },
-                      })
-                    }
-                    className="w-full border-dashed"
-                  >
-                    <Plus size={14} /> Add Feature
-                  </SecondaryButton>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Highlighted Color Word</label>
+                  <input
+                    type="text"
+                    value={draft.hero.highlightedWord}
+                    onChange={(e) => updateDraftField("hero.highlightedWord", e.target.value)}
+                    className="w-full bg-white/[0.02] border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#7c66ff]/40"
+                  />
+                </div>
+                <div className="space-y-2 md:col-span-2">
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Main Title Banner</label>
+                  <input
+                    type="text"
+                    value={draft.hero.title}
+                    onChange={(e) => updateDraftField("hero.title", e.target.value)}
+                    className="w-full bg-white/[0.02] border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#7c66ff]/40"
+                  />
+                </div>
+                <div className="space-y-2 md:col-span-2">
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Description text</label>
+                  <textarea
+                    rows={3}
+                    value={draft.hero.description}
+                    onChange={(e) => updateDraftField("hero.description", e.target.value)}
+                    className="w-full bg-white/[0.02] border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#7c66ff]/40 resize-none"
+                  />
                 </div>
               </div>
-            ))}
-            <SecondaryButton
-              onClick={() =>
-                setDraft({
-                  ...draft,
-                  services: {
-                    ...draft.services,
-                    items: [
-                      ...draft.services.items,
-                      {
-                        title: "New Service",
-                        description: "Service description",
-                        icon: "monitor",
-                        features: [],
-                      },
-                    ],
-                  },
-                })
-              }
-            >
-              <Plus size={14} /> Add Service
-            </SecondaryButton>
-          </Section>
-
-          <Section id="tech-stack" title="Tech Stack" description="Technologies and platforms shown in the moving stack section." visible={activeSection === "#tech-stack"}>
-            <Field label="Eyebrow">
-              <Input
-                value={draft.techStack.eyebrow}
-                onChange={(e) =>
-                  setDraft({
-                    ...draft,
-                    techStack: { ...draft.techStack, eyebrow: e.target.value },
-                  })
-                }
-              />
-            </Field>
-            {draft.techStack.items.map((tech, index) => (
-              <div key={index} className="flex gap-3">
-                <Input
-                  value={tech}
-                  onChange={(e) =>
-                    setDraft({
-                      ...draft,
-                      techStack: {
-                        ...draft.techStack,
-                        items: draft.techStack.items.map((item, i) =>
-                          i === index ? e.target.value : item
-                        ),
-                      },
-                    })
-                  }
-                />
-                <SecondaryButton
-                  onClick={() =>
-                    setDraft({
-                      ...draft,
-                      techStack: {
-                        ...draft.techStack,
-                        items: draft.techStack.items.filter((_, i) => i !== index),
-                      },
-                    })
-                  }
-                >
-                  <Trash2 size={14} />
-                </SecondaryButton>
-              </div>
-            ))}
-            <SecondaryButton
-              onClick={() =>
-                setDraft({
-                  ...draft,
-                  techStack: {
-                    ...draft.techStack,
-                    items: [...draft.techStack.items, "New Tech"],
-                  },
-                })
-              }
-            >
-              <Plus size={14} /> Add Tech
-            </SecondaryButton>
-          </Section>
-
-          <Section id="portfolio" title="Portfolio Projects" description="Select a service category first to view or add projects." visible={activeSection === "#portfolio"}>
-            {/* Category Tabs */}
-            <div className="flex flex-wrap gap-2 mb-10 p-2 rounded-2xl border border-white/10 bg-white/[0.03]">
-              {portfolioCategories.map((category) => (
-                <button
-                  key={category}
-                  type="button"
-                  onClick={() => setActivePortfolioCategory(category)}
-                  className={`px-6 py-3 rounded-xl text-sm font-bold transition-all duration-200 ${
-                    activePortfolioCategory === category
-                      ? "bg-white text-black shadow-lg shadow-white/10"
-                      : "text-gray-400 hover:text-white hover:bg-white/5"
-                  }`}
-                >
-                  {category}
-                </button>
-              ))}
             </div>
 
-            {/* Project List for Active Category */}
-            <div className="space-y-8">
-              {draft.portfolio.items.map((project, originalIndex) => {
-                if (project.category !== activePortfolioCategory) return null;
-                return (
-                  <div key={originalIndex} className="rounded-[32px] border border-white/10 bg-white/[0.02] p-8 relative group overflow-hidden">
-                    <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setDraft({
-                            ...draft,
-                            portfolio: {
-                              ...draft.portfolio,
-                              items: draft.portfolio.items.filter((_, i) => i !== originalIndex),
-                            },
-                          })
-                        }
-                        className="p-3 rounded-full bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white transition-all shadow-xl"
-                        title="Delete Project"
-                      >
-                        <Trash2 size={18} />
-                      </button>
+            {/* About Section Configuration */}
+            <div className="p-6 md:p-8 rounded-3xl border border-white/5 bg-[#0a0c12]/40 backdrop-blur-md space-y-6">
+              <h4 className="font-bold text-lg border-b border-white/5 pb-3">About Section Configuration</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Eyebrow</label>
+                  <input
+                    type="text"
+                    value={draft.about.eyebrow}
+                    onChange={(e) => updateDraftField("about.eyebrow", e.target.value)}
+                    className="w-full bg-white/[0.02] border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#7c66ff]/40"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Highlighted Gradient Word</label>
+                  <input
+                    type="text"
+                    value={draft.about.highlightedWord}
+                    onChange={(e) => updateDraftField("about.highlightedWord", e.target.value)}
+                    className="w-full bg-white/[0.02] border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#7c66ff]/40"
+                  />
+                </div>
+                <div className="space-y-2 md:col-span-2">
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Title Header</label>
+                  <input
+                    type="text"
+                    value={draft.about.title}
+                    onChange={(e) => updateDraftField("about.title", e.target.value)}
+                    className="w-full bg-white/[0.02] border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#7c66ff]/40"
+                  />
+                </div>
+                <div className="space-y-2 md:col-span-2">
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Paragraph Content</label>
+                  <textarea
+                    rows={4}
+                    value={draft.about.paragraphs[0] || ""}
+                    onChange={(e) => updateDraftField("about.paragraphs[0]", e.target.value)}
+                    className="w-full bg-white/[0.02] border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#7c66ff]/40 resize-none"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Brand details */}
+            <div className="p-6 md:p-8 rounded-3xl border border-white/5 bg-[#0a0c12]/40 backdrop-blur-md space-y-6">
+              <h4 className="font-bold text-lg border-b border-white/5 pb-3">Socials & Contact Information</h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Email Address</label>
+                  <input
+                    type="email"
+                    value={draft.brand?.email || ""}
+                    onChange={(e) => updateDraftField("brand.email", e.target.value)}
+                    className="w-full bg-white/[0.02] border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#7c66ff]/40"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Phone Contact</label>
+                  <input
+                    type="text"
+                    value={draft.brand?.phone || ""}
+                    onChange={(e) => updateDraftField("brand.phone", e.target.value)}
+                    className="w-full bg-white/[0.02] border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#7c66ff]/40"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Twitter URL</label>
+                  <input
+                    type="text"
+                    value={draft.brand?.socials?.twitter || ""}
+                    onChange={(e) => updateDraftField("brand.socials.twitter", e.target.value)}
+                    className="w-full bg-white/[0.02] border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#7c66ff]/40"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Linkedin URL</label>
+                  <input
+                    type="text"
+                    value={draft.brand?.socials?.linkedin || ""}
+                    onChange={(e) => updateDraftField("brand.socials.linkedin", e.target.value)}
+                    className="w-full bg-white/[0.02] border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#7c66ff]/40"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Services Tab */}
+        {activeTab === "services" && (
+          <div className="space-y-10">
+            <div>
+              <h2 className="text-3xl font-bold tracking-tight mb-2">Our Services Configuration</h2>
+              <p className="text-gray-400 text-sm font-light">Modify service titles, features lists, and visual icons.</p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {draft.services.items.map((service, index) => (
+                <div key={index} className="p-6 md:p-8 rounded-3xl border border-white/5 bg-[#0a0c12]/40 backdrop-blur-md space-y-6">
+                  <div className="flex justify-between items-center border-b border-white/5 pb-3">
+                    <h4 className="font-bold text-lg text-[#7c66ff]">{service.title || "Untitled Service"}</h4>
+                    <span className="text-[9px] uppercase px-3 py-1 rounded-full border border-white/10 bg-white/5 font-semibold text-gray-400">
+                      Service {index + 1}
+                    </span>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Service Name</label>
+                      <input
+                        type="text"
+                        value={service.title}
+                        onChange={(e) => updateDraftField(`services.items[${index}].title`, e.target.value)}
+                        className="w-full bg-white/[0.02] border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#7c66ff]/40"
+                      />
                     </div>
 
-                    <div className="grid gap-8 md:grid-cols-[1fr_300px]">
-                      <div className="space-y-6">
-                        <div className="grid gap-6 md:grid-cols-2">
-                          <Field label="Project Title">
-                            <Input
-                              value={project.title}
-                              onChange={(e) =>
-                                setDraft({
-                                  ...draft,
-                                  portfolio: {
-                                    ...draft.portfolio,
-                                    items: draft.portfolio.items.map((item, i) =>
-                                      i === originalIndex ? { ...item, title: e.target.value } : item
-                                    ),
-                                  },
-                                })
-                              }
-                            />
-                          </Field>
-                          <Field label="Category Label">
-                            <Select
-                              value={project.category}
-                              onChange={(e) =>
-                                setDraft({
-                                  ...draft,
-                                  portfolio: {
-                                    ...draft.portfolio,
-                                    items: draft.portfolio.items.map((item, i) =>
-                                      i === originalIndex
-                                        ? { ...item, category: e.target.value }
-                                        : item
-                                    ),
-                                  },
-                                })
-                              }
-                            >
-                              {draft.services.items.map((s) => (
-                                <option key={s.title} value={s.title}>
-                                  {s.title}
-                                </option>
-                              ))}
-                            </Select>
-                          </Field>
-                        </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Lucide Icon Class/Name</label>
+                      <input
+                        type="text"
+                        value={service.icon}
+                        onChange={(e) => updateDraftField(`services.items[${index}].icon`, e.target.value)}
+                        className="w-full bg-white/[0.02] border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#7c66ff]/40"
+                      />
+                    </div>
 
-                        <Field label="Case Study Description">
-                          <Textarea
-                            rows={4}
-                            value={project.description}
-                            onChange={(e) =>
-                              setDraft({
-                                ...draft,
-                                portfolio: {
-                                  ...draft.portfolio,
-                                  items: draft.portfolio.items.map((item, i) =>
-                                    i === originalIndex
-                                      ? { ...item, description: e.target.value }
-                                      : item
-                                  ),
-                                },
-                              })
-                            }
-                          />
-                        </Field>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Description</label>
+                      <textarea
+                        rows={3}
+                        value={service.description}
+                        onChange={(e) => updateDraftField(`services.items[${index}].description`, e.target.value)}
+                        className="w-full bg-white/[0.02] border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#7c66ff]/40 resize-none"
+                      />
+                    </div>
 
-                        <div className="grid gap-6 md:grid-cols-2">
-                          <Field label="Gradient Colors (Tailwind)">
-                            <Input
-                              value={project.color}
-                              onChange={(e) =>
-                                setDraft({
-                                  ...draft,
-                                  portfolio: {
-                                    ...draft.portfolio,
-                                    items: draft.portfolio.items.map((item, i) =>
-                                      i === originalIndex ? { ...item, color: e.target.value } : item
-                                    ),
-                                  },
-                                })
-                              }
+                    {/* Features checklist (Inline edit tags) */}
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Core Deliverables / Features</label>
+                      <div className="space-y-2.5">
+                        {(service.features || []).map((feat, fi) => (
+                          <div key={fi} className="flex gap-2">
+                            <input
+                              type="text"
+                              value={feat}
+                              onChange={(e) => {
+                                const newFeatures = [...service.features];
+                                newFeatures[fi] = e.target.value;
+                                updateDraftField(`services.items[${index}].features`, newFeatures);
+                              }}
+                              className="w-full bg-white/[0.01] border border-white/5 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#7c66ff]/40"
                             />
-                          </Field>
-                          <Field label="Direct Link">
-                            <Input
-                              value={project.link}
-                              onChange={(e) =>
-                                setDraft({
-                                  ...draft,
-                                  portfolio: {
-                                    ...draft.portfolio,
-                                    items: draft.portfolio.items.map((item, i) =>
-                                      i === originalIndex ? { ...item, link: e.target.value } : item
-                                    ),
-                                  },
-                                })
-                              }
-                            />
-                          </Field>
-                        </div>
-
-                        <div>
-                          <p className="text-[10px] uppercase tracking-[0.3em] text-gray-600 font-bold mb-4">Technology Stack</p>
-                          <div className="flex flex-wrap gap-3">
-                            {project.tech.map((tech, techIndex) => (
-                              <div key={techIndex} className="flex items-center gap-2 bg-white/5 border border-white/5 pl-4 pr-2 py-1.5 rounded-xl">
-                                <input
-                                  value={tech}
-                                  className="bg-transparent text-sm focus:outline-none w-24"
-                                  onChange={(e) =>
-                                    setDraft({
-                                      ...draft,
-                                      portfolio: {
-                                        ...draft.portfolio,
-                                        items: draft.portfolio.items.map((item, i) =>
-                                          i === originalIndex
-                                            ? {
-                                                ...item,
-                                                tech: item.tech.map((t, ti) =>
-                                                  ti === techIndex ? e.target.value : t
-                                                ),
-                                              }
-                                            : item
-                                        ),
-                                      },
-                                    })
-                                  }
-                                />
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    setDraft({
-                                      ...draft,
-                                      portfolio: {
-                                        ...draft.portfolio,
-                                        items: draft.portfolio.items.map((item, i) =>
-                                          i === originalIndex
-                                            ? {
-                                                ...item,
-                                                tech: item.tech.filter((_, ti) => ti !== techIndex),
-                                              }
-                                            : item
-                                        ),
-                                      },
-                                    })
-                                  }
-                                  className="p-1 text-gray-500 hover:text-red-400 transition-colors"
-                                >
-                                  <X size={14} />
-                                </button>
-                              </div>
-                            ))}
                             <button
                               type="button"
-                              onClick={() =>
-                                setDraft({
-                                  ...draft,
-                                  portfolio: {
-                                    ...draft.portfolio,
-                                    items: draft.portfolio.items.map((item, i) =>
-                                      i === originalIndex
-                                        ? { ...item, tech: [...item.tech, "New Tag"] }
-                                        : item
-                                    ),
-                                  },
-                                })
-                              }
-                              className="px-4 py-1.5 rounded-xl border border-dashed border-white/20 text-xs text-gray-500 hover:text-white hover:border-white/40 transition-all"
+                              onClick={() => {
+                                const newFeatures = service.features.filter((_, idx) => idx !== fi);
+                                updateDraftField(`services.items[${index}].features`, newFeatures);
+                              }}
+                              className="p-2 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20"
                             >
-                              <Plus size={12} className="inline mr-1" /> Add Tag
+                              <Trash2 size={14} />
                             </button>
                           </div>
-                        </div>
-                      </div>
-
-                      <div className="space-y-6">
-                        <Field label="Project Thumbnail">
-                          <Input
-                            value={project.image}
-                            placeholder="/projects/image.jpg"
-                            onChange={(e) =>
-                              setDraft({
-                                ...draft,
-                                portfolio: {
-                                  ...draft.portfolio,
-                                  items: draft.portfolio.items.map((item, i) =>
-                                    i === originalIndex ? { ...item, image: e.target.value } : item
-                                  ),
-                                },
-                              })
-                            }
-                          />
-                        </Field>
-                        <div className="aspect-video w-full rounded-2xl border border-white/10 bg-black/40 overflow-hidden relative group/img">
-                          <img
-                            src={project.image}
-                            alt="preview"
-                            className="w-full h-full object-cover"
-                          />
-                          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center p-6">
-                            <FileUploadField
-                              label="Upload New Image"
-                              uploading={uploadingTarget === `portfolio-${originalIndex}`}
-                              onUpload={async (file) => {
-                                try {
-                                  setUploadingTarget(`portfolio-${originalIndex}`);
-                                  const url = await uploadImage(file, "portfolio");
-                                  setDraft((current) => ({
-                                    ...current,
-                                    portfolio: {
-                                      ...current.portfolio,
-                                      items: current.portfolio.items.map((item, i) =>
-                                        i === originalIndex ? { ...item, image: url } : item
-                                      ),
-                                    },
-                                  }));
-                                } finally {
-                                  setUploadingTarget(null);
-                                }
-                              }}
-                            />
-                          </div>
-                        </div>
+                        ))}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const newFeatures = [...(service.features || []), "New Deliverable"];
+                            updateDraftField(`services.items[${index}].features`, newFeatures);
+                          }}
+                          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-dashed border-white/10 hover:border-white/20 text-xs font-semibold text-gray-400 hover:text-white transition-all w-full justify-center"
+                        >
+                          <Plus size={14} />
+                          Add Deliverable Line
+                        </button>
                       </div>
                     </div>
                   </div>
-                );
-              })}
-
-              {activePortfolioCategory && (
-                <button
-                  type="button"
-                  onClick={() =>
-                    setDraft({
-                      ...draft,
-                      portfolio: {
-                        ...draft.portfolio,
-                        items: [
-                          ...draft.portfolio.items,
-                          {
-                            title: "New " + activePortfolioCategory + " Project",
-                            category: activePortfolioCategory,
-                            description: "Project description goes here.",
-                            tech: ["React", "Next.js"],
-                            image: "/projects/branding.png",
-                            link: "#",
-                            color: "from-blue-900/40 to-black",
-                          },
-                        ],
-                      },
-                    })
-                  }
-                  className="w-full py-10 rounded-[32px] border-2 border-dashed border-cyan-400/20 bg-cyan-400/5 text-cyan-400 font-bold hover:bg-cyan-400/10 hover:border-cyan-400/40 transition-all flex flex-col items-center justify-center gap-3"
-                >
-                  <div className="p-4 rounded-full bg-cyan-400/20">
-                    <Plus size={24} />
-                  </div>
-                  Add New {activePortfolioCategory} Case Study
-                </button>
-              )}
+                </div>
+              ))}
             </div>
-          </Section>
+          </div>
+        )}
 
-          <Section id="team" title="Team Capabilities" description="Capability cards. No employee photos are required here." visible={activeSection === "#team"}>
-            <div className="grid gap-4 md:grid-cols-2">
-              <Field label="Eyebrow">
-                <Input
-                  value={draft.team.eyebrow}
-                  onChange={(e) =>
-                    setDraft({
-                      ...draft,
-                      team: { ...draft.team, eyebrow: e.target.value },
-                    })
-                  }
-                />
-              </Field>
-              <Field label="Section Title">
-                <Input
-                  value={draft.team.title}
-                  onChange={(e) =>
-                    setDraft({
-                      ...draft,
-                      team: { ...draft.team, title: e.target.value },
-                    })
-                  }
-                />
-              </Field>
-            </div>
-            <Field label="Section Description">
-              <Textarea
-                rows={3}
-                value={draft.team.description}
-                onChange={(e) =>
-                  setDraft({
-                    ...draft,
-                    team: { ...draft.team, description: e.target.value },
-                  })
-                }
-              />
-            </Field>
-            {draft.team.members.map((member, index) => (
-              <div key={index} className="rounded-2xl border border-white/10 p-4">
-                <div className="mb-4 flex items-center justify-between">
-                  <p className="text-sm text-gray-300">Team Capability {index + 1}</p>
-                  <SecondaryButton
-                    onClick={() =>
-                      setDraft({
-                        ...draft,
-                        team: {
-                          ...draft.team,
-                          members: draft.team.members.filter((_, i) => i !== index),
-                        },
-                      })
-                    }
-                  >
-                    <Trash2 size={14} /> Remove
-                  </SecondaryButton>
-                </div>
-                <div className="grid gap-4 md:grid-cols-2">
-                  <Field label="Name">
-                    <Input
-                      value={member.name}
-                      onChange={(e) =>
-                        setDraft({
-                          ...draft,
-                          team: {
-                            ...draft.team,
-                            members: draft.team.members.map((item, i) =>
-                              i === index ? { ...item, name: e.target.value } : item
-                            ),
-                          },
-                        })
-                      }
-                    />
-                  </Field>
-                  <Field label="Role (e.g. Frontend Developer)">
-                    <Input
-                      value={member.role}
-                      onChange={(e) =>
-                        setDraft({
-                          ...draft,
-                          team: {
-                            ...draft.team,
-                            members: draft.team.members.map((item, i) =>
-                              i === index ? { ...item, role: e.target.value } : item
-                            ),
-                          },
-                        })
-                      }
-                    />
-                  </Field>
-                </div>
-                <Field label="Intro (short description about the person)">
-                  <Textarea
-                    rows={3}
-                    value={member.intro || ""}
-                    onChange={(e) =>
-                      setDraft({
-                        ...draft,
-                        team: {
-                          ...draft.team,
-                          members: draft.team.members.map((item, i) =>
-                            i === index ? { ...item, intro: e.target.value } : item
-                          ),
-                        },
-                      })
-                    }
-                  />
-                </Field>
-                <Field label="Accent Gradient Classes">
-                  <Input
-                    value={member.image}
-                    onChange={(e) =>
-                      setDraft({
-                        ...draft,
-                        team: {
-                          ...draft.team,
-                          members: draft.team.members.map((item, i) =>
-                            i === index ? { ...item, image: e.target.value } : item
-                          ),
-                        },
-                      })
-                    }
-                  />
-                </Field>
-                <div className="grid gap-4 md:grid-cols-2 mt-4">
-                  <Field label="Email ID">
-                    <Input
-                      value={member.email || ""}
-                      onChange={(e) =>
-                        setDraft({
-                          ...draft,
-                          team: {
-                            ...draft.team,
-                            members: draft.team.members.map((item, i) =>
-                              i === index ? { ...item, email: e.target.value } : item
-                            ),
-                          },
-                        })
-                      }
-                    />
-                  </Field>
-                  <Field label="Portfolio Link">
-                    <Input
-                      value={member.portfolio || ""}
-                      onChange={(e) =>
-                        setDraft({
-                          ...draft,
-                          team: {
-                            ...draft.team,
-                            members: draft.team.members.map((item, i) =>
-                              i === index ? { ...item, portfolio: e.target.value } : item
-                            ),
-                          },
-                        })
-                      }
-                    />
-                  </Field>
-                  <Field label="GitHub Link">
-                    <Input
-                      value={member.github || ""}
-                      onChange={(e) =>
-                        setDraft({
-                          ...draft,
-                          team: {
-                            ...draft.team,
-                            members: draft.team.members.map((item, i) =>
-                              i === index ? { ...item, github: e.target.value } : item
-                            ),
-                          },
-                        })
-                      }
-                    />
-                  </Field>
-                  <Field label="LinkedIn Link">
-                    <Input
-                      value={member.linkedin || ""}
-                      onChange={(e) =>
-                        setDraft({
-                          ...draft,
-                          team: {
-                            ...draft.team,
-                            members: draft.team.members.map((item, i) =>
-                              i === index ? { ...item, linkedin: e.target.value } : item
-                            ),
-                          },
-                        })
-                      }
-                    />
-                  </Field>
-                  <Field label="ArtStation Link">
-                    <Input
-                      value={member.artstation || ""}
-                      onChange={(e) =>
-                        setDraft({
-                          ...draft,
-                          team: {
-                            ...draft.team,
-                            members: draft.team.members.map((item, i) =>
-                              i === index ? { ...item, artstation: e.target.value } : item
-                            ),
-                          },
-                        })
-                      }
-                    />
-                  </Field>
-                  <Field label="Skills (comma separated)">
-                    <Input
-                      value={member.skills ? member.skills.join(", ") : ""}
-                      onChange={(e) =>
-                        setDraft({
-                          ...draft,
-                          team: {
-                            ...draft.team,
-                            members: draft.team.members.map((item, i) =>
-                              i === index
-                                ? { ...item, skills: e.target.value.split(",").map(s => s.trim()) }
-                                : item
-                            ),
-                          },
-                        })
-                      }
-                    />
-                  </Field>
-                </div>
+        {/* Portfolio Tab */}
+        {activeTab === "portfolio" && (
+          <div className="space-y-10">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <div>
+                <h2 className="text-3xl font-bold tracking-tight mb-2">Recent Works Configuration</h2>
+                <p className="text-gray-400 text-sm font-light">Manage project cases, tags, and category mapping.</p>
               </div>
-            ))}
-            <SecondaryButton
-              onClick={() =>
-                setDraft({
-                  ...draft,
-                  team: {
-                    ...draft.team,
-                    members: [
-                      ...draft.team.members,
-                      {
-                        name: "New Member",
-                        role: "Role / Title",
-                        intro: "Short intro about this person.",
-                        image: "from-zinc-400 to-slate-500",
-                        email: "",
-                        portfolio: "",
-                        github: "",
-                        linkedin: "",
-                        artstation: "",
-                        skills: [],
-                      },
-                    ],
-                  },
-                })
-              }
-            >
-              <Plus size={14} /> Add Capability
-            </SecondaryButton>
-          </Section>
 
-          <Section id="testimonials" title="Reviews Management" description="Directly posted reviews from the website. Admin can only delete inappropriate reviews." visible={activeSection === "#testimonials"}>
-            <div className="grid gap-4">
-              {draft.testimonials.length > 0 ? (
-                draft.testimonials.map((testimonial, index) => (
-                  <div key={index} className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 flex flex-col gap-4 relative group">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="flex gap-0.5">
-                          {[1, 2, 3, 4, 5].map((s) => (
-                            <Star key={s} size={14} className={(testimonial.rating || 5) >= s ? "fill-yellow-500 text-yellow-500" : "text-white/5"} />
-                          ))}
-                        </div>
-                        <span className="text-sm font-bold text-white">{testimonial.client}</span>
-                        <span className="text-xs text-gray-500">— {testimonial.company}</span>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setDraft({
-                            ...draft,
-                            testimonials: draft.testimonials.filter((_, i) => i !== index),
-                          })
+              {/* Add Project Button */}
+              <button
+                type="button"
+                onClick={() => {
+                  const activeCategory = draft.services.items[0]?.title || "Website Development";
+                  const newProject = {
+                    title: `New Project`,
+                    category: activeCategory,
+                    description: "Details about this agency project casing.",
+                    tech: ["React", "Next.js", "TailwindCSS"],
+                    image: "/projects/strategy.png",
+                    link: "#",
+                    color: "from-[#7c66ff]/20 to-black",
+                  };
+                  updateDraftField("portfolio.items", [...draft.portfolio.items, newProject]);
+                }}
+                className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-[#7c66ff] hover:bg-[#6c54ff] text-xs font-bold shadow-lg shadow-[#7c66ff]/15 transition-all"
+              >
+                <Plus size={16} />
+                Create New Project
+              </button>
+            </div>
+
+            {/* List of projects */}
+            <div className="space-y-8">
+              {draft.portfolio.items.length === 0 ? (
+                <div className="text-center py-20 border border-dashed border-white/10 rounded-3xl text-gray-500">
+                  No projects added yet. Click "Create New Project" to add.
+                </div>
+              ) : (
+                draft.portfolio.items.map((project, index) => (
+                  <div key={index} className="p-6 md:p-8 rounded-3xl border border-white/5 bg-[#0a0c12]/40 backdrop-blur-md flex flex-col lg:flex-row gap-8 relative overflow-hidden group">
+                    {/* Trash Button */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (confirm(`Are you sure you want to delete "${project.title}"?`)) {
+                          const newProjects = draft.portfolio.items.filter((_, idx) => idx !== index);
+                          updateDraftField("portfolio.items", newProjects);
                         }
-                        className="rounded-full p-2 text-gray-500 hover:bg-red-500/10 hover:text-red-400 transition-all"
-                        title="Delete Review"
-                      >
-                        <Trash2 size={18} />
-                      </button>
+                      }}
+                      className="absolute top-6 right-6 p-3 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 shadow-md transition-all"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+
+                    {/* Image Preview / Edit */}
+                    <div className="w-full lg:w-80 shrink-0 space-y-4">
+                      <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 bg-white/5 flex items-center justify-center">
+                        {project.image ? (
+                          <img src={project.image} alt={project.title} className="w-full h-full object-cover" />
+                        ) : (
+                          <span className="text-xs text-gray-500 italic">No Image</span>
+                        )}
+                        {uploading === `portfolio.items[${index}].image` && (
+                          <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                            <span className="text-xs font-bold animate-pulse">Uploading...</span>
+                          </div>
+                        )}
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Project Image File</label>
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            placeholder="/projects/filename.png"
+                            value={project.image}
+                            onChange={(e) => updateDraftField(`portfolio.items[${index}].image`, e.target.value)}
+                            className="flex-grow bg-white/[0.02] border border-white/10 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-[#7c66ff]/40"
+                          />
+                          <label className="p-2.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 cursor-pointer flex items-center justify-center transition-all shrink-0">
+                            <Upload size={14} />
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={(e) => handleImageUpload(e, `portfolio.items[${index}].image`)}
+                              className="hidden"
+                            />
+                          </label>
+                        </div>
+                      </div>
                     </div>
-                    <p className="text-sm text-gray-400 leading-relaxed italic">
-                      "{testimonial.content}"
-                    </p>
-                    <div className="text-[10px] text-gray-600 uppercase tracking-widest font-medium">
-                      {testimonial.date ? new Date(testimonial.date).toLocaleDateString() : "Recently Posted"}
+
+                    {/* Meta Fields */}
+                    <div className="flex-grow grid grid-cols-1 sm:grid-cols-2 gap-6 pt-6 lg:pt-0">
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Project Title</label>
+                        <input
+                          type="text"
+                          value={project.title}
+                          onChange={(e) => updateDraftField(`portfolio.items[${index}].title`, e.target.value)}
+                          className="w-full bg-white/[0.02] border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#7c66ff]/40"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Service Category Mapping</label>
+                        <select
+                          value={project.category}
+                          onChange={(e) => updateDraftField(`portfolio.items[${index}].category`, e.target.value)}
+                          className="w-full bg-[#0a0c12] border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#7c66ff]/40"
+                        >
+                          {draft.services.items.map((s, idx) => (
+                            <option key={idx} value={s.title}>
+                              {s.title}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div className="space-y-2 sm:col-span-2">
+                        <label className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Short Description</label>
+                        <textarea
+                          rows={2}
+                          value={project.description}
+                          onChange={(e) => updateDraftField(`portfolio.items[${index}].description`, e.target.value)}
+                          className="w-full bg-white/[0.02] border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#7c66ff]/40 resize-none"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Case Link / URL</label>
+                        <input
+                          type="text"
+                          value={project.link || "#"}
+                          onChange={(e) => updateDraftField(`portfolio.items[${index}].link`, e.target.value)}
+                          className="w-full bg-white/[0.02] border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#7c66ff]/40"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Tech Stack Tags (Comma separated)</label>
+                        <input
+                          type="text"
+                          value={(project.tech || []).join(", ")}
+                          onChange={(e) => {
+                            const tags = e.target.value.split(",").map((t) => t.trim()).filter(Boolean);
+                            updateDraftField(`portfolio.items[${index}].tech`, tags);
+                          }}
+                          className="w-full bg-white/[0.02] border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#7c66ff]/40"
+                        />
+                      </div>
                     </div>
                   </div>
                 ))
-              ) : (
-                <div className="py-20 text-center border border-dashed border-white/10 rounded-3xl bg-white/[0.01]">
-                  <p className="text-gray-500 text-sm">No reviews found.</p>
-                </div>
               )}
             </div>
-          </Section>
+          </div>
+        )}
 
-          <Section id="process" title="Process" description="Step-by-step delivery workflow shown on the homepage." visible={activeSection === "#process"}>
-            {draft.process.map((step, index) => (
-              <div key={index} className="rounded-2xl border border-white/10 p-4">
-                <div className="mb-4 flex items-center justify-between">
-                  <p className="text-sm text-gray-300">Step {index + 1}</p>
-                  <SecondaryButton
-                    onClick={() =>
-                      setDraft({
-                        ...draft,
-                        process: draft.process.filter((_, i) => i !== index),
-                      })
-                    }
-                  >
-                    <Trash2 size={14} /> Remove
-                  </SecondaryButton>
-                </div>
-                <div className="grid gap-4 md:grid-cols-2">
-                  <Field label="Number">
-                    <Input
-                      value={step.num}
-                      onChange={(e) =>
-                        setDraft({
-                          ...draft,
-                          process: draft.process.map((item, i) =>
-                            i === index ? { ...item, num: e.target.value } : item
-                          ),
-                        })
-                      }
-                    />
-                  </Field>
-                  <Field label="Title">
-                    <Input
-                      value={step.title}
-                      onChange={(e) =>
-                        setDraft({
-                          ...draft,
-                          process: draft.process.map((item, i) =>
-                            i === index ? { ...item, title: e.target.value } : item
-                          ),
-                        })
-                      }
-                    />
-                  </Field>
-                </div>
-                <Field label="Description">
-                  <Textarea
-                    rows={3}
-                    value={step.desc}
-                    onChange={(e) =>
-                      setDraft({
-                        ...draft,
-                        process: draft.process.map((item, i) =>
-                          i === index ? { ...item, desc: e.target.value } : item
-                        ),
-                      })
-                    }
-                  />
-                </Field>
+        {/* Leads Submissions Tab */}
+        {activeTab === "leads" && (
+          <div className="space-y-8">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <div>
+                <h2 className="text-3xl font-bold tracking-tight mb-2">Lead submissions</h2>
+                <p className="text-gray-400 text-sm font-light">Review and manage client contact inquiries.</p>
               </div>
-            ))}
-            <SecondaryButton
-              onClick={() =>
-                setDraft({
-                  ...draft,
-                  process: [
-                    ...draft.process,
-                    { num: "00", title: "New Step", desc: "Step description" },
-                  ],
-                })
-              }
-            >
-              <Plus size={14} /> Add Step
-            </SecondaryButton>
-          </Section>
 
+              {submissions.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => clearAllLeads()}
+                  className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 text-red-400 text-xs font-bold transition-all"
+                >
+                  <Trash2 size={16} />
+                  Clear All Submissions
+                </button>
+              )}
+            </div>
 
-
-
-          <Section id="policies" title="Policies" description="Payment, delivery, revision, refund, and other policy content." visible={activeSection === "#policies"}>
-            <Field label="Section Title">
-              <Input
-                value={draft.policies.title}
-                onChange={(e) =>
-                  setDraft({
-                    ...draft,
-                    policies: { ...draft.policies, title: e.target.value },
-                  })
-                }
-              />
-            </Field>
-            {draft.policies.items.map((policy, index) => (
-              <div key={index} className="rounded-2xl border border-white/10 p-4">
-                <div className="mb-4 flex items-center justify-between">
-                  <p className="text-sm text-gray-300">Policy {index + 1}</p>
-                  <SecondaryButton
-                    onClick={() =>
-                      setDraft({
-                        ...draft,
-                        policies: {
-                          ...draft.policies,
-                          items: draft.policies.items.filter((_, i) => i !== index),
-                        },
-                      })
-                    }
-                  >
-                    <Trash2 size={14} /> Remove
-                  </SecondaryButton>
-                </div>
-                <Field label="Policy Title">
-                  <Input
-                    value={policy.title}
-                    onChange={(e) =>
-                      setDraft({
-                        ...draft,
-                        policies: {
-                          ...draft.policies,
-                          items: draft.policies.items.map((item, i) =>
-                            i === index ? { ...item, title: e.target.value } : item
-                          ),
-                        },
-                      })
-                    }
-                  />
-                </Field>
-                <Field label="Content">
-                  <Textarea
-                    rows={4}
-                    value={policy.content}
-                    onChange={(e) =>
-                      setDraft({
-                        ...draft,
-                        policies: {
-                          ...draft.policies,
-                          items: draft.policies.items.map((item, i) =>
-                            i === index
-                              ? { ...item, content: e.target.value }
-                              : item
-                          ),
-                        },
-                      })
-                    }
-                  />
-                </Field>
+            {/* Filter / Search Row */}
+            <div className="flex flex-col sm:flex-row gap-4 p-4 rounded-2xl border border-white/5 bg-[#0a0c12]/40 backdrop-blur-md">
+              <div className="flex-grow relative">
+                <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
+                <input
+                  type="text"
+                  placeholder="Search by name, email, or message..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full bg-white/[0.02] border border-white/10 rounded-xl pl-11 pr-4 py-3 text-xs focus:outline-none focus:border-[#7c66ff]/40"
+                />
               </div>
-            ))}
-            <SecondaryButton
-              onClick={() =>
-                setDraft({
-                  ...draft,
-                  policies: {
-                    ...draft.policies,
-                    items: [
-                      ...draft.policies.items,
-                      { title: "New Policy", content: "Policy details" },
-                    ],
-                  },
-                })
-              }
-            >
-              <Plus size={14} /> Add Policy
-            </SecondaryButton>
-          </Section>
 
-          <Section id="contact" title="Contact" description="Final call-to-action copy and contact section details." visible={activeSection === "#contact"}>
-            <div className="grid gap-6">
-              <div className="space-y-4 rounded-2xl border border-white/10 p-4">
-                <Field label="Eyebrow">
-                  <Input
-                    value={draft.contact.eyebrow}
-                    onChange={(e) =>
-                      setDraft({
-                        ...draft,
-                        contact: { ...draft.contact, eyebrow: e.target.value },
-                      })
-                    }
-                  />
-                </Field>
-                <Field label="Title">
-                  <Input
-                    value={draft.contact.title}
-                    onChange={(e) =>
-                      setDraft({
-                        ...draft,
-                        contact: { ...draft.contact, title: e.target.value },
-                      })
-                    }
-                  />
-                </Field>
-                <Field label="Highlight">
-                  <Input
-                    value={draft.contact.highlight}
-                    onChange={(e) =>
-                      setDraft({
-                        ...draft,
-                        contact: { ...draft.contact, highlight: e.target.value },
-                      })
-                    }
-                  />
-                </Field>
-                <Field label="Description">
-                  <Textarea
-                    rows={4}
-                    value={draft.contact.description}
-                    onChange={(e) =>
-                      setDraft({
-                        ...draft,
-                        contact: {
-                          ...draft.contact,
-                          description: e.target.value,
-                        },
-                      })
-                    }
-                  />
-                </Field>
+              <div className="flex items-center gap-2 sm:w-48 shrink-0">
+                <Filter size={14} className="text-gray-500" />
+                <select
+                  value={leadSourceFilter}
+                  onChange={(e) => setLeadSourceFilter(e.target.value)}
+                  className="w-full bg-[#0a0c12] border border-white/10 rounded-xl px-3 py-3 text-xs focus:outline-none focus:border-[#7c66ff]/40"
+                >
+                  <option value="All">All Sources</option>
+                  <option value="Contact">Contact</option>
+                  <option value="Start-project">Start-project</option>
+                  <option value="Review">Review</option>
+                </select>
               </div>
             </div>
-          </Section>
-        </div>
-      </div>
-      
-      {/* Password Prompt Modal */}
-      {showSavePrompt && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-          <div className="w-full max-w-md rounded-3xl border border-white/10 bg-zinc-950 p-8 shadow-2xl relative">
-            <button 
-              onClick={() => setShowSavePrompt(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-white transition"
+
+            {/* Leads Table List */}
+            <div className="border border-white/5 bg-[#0a0c12]/30 backdrop-blur-md rounded-3xl overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="border-b border-white/5 text-[10px] font-bold uppercase tracking-wider text-gray-500 bg-white/[0.01]">
+                      <th className="py-4 px-6">Name</th>
+                      <th className="py-4 px-6">Contact Info</th>
+                      <th className="py-4 px-6">Submission Details</th>
+                      <th className="py-4 px-6">Source</th>
+                      <th className="py-4 px-6">Submitted At</th>
+                      <th className="py-4 px-6 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-white/[0.03] text-xs font-light">
+                    {filteredSubmissions.length === 0 ? (
+                      <tr>
+                        <td colSpan={6} className="py-16 text-center text-gray-500 italic">
+                          No submissions match your query filters.
+                        </td>
+                      </tr>
+                    ) : (
+                      filteredSubmissions.map((sub) => (
+                        <tr key={sub.id} className="hover:bg-white/[0.01] transition-all">
+                          <td className="py-4 px-6 font-bold text-white">{sub.name}</td>
+                          <td className="py-4 px-6 space-y-1">
+                            <div className="text-gray-300 font-medium">{sub.email}</div>
+                            {sub.phone && <div className="text-gray-500 text-[10px]">{sub.phone}</div>}
+                          </td>
+                          <td className="py-4 px-6 max-w-sm truncate whitespace-normal leading-relaxed text-gray-400">
+                            {sub.message}
+                          </td>
+                          <td className="py-4 px-6">
+                            <span className="inline-block text-[9px] uppercase px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-gray-400 font-semibold">
+                              {sub.source || "contact"}
+                            </span>
+                          </td>
+                          <td className="py-4 px-6 text-gray-500 text-[10px]">
+                            {sub.createdAt ? new Date(sub.createdAt).toLocaleString() : "N/A"}
+                          </td>
+                          <td className="py-4 px-6 text-right">
+                            <button
+                              type="button"
+                              onClick={() => deleteLead(sub.id)}
+                              className="p-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 hover:text-white transition-all inline-flex items-center justify-center"
+                            >
+                              <Trash2 size={14} />
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Testimonials Tab */}
+        {activeTab === "reviews" && (
+          <div className="space-y-8">
+            <div>
+              <h2 className="text-3xl font-bold tracking-tight mb-2">Testimonials Reviews</h2>
+              <p className="text-gray-400 text-sm font-light">Moderate client reviews posted on the live site.</p>
+            </div>
+
+            {/* Testimonials List */}
+            <div className="border border-white/5 bg-[#0a0c12]/30 backdrop-blur-md rounded-3xl overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="border-b border-white/5 text-[10px] font-bold uppercase tracking-wider text-gray-500 bg-white/[0.01]">
+                      <th className="py-4 px-6">Author</th>
+                      <th className="py-4 px-6">Review Text</th>
+                      <th className="py-4 px-6">Rating</th>
+                      <th className="py-4 px-6">Status</th>
+                      <th className="py-4 px-6 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-white/[0.03] text-xs font-light">
+                    {!draft.testimonials || draft.testimonials.length === 0 ? (
+                      <tr>
+                        <td colSpan={5} className="py-16 text-center text-gray-500 italic">
+                          No testimonials received yet.
+                        </td>
+                      </tr>
+                    ) : (
+                      draft.testimonials.map((test, index) => (
+                        <tr key={index} className="hover:bg-white/[0.01] transition-all">
+                          <td className="py-4 px-6 font-bold text-white">
+                            <div>{test.name}</div>
+                            <div className="text-[10px] text-gray-500 font-normal">{test.role}</div>
+                          </td>
+                          <td className="py-4 px-6 max-w-md whitespace-normal leading-relaxed text-gray-400 italic">
+                            "{test.comment}"
+                          </td>
+                          <td className="py-4 px-6 text-amber-400 font-bold">
+                            {"★".repeat(test.rating || 5)}
+                          </td>
+                          <td className="py-4 px-6">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const newTestimonials = [...draft.testimonials!];
+                                newTestimonials[index].isApproved = !newTestimonials[index].isApproved;
+                                updateDraftField("testimonials", newTestimonials);
+                              }}
+                              className={`text-[9px] uppercase px-2 py-0.5 rounded-full font-bold border transition-all ${
+                                test.isApproved
+                                  ? "bg-green-500/10 border-green-500/20 text-green-400"
+                                  : "bg-yellow-500/10 border-yellow-500/20 text-yellow-400"
+                              }`}
+                            >
+                              {test.isApproved ? "Approved" : "Pending"}
+                            </button>
+                          </td>
+                          <td className="py-4 px-6 text-right">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (confirm("Delete this review from website database?")) {
+                                  const newTestimonials = draft.testimonials!.filter((_, idx) => idx !== index);
+                                  updateDraftField("testimonials", newTestimonials);
+                                }
+                              }}
+                              className="p-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-all inline-flex items-center justify-center"
+                            >
+                              <Trash2 size={14} />
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+      </main>
+
+      {/* Unsaved Changes Save Bar */}
+      {isDirty && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-[#0a0c12]/90 backdrop-blur-xl border border-[#7c66ff]/20 px-6 py-4 rounded-3xl flex items-center gap-6 shadow-[0_20px_50px_rgba(124,102,255,0.15)] w-full max-w-xl animate-fade-in-up">
+          <div className="flex items-center gap-2 text-xs">
+            <div className="w-2.5 h-2.5 rounded-full bg-[#7c66ff] animate-ping" />
+            <span className="font-semibold">Unsaved alterations in draft</span>
+          </div>
+
+          <div className="flex gap-3.5 ml-auto">
+            <button
+              onClick={handleDiscard}
+              className="px-4 py-2.5 rounded-xl border border-white/5 bg-white/5 hover:bg-white/10 text-xs font-bold transition-all text-gray-300"
             >
-              <X size={20} />
+              Discard Changes
             </button>
-            <h3 className="text-xl font-bold mb-2">Confirm Save</h3>
-            <p className="text-gray-400 text-sm mb-6">Enter admin password to save your changes to the live site.</p>
-            <Field label="Admin Password">
-              <Input
-                type="password"
-                value={savePassword}
-                onChange={(e) => setSavePassword(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") confirmSave();
-                }}
-                autoFocus
-              />
-            </Field>
-            <div className="mt-6 flex justify-end gap-3">
-              <SecondaryButton onClick={() => setShowSavePrompt(false)}>
-                Cancel
-              </SecondaryButton>
-              <button
-                type="button"
-                onClick={confirmSave}
-                disabled={isVerifying || !savePassword}
-                className="rounded-full bg-cyan-400 px-5 py-2 text-sm font-medium text-black transition hover:bg-cyan-300 disabled:opacity-50"
-              >
-                {isVerifying ? "Verifying..." : "Save Changes"}
-              </button>
-            </div>
+            <button
+              disabled={saving}
+              onClick={handleSave}
+              className="px-5 py-2.5 rounded-xl bg-[#7c66ff] hover:bg-[#6c54ff] text-xs font-bold transition-all flex items-center gap-1.5 shadow-lg shadow-[#7c66ff]/10 disabled:opacity-50 disabled:pointer-events-none"
+            >
+              {saving ? (
+                <>Saving...</>
+              ) : (
+                <>
+                  <Save size={14} />
+                  Save Draft Changes
+                </>
+              )}
+            </button>
           </div>
         </div>
       )}
     </div>
-  </div>
   );
 }
