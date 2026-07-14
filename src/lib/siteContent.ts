@@ -180,22 +180,10 @@ export const defaultSiteContent: SiteContent = {
       "Focused digital solutions to help your brand grow from strategy to launch.",
     items: [
       {
-        title: "Web Development",
-        description: "We build fast, secure and modern websites that deliver exceptional performance.",
+        title: "Website Development",
+        description: "We build fast, secure and modern websites that deliver exceptional performance and conversion.",
         icon: "code",
-        features: ["Custom Website Development", "CMS Development", "E-Commerce Solutions", "Website Maintenance"]
-      },
-      {
-        title: "UI/UX Design",
-        description: "We design intuitive and engaging interfaces that enhance user experience and satisfaction.",
-        icon: "paintbrush",
-        features: ["User Research", "Wireframing & Prototyping", "UI/UX Design", "Usability Testing"]
-      },
-      {
-        title: "Graphic Design",
-        description: "We create visually stunning designs that communicate your brand's message effectively and leave a lasting impression.",
-        icon: "paintbrush",
-        features: ["Brand Identity & Logo Design", "Marketing & Ad Creatives", "Social Media Graphics", "Print & Packaging Design"]
+        features: ["Custom Website Development", "Next.js & React Solutions", "E-Commerce Integrations", "Performance Optimization"]
       },
       {
         title: "Video Editing",
@@ -204,46 +192,16 @@ export const defaultSiteContent: SiteContent = {
         features: ["Cinematic Editing", "Color Grading", "Sound Design & Mixing", "Social Media Ads"]
       },
       {
-        title: "Mobile App Development",
+        title: "Automation",
+        description: "Optimize your workflow and save time by automating repetitive tasks and system integrations.",
+        icon: "zap",
+        features: ["Workflow Automation", "API Integrations", "AI Tooling & Bots", "Custom Scripting"]
+      },
+      {
+        title: "App Development",
         description: "We create powerful mobile apps for iOS and Android that drive engagement and growth.",
         icon: "smartphone",
         features: ["iOS App Development", "Android App Development", "Cross-Platform Apps", "App UI/UX Design"]
-      },
-      {
-        title: "Digital Marketing",
-        description: "We help you reach the right audience and grow your brand online.",
-        icon: "megaphone",
-        features: ["SEO (Search Engine Optimization)", "Social Media Marketing", "Google Ads Management", "Content Marketing"]
-      },
-      {
-        title: "E-Commerce Solutions",
-        description: "We build secure and scalable online stores that convert visitors into customers.",
-        icon: "shoppingCart",
-        features: ["Shopify Development", "WooCommerce Development", "Payment Gateway Integration", "Store Optimization"]
-      },
-      {
-        title: "Cloud & DevOps",
-        description: "We offer reliable cloud solutions and DevOps services to scale your business.",
-        icon: "cloud",
-        features: ["Cloud Deployment", "Server Management", "CI/CD Pipeline", "Performance Monitoring"]
-      },
-      {
-        title: "Motion Graphics",
-        description: "We bring your brand ideas to life with stunning 2D/3D motion design and dynamic animations.",
-        icon: "zap",
-        features: ["Logo Animation", "Explainer Videos", "UI Transitions", "3D Product Renders"]
-      },
-      {
-        title: "Photo Editing",
-        description: "High-end photo manipulation, retouching, and color correction to showcase your products beautifully.",
-        icon: "paintbrush",
-        features: ["Product Retouching", "Background Removal", "Color Correction", "Image Manipulation"]
-      },
-      {
-        title: "VFX",
-        description: "We craft stunning visual effects and compositing that elevate your videos and productions to a cinematic level.",
-        icon: "sparkles",
-        features: ["Visual Effects Compositing", "Green Screen & Chroma Key", "Particle & Simulation FX", "3D VFX Integration"]
       }
     ],
   },
@@ -268,7 +226,7 @@ export const defaultSiteContent: SiteContent = {
     items: [
       {
         title: "UrbanEdge Brand Launch",
-        category: "Graphic Design",
+        category: "Website Development",
         description:
           "A complete identity system with logo direction and visual language for a modern local brand.",
         tech: ["Brand Strategy", "Identity", "Logo Design"],
@@ -278,7 +236,7 @@ export const defaultSiteContent: SiteContent = {
       },
       {
         title: "Smashic Unisex Jordan",
-        category: "Graphic Design",
+        category: "Video Editing",
         description: "A premium sneaker advertisement design focusing on minimalist aesthetics and brand heritage.",
         tech: ["Ad Design", "Typography", "Visual Arts"],
         image: "/projects/graphic-1.jpg",
@@ -287,7 +245,7 @@ export const defaultSiteContent: SiteContent = {
       },
       {
         title: "Purple Sweet Cupcake",
-        category: "Graphic Design",
+        category: "Video Editing",
         description: "Vibrant and appetizing social media creative for a bakery brand, featuring custom illustrations.",
         tech: ["Social Media", "Product Design", "Illustration"],
         image: "/projects/graphic-2.jpg",
@@ -296,7 +254,7 @@ export const defaultSiteContent: SiteContent = {
       },
       {
         title: "Rise and Fall of Hungama",
-        category: "Graphic Design",
+        category: "Video Editing",
         description: "Engaging YouTube thumbnail and editorial graphic exploring the history of iconic cartoon channels.",
         tech: ["Thumbnail Design", "Storytelling", "Digital Art"],
         image: "/projects/graphic-3.jpg",
@@ -305,7 +263,7 @@ export const defaultSiteContent: SiteContent = {
       },
       {
         title: "XO - Hurry Up Tomorrow",
-        category: "Graphic Design",
+        category: "Video Editing",
         description: "A dark, atmospheric custom sneaker design concept inspired by The Weeknd's musical era.",
         tech: ["Concept Art", "Texturing", "Branding"],
         image: "/projects/graphic-4.jpg",
@@ -314,7 +272,7 @@ export const defaultSiteContent: SiteContent = {
       },
       {
         title: "DineFlow Platform",
-        category: "Web Development",
+        category: "Website Development",
         description:
           "A comprehensive restaurant management platform with real-time reservation flows.",
         tech: ["Next.js", "CMS", "Payments"],
@@ -324,7 +282,7 @@ export const defaultSiteContent: SiteContent = {
       },
       {
         title: "GrowthLab Campaign",
-        category: "Digital Marketing",
+        category: "Automation",
         description:
           "Full-funnel marketing strategy and technical SEO overhaul that increased conversion rates.",
         tech: ["SEO", "Performance Marketing", "Analytics"],
@@ -334,7 +292,7 @@ export const defaultSiteContent: SiteContent = {
       },
       {
         title: "Insight Enterprise Dashboard",
-        category: "Cloud & DevOps",
+        category: "Automation",
         description:
           "A custom enterprise dashboard for data visualization and real-time backend sync.",
         tech: ["Software Architecture", "GraphQL", "SaaS"],
@@ -344,7 +302,7 @@ export const defaultSiteContent: SiteContent = {
       },
       {
         title: "Shree Sai Creation Logo",
-        category: "Graphic Design",
+        category: "Video Editing",
         description: "Premium golden diamond logo design with a textured emerald background for a luxury brand.",
         tech: ["Logo Design", "Branding", "Graphic Design"],
         image: "/projects/shree-sai-logo.jpg",
@@ -353,7 +311,7 @@ export const defaultSiteContent: SiteContent = {
       },
       {
         title: "The YJ Brand Identity",
-        category: "Graphic Design",
+        category: "Video Editing",
         description: "Minimalist circular red emblem design focused on modern typography and bold brand recognition.",
         tech: ["Minimalist Design", "Typography", "Vector Art"],
         image: "/projects/the-yj-logo.jpg",
@@ -362,7 +320,7 @@ export const defaultSiteContent: SiteContent = {
       },
       {
         title: "Sai Creation Chandelier Identity",
-        category: "Graphic Design",
+        category: "Video Editing",
         description: "Elegant and sophisticated golden chandelier logo for a premium home décor and lighting brand.",
         tech: ["Luxury Branding", "Illustration", "Graphic Design"],
         image: "/projects/chandelier-logo.jpg",
@@ -371,7 +329,7 @@ export const defaultSiteContent: SiteContent = {
       },
       {
         title: "Hot & Delicious Burger Campaign",
-        category: "Graphic Design",
+        category: "Video Editing",
         description: "Dynamic food promotion poster with high-impact visuals and vibrant color contrast.",
         tech: ["Ad Design", "Photo Manipulation", "Marketing"],
         image: "/projects/burger-poster.jpg",
@@ -380,7 +338,7 @@ export const defaultSiteContent: SiteContent = {
       },
       {
         title: "Peppermint Bliss Drink Poster",
-        category: "Graphic Design",
+        category: "Video Editing",
         description: "Cool and refreshing seasonal drink advertisement with a clean, modern aesthetic.",
         tech: ["Product Poster", "Visual Design", "Advertising"],
         image: "/projects/drink-poster.jpg",
@@ -389,7 +347,7 @@ export const defaultSiteContent: SiteContent = {
       },
       {
         title: "Modern Portfolio Concept",
-        category: "UI/UX Design",
+        category: "Website Development",
         description: "High-fidelity website layouts focused on minimalist aesthetics and user conversion.",
         tech: ["Figma", "Web Design", "UI Design"],
         image: "/projects/web-design.png",
@@ -398,7 +356,7 @@ export const defaultSiteContent: SiteContent = {
       },
       {
         title: "E-commerce Engine",
-        category: "Web Development",
+        category: "Website Development",
         description: "High-performance web store built with Next.js and optimized for rapid scaling.",
         tech: ["Next.js", "React", "Node.js"],
         image: "/projects/web-dev.png",
@@ -407,7 +365,7 @@ export const defaultSiteContent: SiteContent = {
       },
       {
         title: "Brand Motion Identity",
-        category: "Motion Graphics",
+        category: "Video Editing",
         description: "Dynamic logo animations and visual effects that bring brand elements to life.",
         tech: ["After Effects", "Animation", "VFX"],
         image: "/projects/motion.png",
@@ -425,7 +383,7 @@ export const defaultSiteContent: SiteContent = {
       },
       {
         title: "Product Retouching Pro",
-        category: "Photo Editing",
+        category: "Video Editing",
         description: "Expert photo manipulation and retouching for high-end product photography.",
         tech: ["Photoshop", "Retouching", "Color Grading"],
         image: "/projects/photo.png",
@@ -434,7 +392,7 @@ export const defaultSiteContent: SiteContent = {
       },
       {
         title: "Corporate Identity System",
-        category: "Graphic Design",
+        category: "Video Editing",
         description: "Complete visual branding systems including logo, typography, and color guides.",
         tech: ["Branding", "Logo Design", "Strategy"],
         image: "/projects/branding-creative.png",
@@ -443,7 +401,7 @@ export const defaultSiteContent: SiteContent = {
       },
       {
         title: "SaaS Platform UI",
-        category: "UI/UX Design",
+        category: "Website Development",
         description: "User-centric interface design for complex software-as-a-service platforms.",
         tech: ["Figma", "User Research", "Prototyping"],
         image: "/projects/uiux.png",
@@ -452,7 +410,7 @@ export const defaultSiteContent: SiteContent = {
       },
       {
         title: "Engagement Booster Pack",
-        category: "Graphic Design",
+        category: "Video Editing",
         description: "Set of eye-catching social media assets designed to increase brand interaction.",
         tech: ["Social Media", "Graphic Design", "Ad Design"],
         image: "/projects/social.png",
@@ -461,7 +419,7 @@ export const defaultSiteContent: SiteContent = {
       },
       {
         title: "Native Mobile App",
-        category: "Mobile App Development",
+        category: "App Development",
         description: "Custom iOS and Android applications focused on performance and seamless UX.",
         tech: ["React Native", "iOS", "Android"],
         image: "/projects/app-dev.png",
@@ -470,7 +428,7 @@ export const defaultSiteContent: SiteContent = {
       },
       {
         title: "Marketing Ad Suite",
-        category: "Graphic Design",
+        category: "Video Editing",
         description: "Strategic marketing materials for digital and print advertising campaigns.",
         tech: ["Ad Design", "Marketing", "Print"],
         image: "/projects/marketing-assets.png",
@@ -479,7 +437,7 @@ export const defaultSiteContent: SiteContent = {
       },
       {
         title: "Brand Storytelling Series",
-        category: "Graphic Design",
+        category: "Video Editing",
         description: "High-quality creative content tailored for multi-channel brand storytelling.",
         tech: ["Content", "Copywriting", "Visuals"],
         image: "/projects/content.png",
@@ -488,7 +446,7 @@ export const defaultSiteContent: SiteContent = {
       },
       {
         title: "Artistic Vision Roadmap",
-        category: "Graphic Design",
+        category: "Video Editing",
         description: "Comprehensive creative direction and artistic vision for large-scale projects.",
         tech: ["Direction", "Vision", "Art"],
         image: "/projects/direction.png",
@@ -497,7 +455,7 @@ export const defaultSiteContent: SiteContent = {
       },
       {
         title: "Digital Growth Blueprint",
-        category: "Digital Marketing",
+        category: "Automation",
         description: "Strategic content planning and data-driven roadmaps for digital growth.",
         tech: ["Strategy", "SEO", "Planning"],
         image: "/projects/strategy.png",
@@ -509,7 +467,7 @@ export const defaultSiteContent: SiteContent = {
   stats: [
     { value: 45, label: "Projects Planned", suffix: "+" },
     { value: 98, label: "Client Satisfaction", suffix: "%" },
-    { value: 6, label: "Service Capabilities", suffix: "" },
+    { value: 4, label: "Service Capabilities", suffix: "" },
     { value: 100, label: "On-time Delivery", suffix: "%" },
   ],
   team: {

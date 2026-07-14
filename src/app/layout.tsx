@@ -61,7 +61,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
-      <body className={`${inter.variable} ${outfit.variable} ${jakarta.variable} font-sans antialiased`}>
+      <body className={`${inter.variable} ${outfit.variable} ${jakarta.variable} font-sans antialiased`} suppressHydrationWarning>
 
         <MovingBackground />
         <div className="noise-bg"></div>

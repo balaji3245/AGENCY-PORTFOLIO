@@ -45,7 +45,7 @@ export default function About() {
   });
 
   const opacity = useTransform(scrollYProgress, [0, 0.15, 0.85, 1], [0, 1, 1, 0]);
-  const y = useTransform(scrollYProgress, [0, 1], [60, -60]);
+  const y = useTransform(scrollYProgress, [0, 1], [0, -120]);
 
   return (
     <section ref={containerRef} id="about" className="py-16 relative z-10 bg-transparent overflow-hidden">

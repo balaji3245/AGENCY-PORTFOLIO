@@ -21,8 +21,11 @@ export default function Portfolio() {
   }, [content.portfolio.items]);
 
   const filteredItems = useMemo(() => {
-    if (activeTab === "All") return content.portfolio.items;
-    return content.portfolio.items.filter(item => item.category === activeTab);
+    const items = activeTab === "All"
+      ? content.portfolio.items
+      : content.portfolio.items.filter(item => item.category === activeTab);
+    // Reverse to show the newest (last added) projects first
+    return [...items].reverse().slice(0, 4);
   }, [activeTab, content.portfolio.items]);
 
   return (
@@ -31,7 +34,7 @@ export default function Portfolio() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-20">
           <div>
             <h2 className="text-xs uppercase tracking-[0.4em] text-gray-500 mb-4">Portfolio</h2>
-            <h3 className="text-4xl md:text-7xl font-bold tracking-tighter">Selected <span className="text-gray-500">Works</span></h3>
+            <h3 className="text-4xl md:text-7xl font-bold tracking-tighter">Recent <span className="text-gray-500">Works</span></h3>
           </div>
           
           {/* Filter Tabs */}
@@ -129,11 +132,7 @@ export default function Portfolio() {
           </AnimatePresence>
         </motion.div>
 
-        <div className="mt-16 flex justify-center">
-          <MagneticButton className="px-8 py-3 rounded-full border border-white/10 hover:bg-white hover:text-black transition-all duration-500 text-[10px] font-bold uppercase tracking-widest">
-            View All Projects
-          </MagneticButton>
-        </div>
+
       </div>
     </section>
   );

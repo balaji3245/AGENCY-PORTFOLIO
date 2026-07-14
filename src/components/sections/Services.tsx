@@ -5,7 +5,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import IconByName from "@/components/IconByName";
 import { useSiteContent } from "@/components/SiteContentProvider";
-import { ArrowRight, CheckCircle2, ChevronRight, Rocket } from "lucide-react";
+import { ArrowUpRight, ChevronRight } from "lucide-react";
 
 export default function Services() {
   const { content } = useSiteContent();
@@ -52,7 +52,7 @@ export default function Services() {
         </div>
 
         {/* Services Grid */}
-        <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+        <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
           <AnimatePresence mode="popLayout">
             {displayedServices.map((service, index) => (
               <motion.div
@@ -66,41 +66,42 @@ export default function Services() {
                 className="group"
               >
                 <Link href={`/services/${encodeURIComponent(service.title)}`} className="block h-full">
-                  <div className="h-full bg-[#0a0c12]/40 backdrop-blur-md border border-white/5 p-6 md:p-10 rounded-[2rem] md:rounded-[2.5rem] transition-all duration-500 hover:border-[#7c66ff]/30 hover:bg-[#7c66ff]/5 relative overflow-hidden group/card flex flex-col">
+                  <div className="h-full bg-[#0a0c12]/30 backdrop-blur-md border border-white/[0.06] p-6 md:p-8 rounded-[2rem] transition-all duration-500 hover:border-[#7c66ff]/40 hover:bg-[#7c66ff]/[0.03] hover:shadow-[0_30px_60px_rgba(124,102,255,0.08)] relative overflow-hidden group/card flex flex-col justify-between min-h-[320px]">
                     {/* Subtle hover gradient */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-[#7c66ff]/5 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-500" />
+                    <div className="absolute -inset-px bg-gradient-to-br from-[#7c66ff]/15 via-transparent to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 rounded-[2rem]" />
                     
-                    {/* Icon & Title Row */}
-                    <div className="flex items-center md:items-start gap-4 md:gap-6 mb-4 md:mb-8 relative z-10">
-                      <div className="w-12 h-12 md:w-16 md:h-16 rounded-full border border-[#7c66ff]/20 bg-[#7c66ff]/10 flex items-center justify-center text-[#7c66ff] group-hover:scale-110 transition-transform duration-500 shrink-0 shadow-[0_0_20px_rgba(124,102,255,0.1)]">
-                        <IconByName name={service.icon} size={22} />
+                    <div>
+                      {/* Icon & Arrow Link Row */}
+                      <div className="flex items-center justify-between mb-8 relative z-10">
+                        <div className="w-12 h-12 rounded-2xl border border-[#7c66ff]/20 bg-[#7c66ff]/10 flex items-center justify-center text-[#7c66ff] group-hover/card:scale-110 group-hover/card:border-[#7c66ff]/40 transition-all duration-500 shadow-[0_0_20px_rgba(124,102,255,0.05)]">
+                          <IconByName name={service.icon} size={20} />
+                        </div>
+                        <div className="w-8 h-8 rounded-full border border-white/5 bg-white/[0.03] flex items-center justify-center text-gray-500 group-hover/card:text-white group-hover/card:border-[#7c66ff]/30 group-hover/card:bg-[#7c66ff]/10 group-hover/card:rotate-45 transition-all duration-500">
+                          <ArrowUpRight size={14} />
+                        </div>
                       </div>
-                      <div className="flex-grow pt-0 md:pt-2 overflow-hidden">
-                        <h4 className="text-lg md:text-xl font-bold mb-1 md:mb-3 tracking-tight group-hover:text-white transition-colors truncate md:whitespace-normal">{service.title}</h4>
-                        <p className="hidden md:block text-gray-400 font-light leading-relaxed text-sm line-clamp-2 md:line-clamp-3">
+
+                      {/* Title & Description */}
+                      <div className="relative z-10 mb-6">
+                        <h4 className="text-xl font-bold mb-3 tracking-tight group-hover/card:text-[#7c66ff] transition-colors duration-300">
+                          {service.title}
+                        </h4>
+                        <p className="text-gray-400 font-light leading-relaxed text-sm line-clamp-3">
                           {service.description}
                         </p>
                       </div>
-                      {/* Arrow for mobile reference design */}
-                      <div className="md:hidden flex items-center justify-center">
-                        <ChevronRight size={18} className="text-[#7c66ff]" />
-                      </div>
                     </div>
 
-                    {/* Features List - Desktop only */}
-                    <div className="hidden md:block space-y-3.5 mb-10 pt-6 border-t border-white/5 relative z-10 flex-grow">
-                      {(service.features || []).map((feature, i) => (
-                        <div key={i} className="flex items-center gap-3 text-[13px] text-gray-400 font-medium group-hover/feature:text-gray-300">
-                          <CheckCircle2 size={16} className="text-[#7c66ff] shrink-0" />
+                    {/* Features Tags */}
+                    <div className="flex flex-wrap gap-2 pt-4 border-t border-white/[0.05] relative z-10 mt-auto">
+                      {(service.features || []).slice(0, 3).map((feature, i) => (
+                        <span 
+                          key={i} 
+                          className="text-[9px] uppercase tracking-wider px-2.5 py-1 rounded-lg bg-white/[0.02] border border-white/[0.05] text-gray-500 group-hover/card:text-gray-300 group-hover/card:border-white/10 transition-colors duration-500"
+                        >
                           {feature}
-                        </div>
+                        </span>
                       ))}
-                    </div>
-
-                    {/* Learn More link */}
-                    <div className="hidden md:flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-[#7c66ff] relative z-10 group/link">
-                      Learn More 
-                      <ArrowRight size={14} className="group-hover/link:translate-x-1 transition-transform" />
                     </div>
                   </div>
                 </Link>
@@ -117,7 +118,7 @@ export default function Services() {
               className="px-10 py-5 rounded-2xl border border-white/10 bg-white/5 hover:bg-[#7c66ff] hover:border-[#7c66ff] hover:text-white transition-all duration-500 text-[10px] font-bold uppercase tracking-[0.2em] group"
             >
               {showAll ? "Show Less Services" : `View All Services (${content.services.items.length})`}
-              <ArrowRight size={14} className={`inline-block ml-2 transition-transform duration-500 ${showAll ? "rotate-90" : ""}`} />
+              <ChevronRight size={14} className={`inline-block ml-2 transition-transform duration-500 ${showAll ? "rotate-90" : ""}`} />
             </button>
           </div>
         )}
