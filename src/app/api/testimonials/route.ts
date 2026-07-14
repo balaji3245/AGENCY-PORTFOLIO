@@ -1,13 +1,29 @@
+import { supabase } from "@/lib/supabase";
 import { revalidatePath } from "next/cache";
-import { type SiteContent } from "@/lib/siteContent";
-import { readContent, saveContent } from "@/lib/siteContentServer";
+import { type SiteContent, defaultSiteContent } from "@/lib/siteContent";
 
 export async function POST(request: Request) {
   try {
     const newReview = await request.json();
 
-    // 1. Fetch current content using server helper (handles local fallback)
-    const currentContent = await readContent();
+    // 1. Fetch current content
+    let currentContent: SiteContent = defaultSiteContent;
+    let fetchError = null;
+
+    if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+      const { data, error } = await supabase
+        .from("site_content")
+        .select("content")
+        .eq("id", "yj-developers:site-content")
+        .single();
+      
+      currentContent = data?.content || defaultSiteContent;
+      fetchError = error;
+    }
+
+    if (fetchError && fetchError.code !== "PGRST116") {
+      throw fetchError;
+    }
 
     // 2. Append new review (auto-approve)
     const reviewWithMeta = {
@@ -23,8 +39,19 @@ export async function POST(request: Request) {
 
     currentContent.testimonials.unshift(reviewWithMeta);
 
-    // 3. Save back (handles local fallback)
-    await saveContent(currentContent);
+    // 3. Save back to Supabase
+    if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+      const { error: saveError } = await supabase.from("site_content").upsert({
+        id: "yj-developers:site-content",
+        content: currentContent,
+        updated_at: new Date().toISOString(),
+      });
+      if (saveError) throw saveError;
+    } else {
+      console.warn("Supabase not configured. Skipping testimonial save.");
+    }
+
+
 
     // 4. Revalidate
     revalidatePath("/");
